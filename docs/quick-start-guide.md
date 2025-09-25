@@ -36,7 +36,7 @@ from holm import App
 app = App()
 ```
 
-This is all you need! The `App()` call will automatically discover and register all your layouts and pages based on the file structure.
+This is all you need! The `App()` call will automatically discover and register all your layouts and pages based on the folder structure.
 
 ## Create a root layout
 
