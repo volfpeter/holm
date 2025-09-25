@@ -1,0 +1,95 @@
+[project]
+name = "holm"
+dynamic = ["version"]
+description = "Web development framework that brings the Next.js developer experience to Python, built on FastAPI, htmy, and FastHX."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115.12",
+    "fasthx>=2.3.3",
+    "htmy[lxml]>=0.8.2",
+]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "mkdocs-material>=9.6.20",
+    "mkdocstrings[python]>=0.30.1",
+    "mypy>=1.15.0",
+    "poethepoet>=0.35.0",
+    "pytest>=8.3.5",
+    "pytest-random-order>=1.1.1",
+    "ruff>=0.12.0",
+    "uvicorn>=0.34.1",
+    "watchfiles>=1.1.0",
+]
+
+[tool.mypy]
+strict = true
+explicit_package_bases = true
+show_error_codes = true
+
+[tool.pdm.build]
+# TODO: find a way to exclude test_app/ from the wheel build.
+# This config can be removed then, and tests/ and tests_app/ can be added back
+# to the source build as expected, but excluded from the wheel build.
+excludes = ["tests/", "test_app/"]
+
+[tool.pdm.version]
+source = "file"
+path = "holm/__init__.py"
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
+[tool.pytest.ini_options]
+addopts = "--random-order"
+
+[tool.ruff]
+line-length = 108
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "dist",
+    "docs",
+]
+lint.select = [
+    "B", # flake8-bugbear
+    "C", # flake8-comprehensions
+    "E", # pycodestyle errors
+    "F", # pyflakes
+    "I", # isort
+    "S", # flake8-bandit - we must ignore these rules in tests
+    "W", # pycodestyle warnings
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*" = ["S101"] # S101: use of assert detected
+
+[tool.poe.tasks]
+
+test-app.cmd = "uvicorn test_app.main:app --reload"
+
+format = "ruff format . --check"
+format-fix = "ruff format ."
+
+lint = "ruff check ."
+lint-fix = "ruff check . --fix"
+
+mypy = "mypy ."
+
+check.sequence = ["format", "lint", "mypy"]
+check.ignore_fail = "return_non_zero"
+
+test.cmd = "python -m pytest tests"
+test.env = { APP_ENV = "test" }
+
+serve-docs = "mkdocs serve"

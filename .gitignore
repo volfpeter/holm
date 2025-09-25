@@ -1,0 +1,23 @@
+# Python-generated files
+__pycache__/
+
+# Tool folders
+
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# IDEs and coding tools
+.opencode
+OpenCode.md
+.ropeproject/
+
+# Virtual environments and node modules
+.venv
+
+# Lock files
+uv.lock
+
+# Build
+
+dist/

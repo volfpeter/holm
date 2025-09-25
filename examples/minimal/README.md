@@ -1,0 +1,1 @@
+The simplest possible application.
