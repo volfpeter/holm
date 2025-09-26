@@ -11,7 +11,7 @@ APIFactory: TypeAlias = PlainAPIFactory | RenderingAPIFactory
 """
 `APIRouter` factory definition.
 
-It is a callable that optionally accepts an `HTMY` instance as an argument to make sure
+It is a callable that optionally accepts a `HTMY` instance as an argument to make sure
 the same renderer is used throughout the application if the API does HTML rendering.
 Otherwise the argument can be omitted.
 """

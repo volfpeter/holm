@@ -11,11 +11,11 @@ Rules for *layouts*:
 - The root layout must always return a `htmy.Component`.
 - The `layout` variable must be a callable and it must accept a positional argument (other than `self` if the layout is a method of a class), the data / properties of the layout that are returned by the pages or layouts this layout directly wraps.
 - The `layout` variable can have additional arguments (position or keyword and keyword-only, but not positional-only). These arguments must be FastAPI dependencies. They will be automatically resolved during each request.
-- Returning a tuple or a list from a layout is **not allowed** unless the value is an `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
+- Returning a tuple or a list from a layout is **not allowed** unless the value is a `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
 
 Layouts automatically wrap all layouts and pages in subpackages.
 
-*Tip: layouts can provide context for their entire subtree by wrapping the subtree an `htmy` `ContextProvider` component.*
+*Tip: layouts can provide context for their entire subtree by wrapping the subtree a `htmy` `ContextProvider` component.*
 
 *Pages* are defined in the `page.py` module of packages as a callable `page` variable (note that classes with an `__init__()` method are callable, so they also qualify).
 
@@ -23,8 +23,8 @@ Rules for *pages*:
 
 - The `page` variable must be a FastAPI dependency, meaning it can have any arguments as long as they can all be resolved by FastAPI as dependencies.
 - The `page` variable must return the properties object for the layout that directly wraps it.
-- If a page is not wrapped by a layout, then it must return an `htmy.Component`.
-- Returning a tuple or a list from a layout is **not allowed** unless the value is an `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
+- If a page is not wrapped by a layout, then it must return a `htmy.Component`.
+- Returning a tuple or a list from a layout is **not allowed** unless the value is a `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
 
 `page.py` modules can have a `metadata` variable, which can be an arbitrary mapping or a FastAPI dependency that returns an arbitrary mapping.
 
@@ -74,6 +74,8 @@ Reminder: if the package name also ends with an underscore, it will be treated a
 
 Error handlers are defined in the `error.py` module of the root package as a `handlers` variable, which can be a mapping from exception types or HTTP status codes to standard FastAPI exception handler functions, or a callable that expects a `fasthx.htmy.HTMY` positional argument and returns such a mapping. The latter option is useful if you want to do custom HTML rendering in an error handler.
 
-Rules:
+Error handlers must return either a `htmy.Component` or a `fastapi.Response`. Responses are returned to the client as is, and components are automatically rendered and returned as a `HTMLResponse`.
 
-- Error handlers must return either an `htmy.Component` or a `fastapi.Response`. Responses are returned to the client as is, and components are automatically rendered and returned as an `HTMLResponse`.
+It is important to know that rendered errors are **not** automatically wrapped in the root layout of your application. The main reason for this is `holm` can not always know what the client (be it HTMX or simply the browser) expects.
+
+The recommended way to handle this is to create and HTML skeleton component somewhere in your codebase, and use it both in the root layout and in error handlers to wrap page content. This, together with application-specific exceptions make it easy to handle every error correctly with minimal manual effort.

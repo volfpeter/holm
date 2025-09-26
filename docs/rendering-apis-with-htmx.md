@@ -72,7 +72,7 @@ Next we create our rendering API in an `api.py` module. We will place it at the 
 
 Note: `holm` applies file-system based routing to both pages and APIs! Actually, if both an API (`api.py`) and a page (`page.py`) exists in a directory, `holm` combines their routes into a single `APIRouter` for that path. API routes are registered first, followed by the page route at `GET` `/`. This means if your API defines a `GET` `/` route, it will conflict with your page route.
 
-The API we create will be very simple, it will have a single `/welcome-message` route that returns a welcome message in a randomly chosen language. The returned message is itself an `htmy` `Component`, so all we need is decorate the path operation function with `@htmy.hx()`. You can learn more about using `fasthx.htmy.HTMY` [here](https://volfpeter.github.io/fasthx/examples/htmy/).
+The API we create will be very simple, it will have a single `/welcome-message` route that returns a welcome message in a randomly chosen language. The returned message is itself a `htmy` `Component`, so all we need is decorate the path operation function with `@htmy.hx()`. You can learn more about using `fasthx.htmy.HTMY` [here](https://volfpeter.github.io/fasthx/examples/htmy/).
 
 ```python
 import random
@@ -91,7 +91,7 @@ _welcome_message: list[str] = [
 
 
 def api(htmy: HTMY) -> APIRouter:
-    """Rendering API factories need an `htmy: fasthx.htmy.HTMY` argument."""
+    """Rendering API factories need a `htmy: fasthx.htmy.HTMY` argument."""
     api = APIRouter()
 
     @api.get("/welcome-message")
