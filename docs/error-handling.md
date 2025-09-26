@@ -4,7 +4,7 @@ This short guide demonstrates how to add error handling to your `holm` applicati
 
 Before you continue, make sure you have the basic application from the [quick start guide](quick-start-guide.md) working, as we will be expanding that application.
 
-As a reminder, you must write standard FastAPI error handlers (async functions with a `Request` and an `Exception` argument), as you would in any FastAPI application. The only difference is that error handler can return `htmy.Component`s as well as FastAPI `Response` objects.
+As a reminder, you must write standard FastAPI error handlers (async functions with a `Request` and an `Exception` argument), as you would in any FastAPI application. The only difference is that error handlers can return `htmy.Component`s as well as FastAPI `Response` objects.
 
 For additional rules and recommendations on error handling, please read the corresponding section of the [Application components](application-components.md) guide.
 
@@ -31,7 +31,7 @@ async def handle_404(request: Request, exc: Exception) -> Component:
     )
 
 
-handlers: dict[int | Exception, FastAPIErrorHandler] = {
+handlers: dict[int | type[Exception], FastAPIErrorHandler] = {
     404: handle_404,
 }
 """Dictionary that maps HTTP error codes or exception types to error handlers."""

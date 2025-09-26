@@ -15,7 +15,7 @@ Rules for *layouts*:
 
 Layouts automatically wrap all layouts and pages in subpackages.
 
-*Tip: layouts can provide context for their entire subtree by wrapping the subtree a `htmy` `ContextProvider` component.*
+*Tip: layouts can provide context for their entire subtree by wrapping the subtree with a `htmy` `ContextProvider` component.*
 
 *Pages* are defined in the `page.py` module of packages as a callable `page` variable (note that classes with an `__init__()` method are callable, so they also qualify).
 
@@ -24,7 +24,7 @@ Rules for *pages*:
 - The `page` variable must be a FastAPI dependency, meaning it can have any arguments as long as they can all be resolved by FastAPI as dependencies.
 - The `page` variable must return the properties object for the layout that directly wraps it.
 - If a page is not wrapped by a layout, then it must return a `htmy.Component`.
-- Returning a tuple or a list from a layout is **not allowed** unless the value is a `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
+- Returning a tuple or a list from a page is **not allowed** unless the value is a `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
 
 `page.py` modules can have a `metadata` variable, which can be an arbitrary mapping or a FastAPI dependency that returns an arbitrary mapping.
 
@@ -78,6 +78,6 @@ Error handlers must return either a `htmy.Component` or a `fastapi.Response`. Re
 
 It is important to know that rendered errors are **not** automatically wrapped in the root layout of your application. The main reason for this is `holm` can not always know what the client (be it HTMX or simply the browser) expects.
 
-The recommended way to handle this is to create and HTML skeleton component somewhere in your codebase, and use it both in the root layout and in error handlers to wrap page content. This, together with application-specific exceptions make it easy to handle every error correctly with minimal manual effort.
+The recommended way to handle this is to create an HTML skeleton component somewhere in your codebase, and use it both in the root layout and in error handlers to wrap page content. This, together with application-specific exceptions make it easy to handle every error correctly with minimal manual effort.
 
 Also, you can simply return redirect responses in error handlers that navigate users to the appropriate error page, passing context as query parameters.
