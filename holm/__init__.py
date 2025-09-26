@@ -1,4 +1,4 @@
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 from .app import App as App
 from .fastapi import FastAPIDependency as FastAPIDependency

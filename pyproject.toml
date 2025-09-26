@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.115.12",
-    "fasthx>=2.3.3",
+    "fasthx>=3.0.0",
     "htmy[lxml]>=0.8.2",
 ]
 
