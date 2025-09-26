@@ -13,15 +13,12 @@ _welcome_message: list[str] = [
 ]
 
 
-def _render_welcome_message(val: str) -> str:
-    return val
-
-
 def api(htmy: HTMY) -> APIRouter:
+    """Rendering API factories need an `htmy: fasthx.htmy.HTMY` argument."""
     api = APIRouter()
 
     @api.get("/welcome-message")
-    @htmy.hx(_render_welcome_message)
+    @htmy.hx()  # type: ignore[arg-type]
     async def get_welcome_message() -> str:
         return random.choice(_welcome_message)  # noqa: S311
 

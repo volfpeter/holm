@@ -42,7 +42,6 @@ These are standard FastAPI `APIRouter`s, but you should still follow these recom
 
 - If routes in the API don't do any rendering, then the `api()` callable should have no arguments or simply an `api` variable should be used. Otherwise the `api()` callable should have a single `fasthx.htmy.HTMY` positional argument. The application's renderer will be passed to this function automatically by `holm`.
 - If an `api()` callable is used, it may have further arguments as long as they all have default values. This pattern can simplify API testing for example, by allowing custom configurations for tests.
-- The `APIRouter` should not have a `prefix`. The application's URL structure automatically matches the package structure.
 
 Note on rendering APIs:
 

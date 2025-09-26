@@ -7,7 +7,11 @@ metadata = {"title": "Home | My App"}
 def page() -> Component:
     """Home page content."""
     return html.div(
-        html.h1("Welcome to My App", hx_get="/welcome-message", hx_trigger="every 2s", hx_swap="innerHTML"),
+        html.h1(
+            "Welcome to My App",
+            hx_get="/welcome-message",
+            hx_trigger="every 2s",
+        ),
         html.p("This is a minimal holm application demonstrating:"),
         html.ul(
             html.li("File-system based routing"),
@@ -17,6 +21,6 @@ def page() -> Component:
         ),
         html.div(
             html.a("Learn more about us", href="/about"),
-            hx_boost="true",
+            hx_boost="true",  # Explicit hx-boost for this link
         ),
     )

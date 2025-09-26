@@ -26,8 +26,8 @@ def layout(children: ComponentType, context: Context) -> Component:
                         html.ul(
                             html.li(html.a("Home", href="/")),
                             html.li(html.a("About", href="/about")),
-                            hx_boost="true",
-                        )
+                        ),
+                        hx_boost="true",
                     ),
                     class_="container",
                 ),

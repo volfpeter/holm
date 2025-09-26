@@ -148,13 +148,13 @@ That's it! You now have a working application. From here, you can add more pages
 
 ## Run your application
 
-You can now run your application using `uvicorn` or `fastapi-cli` :
+You can now run your application using `uvicorn` or `fastapi-cli`:
 
 ```bash
 uvicorn main:app --reload
 ```
 
-Or with FastAPI CLI if installed:
+Or with the FastAPI CLI if installed:
 
 ```bash
 fastapi dev main.py

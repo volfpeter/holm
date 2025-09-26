@@ -44,5 +44,7 @@ markdown_extensions:
 nav:
   - Holm: index.md
   - application-components.md
-  - quick-start-guide.md
+  - Guides:
+    - quick-start-guide.md
+    - rendering-apis-with-htmx.md
   - API Reference: api.md
