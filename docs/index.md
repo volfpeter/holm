@@ -63,7 +63,9 @@ All you need to do is follow these simple rules:
 
 ## Examples
 
-If you prefer to learn through examples, the [Quick start guide](quick-start-guide.md) is the best place to start. The entire source code of the quick start guide application can be found in the [examples/quick-start-guide](https://github.com/volfpeter/holm/tree/main/examples/quick-start-guide) directory of the repository.
+If you prefer to learn through examples, the [Quick start guide](quick-start-guide.md) is the best place to start.
+
+To learn about creating rendering APIs and adding HTMX to your application, you should have a look at the [Rendering APIs with HTMX](rendering-apis-with-htmx.md) guide.
 
 You can discover even more features by exploring the [test application](https://github.com/volfpeter/holm/tree/main/test_app) of the project.
 

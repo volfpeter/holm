@@ -13,6 +13,8 @@ We will cover:
 - How to create API endpoints that return rendered HTML components, often called fragments or partials.
 - How to use [fasthx](https://volfpeter.github.io/fasthx/examples/htmy/) for seamless server-side rendering of [htmy](https://volfpeter.github.io/htmy/) components.
 
+The entire source code of this application can be found in the [examples/rendering-apis-with-htmx](https://github.com/volfpeter/holm/tree/main/examples/rendering-apis-with-htmx) directory of the repository.
+
 ## Add HTMX to the application
 
 Modify `layout.py` to include the HTMX script and enable `hx-boost` on the `nav` tag for enhanced navigation:
