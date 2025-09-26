@@ -139,11 +139,10 @@ def _discover_app_packages(config: AppConfig) -> set[PackageInfo]:
         """Returns whether the given file or package path should be excluded from the application."""
         rel_path = path.relative_to(config.root_dir)
         return any(
-            p
-            for p in rel_path.parts
             # Exclude if a path segment starts with an underscore but does not end with one.
             # Path segments that both start and end with an underscore represent path parameters!
-            if p.startswith("_") and not p.endswith("_")
+            p.startswith("_") and not p.endswith("_")
+            for p in rel_path.parts
         )
 
     return {
