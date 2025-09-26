@@ -79,3 +79,5 @@ Error handlers must return either a `htmy.Component` or a `fastapi.Response`. Re
 It is important to know that rendered errors are **not** automatically wrapped in the root layout of your application. The main reason for this is `holm` can not always know what the client (be it HTMX or simply the browser) expects.
 
 The recommended way to handle this is to create and HTML skeleton component somewhere in your codebase, and use it both in the root layout and in error handlers to wrap page content. This, together with application-specific exceptions make it easy to handle every error correctly with minimal manual effort.
+
+Also, you can simply return redirect responses in error handlers that navigate users to the appropriate error page, passing context as query parameters.
