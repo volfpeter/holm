@@ -11,4 +11,7 @@ from fastapi.testclient import TestClient
 )
 def test_page(client: TestClient, path: str) -> None:
     response = client.get(path)
-    assert response.status_code == 404
+    # Request should be handled by the not found error handler.
+    assert response.status_code == 200
+    assert response.headers["Content-Type"] == "text/html; charset=utf-8"
+    assert response.text == "<div >\n<h1 >Page not found</h1>\n</div>"
