@@ -77,6 +77,16 @@ At the moment, the library **does not** provide security features like automatic
 
 Also, do not forget about **XSS prevention**, when rendering untrusted data with custom components!
 
+## AI assistance
+
+The library and all its dependencies are registered at [Context7](https://context7.com/volfpeter).
+
+To get good AI assistance, all you need to do is register the Context7 MCP server in your coding tool and tell the agent to use it.
+
+If you are starting a new project, you can additionally point the agent at one of the example applications in the [repository](https://github.com/volfpeter/holm). With all this context and detailed instructions of the project you want to build, it will get you started quickly.
+
+Because of the similarity with Next.js and React, and the standard use of FastAPI and other dependencies, you can expect good results, both for vibe coding or inline completion.
+
 ## Development
 
 Development setup:

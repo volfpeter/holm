@@ -60,7 +60,15 @@ Both formats are converted to FastAPI path parameters. For example:
 - File path `user/_id_/profile` becomes URL `/user/{id}/profile`.
 - File path `user/{user_id}/settings` becomes URL `/user/{user_id}/settings`.
 
-Any layout or page within these packages can access the parameter as a FastAPI dependency by adding it to their function signature (e.g., `id: int` or `userId: str`).
+Any layout or page within these packages can access the parameter as a FastAPI dependency by adding it to their function signature (e.g., `id: int` or `user_id: str`).
+
+## Private packages
+
+You can prefix package names with one or more underscores to opt the entire package (including its subpackages) out of the automatic application component discovery.
+
+For example, if you have a package named `_private` somewhere in your application folder, you can freely place valid page, layout, or API files within it or its subpackages. These modules will not be processed and included in the application.
+
+Reminder: if the package name also ends with an underscore, it will be treated as a path parameter, as described [above](#path-parameters-as-package-names).
 
 ## Error handling
 
