@@ -76,6 +76,8 @@ If you prefer to learn through examples, the [Quick start guide](https://volfpet
 
 To learn about creating rendering APIs and adding HTMX to your application, you should have a look at the [Rendering APIs with HTMX](https://volfpeter.github.io/holm/rendering-apis-with-htmx) guide.
 
+For error handling examples, you should check out the [Error Handling](https://volfpeter.github.io/holm/error-handling) guide.
+
 You can discover even more features by exploring the [test application](https://github.com/volfpeter/holm/tree/main/test_app) of the project.
 
 If you are looking for the simplest possible application you can create, then can find it in the [examples/minimal](https://github.com/volfpeter/holm/tree/main/examples/minimal) directory of the repository.

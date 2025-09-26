@@ -14,7 +14,7 @@ _welcome_message: list[str] = [
 
 
 def api(htmy: HTMY) -> APIRouter:
-    """Rendering API factories need an `htmy: fasthx.htmy.HTMY` argument."""
+    """Rendering API factories need a `htmy: fasthx.htmy.HTMY` argument."""
     api = APIRouter()
 
     @api.get("/welcome-message")

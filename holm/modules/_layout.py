@@ -39,7 +39,7 @@ LayoutFactory: TypeAlias = Callable[[Any], Any | Coroutine[None, None, Any]]
 A layout factory is a sync or asynccallable that expects a single argument (the layout's properties)
 and returns the properties for its wrapper layout.
 
-The root layout factory must always return an `htmy` `Component`.
+The root layout factory must always return a `htmy` `Component`.
 """
 
 
