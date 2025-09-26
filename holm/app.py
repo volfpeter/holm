@@ -1,5 +1,7 @@
 import inspect
 from collections.abc import Awaitable, Iterable
+from functools import lru_cache
+from pathlib import Path
 from typing import cast
 
 from fastapi import APIRouter, Depends, FastAPI
@@ -131,10 +133,23 @@ def _discover_app_packages(config: AppConfig) -> set[PackageInfo]:
     """
     Discovers all packages that are part of the application and returns them as a set.
     """
+
+    @lru_cache()
+    def is_excluded(path: Path) -> bool:
+        """Returns whether the given file or package path should be excluded from the application."""
+        rel_path = path.relative_to(config.root_dir)
+        return any(
+            p
+            for p in str(rel_path).split("/")
+            # Exclude if a path segment starts with an underscore but does not end with one.
+            # Path segments that both start and end with an underscore represent path parameters!
+            if p.startswith("_") and not p.endswith("_")
+        )
+
     return {
         PackageInfo.from_marker_file(f, config=config)
         for f in config.app_dir.rglob("*.py")
-        if f.stem in module_names
+        if f.stem in module_names and not is_excluded(f.parent)  # Pass the parent to make use of caching
     }
 
 
