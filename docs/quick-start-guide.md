@@ -10,6 +10,8 @@ This example will get you up and running quickly by demonstrating the following 
 - FastAPI integration: Use standard FastAPI features (dependencies) in layouts, pages, and metadata functions.
 - htmy components: Build your UI in typed Python with a JSX-like syntax.
 
+The entire source code of this application can be found in the [examples/quick-start-guide](https://github.com/volfpeter/holm/tree/main/examples/quick-start-guide) directory of the repository.
+
 ## Create the application structure
 
 Before starting this guide, make sure you have installed `holm` and either `uvicorn` or `fastapi-cli` with `pip` (`pip install holm uvicorn` or `pip install holm fastapi-cli`)!
@@ -148,13 +150,13 @@ That's it! You now have a working application. From here, you can add more pages
 
 ## Run your application
 
-You can now run your application using `uvicorn` or `fastapi-cli` :
+You can now run your application using `uvicorn` or `fastapi-cli`:
 
 ```bash
 uvicorn main:app --reload
 ```
 
-Or with FastAPI CLI if installed:
+Or with the FastAPI CLI if installed:
 
 ```bash
 fastapi dev main.py

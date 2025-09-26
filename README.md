@@ -15,11 +15,12 @@ Web development framework that brings the Next.js developer experience to Python
 
 - **Next.js**-like **developer experience** with **file-system based routing** and page composition.
 - **Standard FastAPI** everywhere, so you can leverage the entire FastAPI ecosystem.
+- **JSX-like syntax** with async support for components, thanks to `htmy`.
+- First class **HTMX support** with `FastHX`.
+- **Async** support everywhere, from APIs and dependencies all the way to UI components.
+- Support for both **JSON** and **HTML** (server side rendering) APIs.
 - **No JavaScript** dependencies
 - **No build steps**, just server side rendering with **fully typed Python**.
-- **Async** support everywhere, from APIs and dependencies all the way to UI components, thanks to `htmy`.
-- Support for both **JSON** and **HTML** (server side rendering) APIs.
-- First class `HTMX` support thanks to `FastHX`.
 - **Stability** by building only on the core feature set of dependent libraries.
 - **Unopinionated**: use any CSS framework for styling and any JavaScript framework for UI interactivity.
 
@@ -71,7 +72,9 @@ All you need to do is follow these simple rules:
 
 ## Examples
 
-If you prefer to learn through examples, the [Quick start guide](https://volfpeter.github.io/holm/quick-start-guide) is the best place to start. The entire source code of the quick start guide application can be found in the [examples/quick-start-guide](https://github.com/volfpeter/holm/tree/main/examples/quick-start-guide) directory of the repository.
+If you prefer to learn through examples, the [Quick start guide](https://volfpeter.github.io/holm/quick-start-guide) is the best place to start.
+
+To learn about creating rendering APIs and adding HTMX to your application, you should have a look at the [Rendering APIs with HTMX](https://volfpeter.github.io/holm/rendering-apis-with-htmx) guide.
 
 You can discover even more features by exploring the [test application](https://github.com/volfpeter/holm/tree/main/test_app) of the project.
 
