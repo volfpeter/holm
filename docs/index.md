@@ -99,7 +99,7 @@ When it comes to serving requests, there are two cases: standard JSON APIs and w
 
 For JSON APIs, the performance overhead is zero. In this case you are only using the application discovery feature of `holm`.
 
-When building web applications, performance should be compared to an application that does all the rendering manually in routes, using `htmy`. In this case, a `holm` application will typically need to resolve a couple of additional dependencies, but because of the efficiency of FastAPI's dependency resolution mechanism, the performance impact is still unnoticable.
+When building web applications, performance should be compared to an application that does all the rendering manually in routes, using `htmy`. In this case, a `holm` application will typically need to resolve a couple of additional dependencies, but because of the efficiency of FastAPI's dependency resolution mechanism, the performance impact is still unnoticeable.
 
 ### Templating language support
 
