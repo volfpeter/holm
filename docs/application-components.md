@@ -32,7 +32,7 @@ If the `metadata` variable is a callable, it can have any FastAPI dependencies, 
 
 The metadata provided by the currently served page is made available to every `htmy.Component` (from the root layout to the page itself) through the built-in `Metadata` utility. It can be accessed as `Metadata.from_context(context)` where `context` is the `htmy` rendering context which is passed to every component. See the [htmy documentation](https://volfpeter.github.io/htmy/#context) for more information.
 
-This feature is particularly useful when pages-specific information - for example title, description, or keywords - must be set dynamically for example in layouts on a page by page basis. `Metadata` implements the `Mapping` protocol, so once loaded from the `htmy` rendering context in a component with `metadata = Metadata.from_context(context)`, you can use it simply like this to set page specific information in any layout, component, or the page itself: `htmy.html.title(metadata["title"])`.
+This feature is particularly useful when page-specific information - for example title, description, or keywords - must be set dynamically (for example, in layouts) on a page-by-page basis. `Metadata` implements the `Mapping` protocol, so once loaded from the `htmy` rendering context in a component with `metadata = Metadata.from_context(context)`, you can use it simply like this to set page-specific information in any layout, component, or the page itself: `htmy.html.title(metadata["title"])`.
 
 ## APIs
 
