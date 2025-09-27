@@ -98,6 +98,22 @@ If you are starting a new project, you can additionally point the agent at one o
 
 Because of the similarity with Next.js and React, and the standard use of FastAPI and other dependencies, you can expect good results, both for vibe coding or inline completion.
 
+## Technical notes
+
+### Performance
+
+Automatic application discovery and route registration takes only marginally more time compared to manual route registration. The performance difference during startup is unnoticeable.
+
+When it comes to serving requests, there are two cases: standard JSON APIs and web applications.
+
+For JSON APIs, the performance overhead is zero. In this case you are only using the application discovery feature of `holm`.
+
+When building web applications, performance should be compared to an application that does all the rendering manually in routes, using `htmy`. In this case, a `holm` application will typically need to resolve a couple of additional dependencies, but because of the efficiency of FastAPI's dependency resolution mechanism, the performance impact is still unnoticeable.
+
+### Templating language support
+
+While certain features in `holm` rely heavily on the capabilities of `htmy` (for example its context and async support), you can still use other DSLs or templating languages (for example Jinja) in your application if you would like to. All you need to do is write a simple wrapper `htmy` component that internally offloads rendering to your framework of choice. You can find out more about this in the [htmy documentation](https://volfpeter.github.io/htmy/#compatibility-and-performance).
+
 ## Development
 
 Development setup:
