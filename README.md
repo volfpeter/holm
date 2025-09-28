@@ -76,6 +76,8 @@ If you prefer to learn through examples, the [Quick start guide](https://volfpet
 
 To learn about creating rendering APIs and adding HTMX to your application, you should have a look at the [Rendering APIs with HTMX](https://volfpeter.github.io/holm/rendering-apis-with-htmx) guide.
 
+The [Custom applications](https://volfpeter.github.io/holm/custom-applications) guide shows you how to customize the FastAPI application instance as well as HTML rendering.
+
 For error handling examples, you should check out the [Error Handling](https://volfpeter.github.io/holm/error-handling) guide.
 
 You can discover even more features by exploring the [test application](https://github.com/volfpeter/holm/tree/main/test_app) of the project.

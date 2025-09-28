@@ -47,5 +47,6 @@ nav:
   - Guides:
     - quick-start-guide.md
     - rendering-apis-with-htmx.md
+    - custom-applications.md
     - error-handling.md
   - API Reference: api.md
