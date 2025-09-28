@@ -52,7 +52,7 @@ Similarly to Next.js, `holm` is built around the concept of file-system based ro
 - You do not need to manually define routes, every [application component](application-components.md) is automatically discovered and registered in the application.
 - You do not need to manually wrap pages in their layouts, it is automatically done based on your application's code structure.
 
-You can find all the necessary details on the [Application component](application-components.md) page, and the [Quick start guide](quick-start-guide.md) can walk you through the process of creating your first application. The two are complementary documents, reading both is strongly recommended.
+You can find all the necessary details on the [Application components](application-components.md) page, and the [Quick start guide](quick-start-guide.md) can walk you through the process of creating your first application. The two are complementary documents, reading both is strongly recommended.
 
 HTML rendering is also fully automated, in the vast majority of cases you do not need to concern yourself with that (the only exceptions are HTML APIs, more on that below).
 
