@@ -12,9 +12,9 @@ This example will get you up and running quickly by demonstrating the following 
 
 The entire source code of this application can be found in the [examples/quick-start-guide](https://github.com/volfpeter/holm/tree/main/examples/quick-start-guide) directory of the repository.
 
-## Create the application structure
+Before you continue, make sure you have installed `holm` and either `uvicorn` or `fastapi-cli` (`pip install holm uvicorn` or `pip install holm fastapi-cli`)!
 
-Before starting this guide, make sure you have installed `holm` and either `uvicorn` or `fastapi-cli` with `pip` (`pip install holm uvicorn` or `pip install holm fastapi-cli`)!
+## Create the application structure
 
 First, create the following directory structure:
 

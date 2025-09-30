@@ -17,6 +17,8 @@ Web development framework that brings the Next.js developer experience to Python
 
 ## Pre-requisite knowledge
 
+*Don't be intimidated by this section. By the time you go through the [Application components](application-components.md) document and the [Quick start guide](guides/quick-start-guide), you will have a very good intuition of how to use `holm`.*
+
 To get started, all you need is a basic understanding of:
 
 - [FastAPI](https://fastapi.tiangolo.com/tutorial/): the underlying web framework.
@@ -54,7 +56,7 @@ Similarly to Next.js, `holm` is built around the concept of file-system based ro
 
 You can find all the necessary details on the [Application components](application-components.md) page, and the [Quick start guide](guides/quick-start-guide.md) can walk you through the process of creating your first application. The two are complementary documents, reading both is strongly recommended.
 
-HTML rendering is also fully automated, in the vast majority of cases you do not need to concern yourself with that (the only exceptions are HTML APIs, more on that below).
+HTML rendering is also fully automated, in the vast majority of cases you do not need to concern yourself with that (the only exceptions are HTML APIs, more on that in the [Rendering APIs with HTMX](guides/rendering-apis-with-htmx.md) guide).
 
 All you need to do is follow these simple rules:
 
