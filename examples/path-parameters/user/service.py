@@ -9,7 +9,7 @@ class User:
 
 
 users_by_id: dict[int, User] = {
-    i: User(id=i, name=f"User {i}", email=f"user-{i}@proton.ma") for i in range(10)
+    i: User(id=i, name=f"User {i}", email=f"user-{i}@holm.ccm") for i in range(10)
 }
 
 

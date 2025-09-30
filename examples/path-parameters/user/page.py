@@ -6,6 +6,7 @@ metadata: dict[str, str] = {"title": "User"}
 
 
 async def page() -> Component:
+    # Load users using an async service.
     users = await list_users()
     return html.div(
         html.h1("Users:"),
