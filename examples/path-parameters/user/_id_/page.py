@@ -21,13 +21,12 @@ def metadata(id: int, user: DependsUser) -> dict[str, str]:
     Just to show that the user was indeed loaded based on the submitted ID,
     the metadata function also uses the `id: int` argument, that is resolved
     by FastAPI from the `{id}` path parameter.
-
     """
     user_title = "Not Found" if user is None else user.name
     if user and user.id != id:
         raise ValueError(
-            "id and user.id should match, because both of values "
-            "originate from the `{id}` path parameter the client submitted."
+            "id and user.id should match, because both values originate "
+            "from the `{id}` path parameter the client submitted."
         )
     return {
         "title": f"User | {user_title}",
