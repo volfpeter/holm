@@ -167,7 +167,7 @@ def page() -> Component:
 
 Next, we'll create the users page at the `/user` URL (`user/page.py`).
 
-This pages uses the `list_users()` service to load the list of users, and displays them as a HTML list. Each list item contains an anchor tag that we can use to navigate to the user's profile page.
+This page uses the `list_users()` service to load the list of users, and displays them as a HTML list. Each list item contains an anchor tag that we can use to navigate to the user's profile page.
 
 ```python hl_lines="10 17"
 from htmy import Component, html
