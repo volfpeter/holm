@@ -3,6 +3,8 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True, kw_only=True, slots=True)
 class User:
+    """User model."""
+
     id: int
     name: str
     email: str
@@ -11,6 +13,7 @@ class User:
 users_by_id: dict[int, User] = {
     i: User(id=i, name=f"User {i}", email=f"user-{i}@holm.ccm") for i in range(10)
 }
+"""Dictionary that maps user IDs to the corresponding user objects."""
 
 
 async def list_users() -> list[User]:

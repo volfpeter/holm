@@ -17,7 +17,7 @@ Web development framework that brings the Next.js developer experience to Python
 
 ## Pre-requisite knowledge
 
-*Don't be intimidated by this section. By the time you go through the [Application components](application-components.md) document and the [Quick start guide](guides/quick-start-guide), you will have a very good intuition of how to use `holm`.*
+*Don't be intimidated by this section. By the time you go through the [Application components](application-components.md) document and the [Quick start guide](guides/quick-start-guide.md), you will have a very good intuition of how to use `holm`.*
 
 To get started, all you need is a basic understanding of:
 

@@ -2,7 +2,7 @@ from htmy import Component, html
 
 from .service import list_users
 
-metadata: dict[str, str] = {"title": "User"}
+metadata: dict[str, str] = {"title": "Users"}
 
 
 async def page() -> Component:
