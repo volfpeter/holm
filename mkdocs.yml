@@ -45,8 +45,9 @@ nav:
   - Holm: index.md
   - application-components.md
   - Guides:
-    - quick-start-guide.md
-    - rendering-apis-with-htmx.md
-    - custom-applications.md
-    - error-handling.md
+    - guides/quick-start-guide.md
+    - guides/path-parameters.md
+    - guides/rendering-apis-with-htmx.md
+    - guides/custom-applications.md
+    - guides/error-handling.md
   - API Reference: api.md

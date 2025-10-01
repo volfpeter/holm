@@ -12,9 +12,9 @@ This example will get you up and running quickly by demonstrating the following 
 
 The entire source code of this application can be found in the [examples/quick-start-guide](https://github.com/volfpeter/holm/tree/main/examples/quick-start-guide) directory of the repository.
 
-## Create the application structure
+Before you continue, make sure you have installed `holm` and either `uvicorn` or `fastapi-cli` (`pip install holm uvicorn` or `pip install holm fastapi-cli`)!
 
-Before starting this guide, make sure you have installed `holm` and either `uvicorn` or `fastapi-cli` with `pip` (`pip install holm uvicorn` or `pip install holm fastapi-cli`)!
+## Create the application structure
 
 First, create the following directory structure:
 
@@ -32,7 +32,7 @@ my_app/
 
 Create `main.py` to initialize your `holm` application:
 
-```python
+```python hl_lines="1 3"
 from holm import App
 
 app = App()
@@ -44,7 +44,7 @@ This is all you need! The `App()` call will automatically discover and register 
 
 Create `layout.py` to define your application's root layout:
 
-```python
+```python hl_lines="6-7 9 15 18-20 32"
 from htmy import Component, ComponentType, Context, component, html
 
 from holm import Metadata
@@ -84,11 +84,15 @@ def layout(children: ComponentType, context: Context) -> Component:
     )
 ```
 
+It is a usual, minimal HTML document, which uses PicoCSS to add some default styling.
+
+The layout itself is a `htmy` function component. This makes the `htmy` rendering context available in the layout (see the `context` argument). Page metadata is added to the `htmy` context by pages that define a `metadata` mapping or function. Being able to access the metadata (with `Metadata.from_context(context)`) is important, because this is how `htmy` components (in this case the layout) can get access to page-specific information, such as the desired page title.
+
 ## Create your home page
 
 Create `page.py` for your home page:
 
-```python
+```python hl_lines="4"
 from htmy import Component, html
 
 # Static metadata for this page
@@ -110,11 +114,17 @@ def page() -> Component:
     )
 ```
 
+There are three interesting parts in the page implementation:
+
+- How `metadata` is set by the page to provide the title for the layout.
+- There is no manual page rendering: `page` is a simple FastAPI dependency, the value it returns is passed to its owner layout as is (see the layout's first argument), and `holm` takes care of rendering automatically.
+- There is no explicit FastAPI route registration, `holm` does it automatically for you.
+
 ## Create an about page with dynamic metadata
 
 Create `about/__init__.py` (empty file) and `about/page.py`:
 
-```python
+```python hl_lines="4 14"
 from htmy import Component, html
 
 
@@ -145,6 +155,12 @@ async def page(featured: bool = False) -> Component:
         html.a("Featured version", href="/about?featured=true"),
     )
 ```
+
+The about page differs from the home page in two important aspects.
+
+First is the `metadata`, which is a function in this case, or more precisely a FastAPI dependency, that returns the metadata mapping for the page. Being a FastAPI dependency means that if a `featured` query parameter is provided, it will be automatically passed to this function by FastAPI. You could of course use any other FastAPI dependency here.
+
+Second is the `page` function, which also has a `featured` query parameter. As you might have guessed, just like `metadata`, `page` is also a FastAPI dependency. In this case these two dependencies have the same arguments, but it is not necessary to be like this! `page` and `metadata` could both have totally different dependencies, `holm` and FastAPI takes care of their correct handling for you!
 
 That's it! You now have a working application. From here, you can add more pages, create nested layouts, add API endpoints, and explore the full power of FastAPI, `htmy`, and FastHX.
 

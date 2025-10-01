@@ -30,7 +30,7 @@ dev = [
 
 [tool.mypy]
 strict = true
-exclude = ["examples/minimal", "examples/quick-start-guide"]
+exclude = ["examples/minimal", "examples/quick-start-guide", "examples/rendering-apis-with-htmx"]
 explicit_package_bases = true
 show_error_codes = true
 

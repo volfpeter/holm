@@ -50,17 +50,19 @@ Note on rendering APIs:
 
 ## Path parameters as package names
 
-You can capture URL path parameters by using special package names. Two formats are supported:
+Routes with path parameters, also often referred to as "dynamic routes", are essential to almost all applications. A simple example is a user profile page, served at `/user/{id}` for example, where we want to display information about the user with the given ID.
+
+You can capture dynamic URL path parameters by using special package names. Two formats are supported:
 
 - `_param_` format: package names like `_id_` or `_user_id_`.
 - `{param}` format: package names like `{id}` or `{user_id}`. *(Note: it works with `holm`, but static code analysis tools flag it because `{id}` is not a valid Python identifier.)*
 
 Both formats are converted to FastAPI path parameters. For example:
 
-- File path `user/_id_/profile` becomes URL `/user/{id}/profile`.
-- File path `user/{user_id}/settings` becomes URL `/user/{user_id}/settings`.
+- File path `user/_id_/page.py` becomes URL `/user/{id}`.
+- File path `user/{user_id}/settings/page.py` becomes URL `/user/{user_id}/settings`.
 
-Any layout or page within these packages can access the parameter as a FastAPI dependency by adding it to their function signature (e.g., `id: int` or `user_id: str`).
+Any layout or page within these packages can access the path parameter as a FastAPI dependency by adding it to their function signature (e.g., `id: int` or `user_id: str`).
 
 ## Private packages
 

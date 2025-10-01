@@ -17,6 +17,8 @@ Web development framework that brings the Next.js developer experience to Python
 
 ## Pre-requisite knowledge
 
+*Don't be intimidated by this section. By the time you go through the [Application components](application-components.md) document and the [Quick start guide](guides/quick-start-guide.md), you will have a very good intuition of how to use `holm`.*
+
 To get started, all you need is a basic understanding of:
 
 - [FastAPI](https://fastapi.tiangolo.com/tutorial/): the underlying web framework.
@@ -52,9 +54,9 @@ Similarly to Next.js, `holm` is built around the concept of file-system based ro
 - You do not need to manually define routes, every [application component](application-components.md) is automatically discovered and registered in the application.
 - You do not need to manually wrap pages in their layouts, it is automatically done based on your application's code structure.
 
-You can find all the necessary details on the [Application components](application-components.md) page, and the [Quick start guide](quick-start-guide.md) can walk you through the process of creating your first application. The two are complementary documents, reading both is strongly recommended.
+You can find all the necessary details on the [Application components](application-components.md) page, and the [Quick start guide](guides/quick-start-guide.md) can walk you through the process of creating your first application. The two are complementary documents, reading both is strongly recommended.
 
-HTML rendering is also fully automated, in the vast majority of cases you do not need to concern yourself with that (the only exceptions are HTML APIs, more on that below).
+HTML rendering is also fully automated, in the vast majority of cases you do not need to concern yourself with that (the only exceptions are HTML APIs, more on that in the [Rendering APIs with HTMX](guides/rendering-apis-with-htmx.md) guide).
 
 All you need to do is follow these simple rules:
 
@@ -63,13 +65,13 @@ All you need to do is follow these simple rules:
 
 ## Examples
 
-If you prefer to learn through examples, the [Quick start guide](quick-start-guide.md) is the best place to start.
+If you prefer to learn through examples, the [Quick start guide](guides/quick-start-guide.md) is the best place to start.
 
-To learn about creating rendering APIs and adding HTMX to your application, you should have a look at the [Rendering APIs with HTMX](rendering-apis-with-htmx.md) guide.
+To learn about creating rendering APIs and adding HTMX to your application, you should have a look at the [Rendering APIs with HTMX](guides/rendering-apis-with-htmx.md) guide.
 
-The [Custom applications](custom-applications.md) guide shows you how to customize the FastAPI application instance as well as HTML rendering.
+The [Custom applications](guides/custom-applications.md) guide shows you how to customize the FastAPI application instance as well as HTML rendering.
 
-For error handling examples, you should check out the [Error Handling](error-handling.md) guide.
+For error handling examples, you should check out the [Error Handling](guides/error-handling.md) guide.
 
 You can discover even more features by exploring the [test application](https://github.com/volfpeter/holm/tree/main/test_app) of the project.
 

@@ -6,7 +6,7 @@ Before you continue, make sure you have the basic application from the [quick st
 
 As a reminder, you must write standard FastAPI error handlers (async functions with a `Request` and an `Exception` argument), as you would in any FastAPI application. The only difference is that error handlers can return `htmy.Component`s as well as FastAPI `Response` objects.
 
-For additional rules and recommendations on error handling, please read the corresponding section of the [Application components](application-components.md) guide.
+For additional rules and recommendations on error handling, please read the corresponding section of the [Application components](../application-components.md) guide.
 
 With all that said, let's set up error handling by adding the `error.py` file to the root of our project (next to `main.py`).
 

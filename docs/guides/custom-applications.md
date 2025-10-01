@@ -19,7 +19,7 @@ The below example demonstrates these steps as simply as possible, through creati
 
 If you followed the [quick-start-guide](quick-start-guide.md), then you can make these changes in the `main.py` file and immediately see the result in action.
 
-```python
+```python hl_lines="6-14 17 26"
 from fastapi import FastAPI
 from fasthx.htmy import HTMY
 

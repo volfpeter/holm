@@ -26,7 +26,9 @@ Web development framework that brings the Next.js developer experience to Python
 
 ## Pre-requisite knowledge
 
-To get started, all you need is a basic understanding of:
+*Don't be intimidated by this section. By the time you go through the [Application components](https://volfpeter.github.io/holm/application-components) document and the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide), you will have a very good intuition of how to use `holm`.*
+
+To get started, all you need is a *basic* understanding of:
 
 - [FastAPI](https://fastapi.tiangolo.com/tutorial/): the underlying web framework.
 - [htmy](https://volfpeter.github.io/htmy/): the used component / templating and rendering library.
@@ -61,9 +63,9 @@ Similarly to Next.js, `holm` is built around the concept of file-system based ro
 - You do not need to manually define routes, every [application component](https://volfpeter.github.io/holm/application-components) is automatically discovered and registered in the application.
 - You do not need to manually wrap pages in their layouts, it is automatically done based on your application's code structure.
 
-You can find all the necessary details on the [Application components](https://volfpeter.github.io/holm/application-components) page, and the [Quick start guide](https://volfpeter.github.io/holm/quick-start-guide) can walk you through the process of creating your first application. The two are complementary documents, reading both is strongly recommended.
+You can find all the necessary details on the [Application components](https://volfpeter.github.io/holm/application-components) page, and the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide) can walk you through the process of creating your first application. The two are complementary documents, reading both is strongly recommended.
 
-HTML rendering is also fully automated, in the vast majority of cases you do not need to concern yourself with that (the only exceptions are HTML APIs, more on that below).
+HTML rendering is also fully automated, in the vast majority of cases you do not need to concern yourself with that (the only exceptions are HTML APIs, more on that in the [Rendering APIs with HTMX](https://volfpeter.github.io/holm/guides/rendering-apis-with-htmx) guide).
 
 All you need to do is follow these simple rules:
 
@@ -72,13 +74,13 @@ All you need to do is follow these simple rules:
 
 ## Examples
 
-If you prefer to learn through examples, the [Quick start guide](https://volfpeter.github.io/holm/quick-start-guide) is the best place to start.
+If you prefer to learn through examples, the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide) is the best place to start.
 
-To learn about creating rendering APIs and adding HTMX to your application, you should have a look at the [Rendering APIs with HTMX](https://volfpeter.github.io/holm/rendering-apis-with-htmx) guide.
+To learn about creating rendering APIs and adding HTMX to your application, you should have a look at the [Rendering APIs with HTMX](https://volfpeter.github.io/holm/guides/rendering-apis-with-htmx) guide.
 
-The [Custom applications](https://volfpeter.github.io/holm/custom-applications) guide shows you how to customize the FastAPI application instance as well as HTML rendering.
+The [Custom applications](https://volfpeter.github.io/holm/guides/custom-applications) guide shows you how to customize the FastAPI application instance as well as HTML rendering.
 
-For error handling examples, you should check out the [Error Handling](https://volfpeter.github.io/holm/error-handling) guide.
+For error handling examples, you should check out the [Error Handling](https://volfpeter.github.io/holm/guides/error-handling) guide.
 
 You can discover even more features by exploring the [test application](https://github.com/volfpeter/holm/tree/main/test_app) of the project.
 

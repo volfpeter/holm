@@ -19,7 +19,7 @@ The entire source code of this application can be found in the [examples/renderi
 
 Modify `layout.py` to include the HTMX script and enable `hx-boost` on the `nav` tag for enhanced navigation:
 
-```python
+```python hl_lines="21 30"
 from htmy import Component, ComponentType, Context, component, html
 
 from holm import Metadata
@@ -74,7 +74,7 @@ Note: `holm` applies file-system based routing to both pages and APIs! Actually,
 
 The API we create will be very simple, it will have a single `/welcome-message` route that returns a welcome message in a randomly chosen language. The returned message is itself a `htmy` `Component`, so all we need to do is decorate the path operation function with `@htmy.hx()`. You can learn more about using `fasthx.htmy.HTMY` [here](https://volfpeter.github.io/fasthx/examples/htmy/).
 
-```python
+```python hl_lines="16 18 20-21 25"
 import random
 
 from fastapi import APIRouter
@@ -121,7 +121,7 @@ These two attributes together will replace the displayed welcome message every t
 
 For the sake of completeness, we also wrap the link at the bottom in a `div` and use `hx_boost` as before to enhance the navigation experience.
 
-```python
+```python hl_lines="12-13"
 from htmy import Component, html
 
 # Static metadata for this page
