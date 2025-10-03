@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import inspect
+import logging
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from importlib import import_module
@@ -137,7 +138,13 @@ class PackageInfo:
 
         # Support applications that are not wrapped in a Python package.
         # In that case `self.package_name` is ".".
-        module = import_module(name if self.package_name == "." else f"{self.package_name}.{name}")
+        import_name = name if self.package_name == "." else f"{self.package_name}.{name}"
+        try:
+            module = import_module(import_name)
+        except Exception:
+            # Handle potential misconfigurations with a simple warning, instead of an exception.
+            logging.getLogger("holm").warning(f"Failed to import module {name} at: {import_name}")
+            return None
 
         if not validate(module):
             raise ValueError(f"Invalid module: {name}")
