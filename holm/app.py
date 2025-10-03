@@ -137,18 +137,21 @@ def _discover_app_packages(config: AppConfig) -> set[PackageInfo]:
     @lru_cache()
     def is_excluded(path: Path) -> bool:
         """Returns whether the given file or package path should be excluded from the application."""
-        rel_path = path.relative_to(config.root_dir)
         return any(
             # Exclude if a path segment starts with an underscore but does not end with one.
             # Path segments that both start and end with an underscore represent path parameters!
-            p.startswith("_") and not p.endswith("_")
-            for p in rel_path.parts
+            (p.startswith("_") and not p.endswith("_"))
+            # Also exclude paths that start with a dot (virtual env, git, etc.)
+            or p.startswith(".")
+            for p in path.parts
         )
 
     return {
         PackageInfo.from_marker_file(f, config=config)
         for f in config.app_dir.rglob("*.py")
-        if f.stem in module_names and not is_excluded(f.parent)  # Pass the parent to make use of caching
+        if f.stem in module_names
+        # Pass the relative path of the parent to make the best use of caching
+        and not is_excluded(f.parent.relative_to(config.root_dir))
     }
 
 
