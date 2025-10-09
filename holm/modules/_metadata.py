@@ -50,14 +50,14 @@ class Metadata(ContextAware):
 
     __slots__ = ("_metadata",)
 
-    def __init__(self, metadata: MetadataMapping) -> None:
+    def __init__(self, metadata: MetadataMapping | None = None) -> None:
         """
         Initialization.
 
         Arguments:
             metadata: The actual metadata mapping.
         """
-        self._metadata = metadata
+        self._metadata = {} if metadata is None else metadata
         """The metadata mapping."""
 
     @overload
@@ -116,8 +116,4 @@ def components_with_metadata(data: tuple[Component, MetadataMapping | None]) -> 
     # This allows `Metadata.from_context()` to be used in all wrapped components.
     # The received components object is usually a ComponentSequence (doctype and html components),
     # so converting to a component sequence seems a tiny bit more efficient.
-    return (
-        components
-        if metadata is None
-        else Metadata(metadata).in_context(*as_component_sequence(components))
-    )
+    return Metadata(metadata).in_context(*as_component_sequence(components))
