@@ -119,9 +119,9 @@ def _build_api(
             api.post(
                 "/",
                 response_model=None,
-                name="page",
+                name="submit",
                 description=submit_handler_dep.__doc__,
-                tags=["Page"],
+                tags=["Page", "Submit"],
             )(htmy.page(components_with_metadata)(path_operation))
 
     for sub_url, child_node in node.subtree.items():
