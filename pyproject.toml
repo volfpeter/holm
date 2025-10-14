@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.115.12",
-    "fasthx>=3.0.0",
+    "fasthx>=3.0.1",
     "htmy[lxml]>=0.8.2",
 ]
 
@@ -23,6 +23,7 @@ dev = [
     "poethepoet>=0.35.0",
     "pytest>=8.3.5",
     "pytest-random-order>=1.1.1",
+    "python-multipart>=0.0.20",
     "ruff>=0.12.0",
     "uvicorn>=0.34.1",
     "watchfiles>=1.1.0",
