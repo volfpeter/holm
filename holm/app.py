@@ -120,7 +120,7 @@ def _build_api(
                 "/",
                 response_model=None,
                 name="page",
-                description=page_dep.__doc__,
+                description=submit_handler_dep.__doc__,
                 tags=["Page"],
             )(htmy.page(components_with_metadata)(path_operation))
 
