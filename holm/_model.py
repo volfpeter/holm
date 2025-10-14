@@ -142,8 +142,12 @@ class PackageInfo:
         try:
             module = import_module(import_name)
         except Exception:
+            import traceback
+
             # Handle potential misconfigurations with a simple warning, instead of an exception.
-            logging.getLogger("holm").warning(f"Failed to import module {name} at: {import_name}")
+            logger = logging.getLogger("holm")
+            logger.warning(f"Failed to import module {name} at: {import_name}")
+            logger.warning(traceback.format_exc())
             return None
 
         if not validate(module):
