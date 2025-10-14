@@ -3,10 +3,13 @@ from typing import Any, Protocol, TypeAlias, TypeGuard
 from holm.fastapi import FastAPIDependency
 
 Page: TypeAlias = FastAPIDependency[Any]
-"""FastAPI dependency that returns the properties for the layout that wraps it
-(for example a `Component`).
+"""FastAPI page dependency.
 
-If the page is not wrapped by a layout, then it must return a `Component`
+A page may return either the properties for the layout that wraps it (for example a `Component`)
+or a FastAPI `Response`.
+
+If the page is not wrapped by a layout and it doesn't return a `Response`,
+then it must return a `Component`.
 """
 
 
