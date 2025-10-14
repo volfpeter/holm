@@ -9,8 +9,8 @@ This section summarizes the different components of `holm` applications. If you 
 Rules for *layouts*:
 
 - The root layout must always return a `htmy.Component`.
-- The `layout` variable must be a callable and it must accept a positional argument (other than `self` if the layout is a method of a class), the data / properties of the layout that are returned by the pages or layouts this layout directly wraps.
-- The `layout` variable can have additional arguments (position or keyword and keyword-only, but not positional-only). These arguments must be FastAPI dependencies. They will be automatically resolved during each request.
+- `layout` must be a callable and it must accept a positional argument (other than `self` if the layout is a method of a class), the data / properties of the layout that are returned by the pages or layouts this layout directly wraps.
+- `layout` can have additional arguments (position or keyword and keyword-only, but not positional-only). These arguments must be FastAPI dependencies. They will be automatically resolved during each request.
 - Returning a tuple or a list from a layout is **not allowed** unless the value is a `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
 
 Layouts automatically wrap all layouts and pages in subpackages.
@@ -21,10 +21,13 @@ Layouts automatically wrap all layouts and pages in subpackages.
 
 Rules for *pages*:
 
-- The `page` variable must be a FastAPI dependency, meaning it can have any arguments as long as they can all be resolved by FastAPI as dependencies.
-- The `page` variable must return the properties object for the layout that directly wraps it.
+- `page` must be a FastAPI dependency, meaning it can have any arguments as long as they can all be resolved by FastAPI as dependencies.
+- `page` must return the properties object for the layout that directly wraps it.
 - If a page is not wrapped by a layout, then it must return a `htmy.Component`.
 - Returning a tuple or a list from a page is **not allowed** unless the value is a `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
+- `page` can directly return a FastAPI `Response` as well, which is always returned as is.
+
+### Page metadata
 
 `page.py` modules can have a `metadata` variable, which can be an arbitrary mapping or a FastAPI dependency that returns an arbitrary mapping.
 
@@ -33,6 +36,20 @@ If the `metadata` variable is a callable, it can have any FastAPI dependencies, 
 The metadata provided by the currently served page is made available to every `htmy.Component` (from the root layout to the page itself) through the built-in `Metadata` utility. It can be accessed as `Metadata.from_context(context)` where `context` is the `htmy` rendering context which is passed to every component. See the [htmy documentation](https://volfpeter.github.io/htmy/#context) for more information.
 
 This feature is particularly useful when page-specific information - for example title, description, or keywords - must be set dynamically (for example, in layouts) on a page-by-page basis. `Metadata` implements the `Mapping` protocol, so once loaded from the `htmy` rendering context in a component with `metadata = Metadata.from_context(context)`, you can use it simply like this to set page-specific information in any layout, component, or the page itself: `htmy.html.title(metadata["title"])`.
+
+### Page submit handlers
+
+`page.py` modules can also define a callable `handle_submit` variable. The same rendering logic and rules apply to it as to the `page` variable itself. The only difference is that for `handle_submit`, a HTTP `POST` route is created.
+
+`handle_submit`, together with `page`, offer a convenient way to handle form submission in your application.
+
+*Note: Form handling requires `python-multipart` to be installed.*
+
+The default HTML `<form>` action is to submit the form to the current URL using a HTTP GET request. This means if you have a form in your `page` (or `layout`), and you do not set `action` and `method`, your form's submission will be handled by your current `page` by default (your GET route). This is useful for search and filtering forms for example.
+
+For forms that trigger state change on the server, you should set the form `method` to `POST`. This is important from a CSRF prevention perspective, and it also ensures the submitted form will be handled by your `handle_submit` function (your POST route), instead of your `page` function.
+
+You can of course set `action` to some URL. In that case the same logic applies, but instead of triggering the `page` or `handle_submit` function that belong to the current URL, it will trigger them in the `page.py` or `api.py` module that handles the given URL.
 
 ## APIs
 
