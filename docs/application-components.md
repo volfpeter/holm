@@ -43,8 +43,6 @@ This feature is particularly useful when page-specific information - for example
 
 `handle_submit`, together with `page`, offer a convenient way to handle form submission in your application.
 
-*Note: Form handling requires `python-multipart` to be installed.*
-
 The default HTML `<form>` action is to submit the form to the current URL using a HTTP GET request. This means if you have a form in your `page` (or `layout`), and you do not set `action` and `method`, your form's submission will be handled by your current `page` by default (your GET route). This is useful for search and filtering forms for example.
 
 For forms that trigger state change on the server, you should set the form `method` to `POST`. This is important from a CSRF prevention perspective, and it also ensures the submitted form will be handled by your `handle_submit` function (your POST route), instead of your `page` function.

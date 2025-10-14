@@ -8,6 +8,7 @@ dependencies = [
     "fastapi>=0.115.12",
     "fasthx>=3.0.1",
     "htmy[lxml]>=0.8.2",
+    "python-multipart>=0.0.20"
 ]
 
 [build-system]
@@ -23,7 +24,6 @@ dev = [
     "poethepoet>=0.35.0",
     "pytest>=8.3.5",
     "pytest-random-order>=1.1.1",
-    "python-multipart>=0.0.20",
     "ruff>=0.12.0",
     "uvicorn>=0.34.1",
     "watchfiles>=1.1.0",
@@ -31,7 +31,7 @@ dev = [
 
 [tool.mypy]
 strict = true
-exclude = ["examples/minimal", "examples/quick-start-guide", "examples/rendering-apis-with-htmx"]
+exclude = ["examples/forms", "examples/minimal", "examples/quick-start-guide", "examples/rendering-apis-with-htmx"]
 explicit_package_bases = true
 show_error_codes = true
 
