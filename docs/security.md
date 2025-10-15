@@ -4,7 +4,7 @@ While `holm` is built on top of the secure foundations of FastAPI and can take a
 
 ## XSS prevention
 
-`holm` uses `htmy` under the hood, which performs XML/HTML escaping by default. You can find more information about this in the [htmy documentation](https://volfpeter.github.io/htmy/#XSS-prevention).
+`holm` uses `htmy` under the hood, which performs XML/HTML escaping by default. You can find more information about this in the [htmy documentation](https://volfpeter.github.io/htmy/#xss-prevention).
 
 ## Cross-Site Request Forgery (CSRF) prevention
 
