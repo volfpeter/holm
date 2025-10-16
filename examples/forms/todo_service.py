@@ -10,7 +10,10 @@ class Todo:
 
 
 todos = [
-    Todo(title="Home page", description="It should show the list of TODOs."),
+    Todo(
+        title="Home page",
+        description="It should show the list of TODOs.",
+    ),
     Todo(
         title="Add filtering",
         description="Add a form that filters the TODO list using substring search on the title.",

@@ -5,13 +5,14 @@ from holm import Metadata
 
 
 @component.context_only
-def _head(context: Context) -> html.head:
+def head(context: Context) -> html.head:
     """
     Helper component that returns the entire head element of the page.
 
-    It uses `Metadata` to correctly set the page title. This way we do not need
-    to access the `htmy` context in the layout itself, so that doesn't need to
-    be a `htmy` component, it can be a simple `holm` layout function with dependencies.
+    It uses `Metadata` to correctly set the page title. This way we do not
+    need to access the `htmy` context in the layout itself, so the layout
+    doesn't need to be a `htmy` component, it can be a simple `holm` layout
+    function with dependencies.
     """
     metadata = Metadata.from_context(context)
     return html.head(
@@ -24,38 +25,45 @@ def _head(context: Context) -> html.head:
     )
 
 
+def search_form(q: str, *, autofocus: bool) -> html.form:
+    """
+    Search form for the layout.
+
+    Arguments:
+        q: The current value of the `q` input.
+        autofocus: Whether the search input should be focused on page load.
+    """
+    return html.form(
+        html.input_(
+            type="search",
+            name="q",  # The name of our filter query parameter.
+            value=q,  # Keep the value of the input field.
+            placeholder="Search...",
+            # Focus automatically after GET requests. autofocus is a bool HTML
+            # attribute, so to disable it, we must either omit the attribute or
+            # use the XBool htmy utility.
+            autofocus=XBool.true if autofocus else XBool.false,
+        ),
+        html.button("Find", type="submit"),
+        role="search",
+    )
+
+
 def layout(children: ComponentType, request: Request, q: str = "") -> Component:
     """Root layout wrapping all pages."""
     return (
         html.DOCTYPE.html,
         html.html(
-            # Use our _head component.
-            _head(),
+            # Use our head component.
+            head(),
             html.body(
                 html.header(
-                    # Global search form, present in all pages, always submitted with a GET request to
-                    # the current URL. The q query parameter contains the search query, this is why
-                    # the layout has a q query parameter dependency. Pages can also use this dependency
-                    # to filter their content.
-                    html.form(
-                        # This is the form for searching TODOs.
-                        # It is submitted to the current URL by default with a HTTP GET request,
-                        # so the page itself will handle the form submission.
-                        # This is why the page has an optional title query parameter dependency,
-                        # whose name matches the name of the input field.
-                        html.input_(
-                            type="search",
-                            name="q",
-                            # Keep the value of the input field.
-                            value=q,
-                            # Focus automatically after GET requests. autofocus is a bool HTML
-                            # attribute, so to set it to False, we must use the XBool utility.
-                            autofocus=XBool.true if request.method == "GET" else XBool.false,
-                            placeholder="Search by title",
-                        ),
-                        html.button("Find", type="submit"),
-                        role="search",
-                    ),
+                    # Global search form, present in all pages, always submitted
+                    # with a GET request to the current URL. The input named "q"
+                    # contains the search query in the HTML, this is why the
+                    # layout has a matching q query parameter dependency.
+                    # Pages can  usethe same dependency for filtering.
+                    search_form(q, autofocus=request.method == "GET"),
                     class_="container",
                 ),
                 html.main(children, class_="container"),
