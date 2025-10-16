@@ -48,6 +48,7 @@ nav:
   - Guides:
     - guides/quick-start-guide.md
     - guides/path-parameters.md
+    - guides/forms.md
     - guides/rendering-apis-with-htmx.md
     - guides/custom-applications.md
     - guides/error-handling.md
