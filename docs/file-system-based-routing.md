@@ -43,7 +43,7 @@ my_app/
 
 ### Pages and layouts
 
-A `page.py` file makes a route segment publicly accessible as (typically) a HTML page. Based on the example structure, `holm` will generate the following page routes:
+A `page.py` file makes a route segment publicly accessible as (typically) an HTML page. Based on the example structure, `holm` will generate the following page routes:
 
 - `my_app/page.py` creates the root route at `/`, because `page.py` is in the root application package.
 - `my_app/users/page.py` creates the route at `/users`, because the page module is in the `users` package.
@@ -73,7 +73,7 @@ In our example, the `_components/` directory is such a private package.
 
 This allows you to organize your internal components logically without exposing them as endpoints.
 
-*Note: A package name like `_user_id_` which is surrounded by underscores is treated as a [dynamic route segment](application-components.md#path-parameters-as-package-names), not a private package.*
+_Note: A package name like `\_user_id_` which is surrounded by underscores is treated as a [dynamic route segment](application-components.md#path-parameters-as-package-names), not a private package.\_
 
 ### Colocation
 
@@ -81,7 +81,7 @@ Besides the special files (`page.py`, `layout.py`, `api.py`, etc.), you can plac
 
 In the example, `my_app/navbar.py` is not a special file, so it is not routable. It can define any components or utilities, like a `Navbar`, which can then be imported and used in the layouts, pages, or APIs of the application.
 
-`holm` also doesn't consider anything that's outside of the application package as an application component. We could create a `my_components/` directory next to `my_app/` and have anything in it, including `page.py` files for example. The content of this package would be ignored by `holm`, this package is not within the application package.
+`holm` also doesn't consider anything outside the application package as an application component. We could create a `my_components/` directory next to `my_app/` and have anything in it, including `page.py` files for example. The content of this package would be ignored by `holm`, it is not within the application package.
 
 ### Submit handlers
 
