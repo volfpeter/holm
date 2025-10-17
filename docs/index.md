@@ -49,7 +49,7 @@ Consider supporting the development and maintenance of the project through [spon
 
 ## Application structure
 
-Similarly to Next.js, `holm` is built around the concept of file-system based routing. This essentially means that your code structure is automatically mapped to a matching API:
+Similarly to Next.js, `holm` is built around the concept of [file-system based routing](file-system-based-routing.md). This essentially means that your code structure is automatically mapped to a matching API:
 
 - You do not need to manually define routes, every [application component](application-components.md) is automatically discovered and registered in the application.
 - You do not need to manually wrap pages in their layouts, it is automatically done based on your application's code structure.

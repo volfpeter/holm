@@ -44,6 +44,7 @@ markdown_extensions:
 nav:
   - Holm: index.md
   - application-components.md
+  - file-system-based-routing.md
   - security.md
   - Guides:
     - guides/quick-start-guide.md
