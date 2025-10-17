@@ -62,7 +62,7 @@ def layout(children: ComponentType, request: Request, q: str = "") -> Component:
                     # with a GET request to the current URL. The input named "q"
                     # contains the search query in the HTML, this is why the
                     # layout has a matching q query parameter dependency.
-                    # Pages can  usethe same dependency for filtering.
+                    # Pages can use the same dependency for filtering.
                     search_form(q, autofocus=request.method == "GET"),
                     class_="container",
                 ),
