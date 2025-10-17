@@ -73,7 +73,7 @@ In our example, the `_components/` directory is such a private package.
 
 This allows you to organize your internal components logically without exposing them as endpoints.
 
-_Note: A package name like `\_user_id_` which is surrounded by underscores is treated as a [dynamic route segment](application-components.md#path-parameters-as-package-names), not a private package.\_
+*Note: A package name like `_user_id_` which is surrounded by underscores is treated as a [dynamic route segment](application-components.md#path-parameters-as-package-names), not a private package.*
 
 ### Colocation
 
