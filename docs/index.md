@@ -77,12 +77,6 @@ You can discover even more features by exploring the [test application](https://
 
 If you are looking for the simplest possible application you can create, then can find it in the [examples/minimal](https://github.com/volfpeter/holm/tree/main/examples/minimal) directory of the repository.
 
-## Security
-
-At the moment, the library **does not** provide security features like automatic **CSRF prevention** out of the box. A custom form component and a corresponding middleware may be added to the library later, but of course 3rd party implementations are very welcome! Alternative solutions include JavaScript, but the library aims to remain unopinionated, especially on the client front. If you use HTMX, you should check out their [CSRF prevention](https://htmx.org/docs/#csrf-prevention) recommendation, just keep in mind that the `<body>` tag is not swapped for boosted requests.
-
-Also, do not forget about **XSS prevention**, when rendering untrusted data with custom components!
-
 ## AI assistance
 
 The library and all its dependencies are registered at [Context7](https://context7.com/volfpeter).

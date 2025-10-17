@@ -44,9 +44,11 @@ markdown_extensions:
 nav:
   - Holm: index.md
   - application-components.md
+  - security.md
   - Guides:
     - guides/quick-start-guide.md
     - guides/path-parameters.md
+    - guides/forms.md
     - guides/rendering-apis-with-htmx.md
     - guides/custom-applications.md
     - guides/error-handling.md

@@ -180,6 +180,6 @@ fastapi dev main.py
 
 Visit these URLs to see your application in action:
 
-- `http://localhost:8000/`: Home page
+- `http://localhost:8000`: Home page
 - `http://localhost:8000/about`: About page
 - `http://localhost:8000/about?featured=true`: About page with dynamic content

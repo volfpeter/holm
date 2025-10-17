@@ -31,13 +31,23 @@ def get_metadata_dependency(obj: Any) -> FastAPIDependency[MetadataMapping | Non
     If the object is not a `MetadataOwner`, the dependency will simply return `None`.
     """
     metadata = getattr(obj, "metadata", None)
-    if metadata is None or isinstance(metadata, Mapping):
+    if metadata is None:
+        return empty_metadata_dep
+
+    if isinstance(metadata, Mapping):
         return lambda: metadata
 
     if callable(metadata):
         return metadata  # type: ignore[no-any-return]
 
     raise ValueError(f"Invalid metadata object: {metadata}")
+
+
+def empty_metadata_dep() -> None:
+    """
+    Metadata dependency that returns `None`.
+    """
+    return None
 
 
 class Metadata(ContextAware):

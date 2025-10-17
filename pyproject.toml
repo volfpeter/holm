@@ -6,8 +6,9 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.115.12",
-    "fasthx>=3.0.0",
+    "fasthx>=3.0.1",
     "htmy[lxml]>=0.8.2",
+    "python-multipart>=0.0.20"
 ]
 
 [build-system]
@@ -30,7 +31,7 @@ dev = [
 
 [tool.mypy]
 strict = true
-exclude = ["examples/minimal", "examples/quick-start-guide", "examples/rendering-apis-with-htmx"]
+exclude = ["examples/forms", "examples/minimal", "examples/quick-start-guide", "examples/rendering-apis-with-htmx"]
 explicit_package_bases = true
 show_error_codes = true
 

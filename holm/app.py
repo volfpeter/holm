@@ -2,15 +2,21 @@ import inspect
 from collections.abc import Awaitable, Iterable
 from functools import lru_cache
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
 
-from fastapi import APIRouter, Depends, FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Depends, FastAPI, Response
 from fasthx.htmy import HTMY
 from htmy import Component, as_component_type
 
 from ._model import AppConfig, AppNode, PackageInfo
 from .fastapi import FastAPIDependency
+from .module_options._metadata import (
+    MetadataMapping,
+    components_with_metadata,
+    empty_metadata_dep,
+    get_metadata_dependency,
+)
+from .module_options._submit_handler import get_submit_handler
 from .modules._api import PlainAPIFactory, RenderingAPIFactory, is_api_definition
 from .modules._error import is_error_handler_owner, register_error_handlers
 from .modules._layout import (
@@ -19,7 +25,6 @@ from .modules._layout import (
     empty_layout_dependency,
     is_layout_definition,
 )
-from .modules._metadata import MetadataMapping, components_with_metadata, get_metadata_dependency
 from .modules._page import is_page_definition
 from .typing import module_names
 
@@ -77,32 +82,46 @@ def _build_api(
         layout_dep = combine_layouts_to_dependency(
             base_layout_dep, None if layout_module is None else layout_module.layout
         )
-        page_dep = None if page_module is None else page_module.page
+        page_dep, submit_handler_dep, metadata_dep = (
+            (None, None, None)
+            if page_module is None
+            else (
+                page_module.page,
+                get_submit_handler(page_module),
+                get_metadata_dependency(page_module),
+            )
+        )
 
         if page_dep is not None:
-            metadata_dep = get_metadata_dependency(page_module)
-
-            async def path_operation(
-                layout: LayoutFactory = Depends(layout_dep),  # noqa: B008
-                metadata: MetadataMapping | None = Depends(metadata_dep),  # noqa: B008
-                page: Component = Depends(page_dep),  # noqa: B008
-            ) -> tuple[Component, MetadataMapping | None]:
-                result = layout(as_component_type(page))
-                # We must await here if result is an Awaitable, otherwise we would pass an
-                # awaitable to htmy.page() and rendering that would fail.
-                if isinstance(result, Awaitable):
-                    result = await result
-
-                return result, metadata
+            path_operation = _make_page_path_operation(
+                layout_dep=layout_dep,
+                metadata_dep=empty_metadata_dep if metadata_dep is None else metadata_dep,
+                page_dep=page_dep,
+            )
 
             # Register the route with rendering.
             api.get(
                 "/",
-                response_class=HTMLResponse,
                 response_model=None,
                 name="page",
                 description=page_dep.__doc__,
                 tags=["Page"],
+            )(htmy.page(components_with_metadata)(path_operation))
+
+        if submit_handler_dep is not None:
+            path_operation = _make_page_path_operation(
+                layout_dep=layout_dep,
+                metadata_dep=empty_metadata_dep if metadata_dep is None else metadata_dep,
+                page_dep=submit_handler_dep,
+            )
+
+            # Register the route with rendering.
+            api.post(
+                "/",
+                response_model=None,
+                name="submit",
+                description=submit_handler_dep.__doc__,
+                tags=["Page", "Submit"],
             )(htmy.page(components_with_metadata)(path_operation))
 
     for sub_url, child_node in node.subtree.items():
@@ -181,3 +200,35 @@ def _make_api_router_for_package(pkg: PackageInfo | None, htmy: HTMY) -> APIRout
         return api
 
     raise ValueError(f"The api function of {cast(PackageInfo, pkg).package_name} must return an APIRouter.")
+
+
+def _make_page_path_operation(
+    *,
+    layout_dep: FastAPIDependency[LayoutFactory],
+    metadata_dep: FastAPIDependency[MetadataMapping | None],
+    page_dep: FastAPIDependency[Any],
+) -> FastAPIDependency[tuple[Component, MetadataMapping | None] | Response]:
+    """Creates the path operation for a page-like route."""
+
+    async def path_operation(
+        # Start by evaluating the page dependency, it is the most likely to raise an error
+        # (could even be a performance improvement strategy when returning a Response).
+        page: Component | Response = Depends(page_dep),  # noqa: B008
+        # Next should be the metadata dependency. It is usually relatively lightweight.
+        metadata: MetadataMapping | None = Depends(metadata_dep),  # noqa: B008
+        # Evaluate the layout dependency last. It's often a sequence of nested dependencies
+        # and it is also unlikely to fail.
+        layout: LayoutFactory = Depends(layout_dep),  # noqa: B008
+    ) -> tuple[Component, MetadataMapping | None] | Response:
+        if isinstance(page, Response):
+            return page
+
+        result = layout(as_component_type(page))
+        # We must await here if result is an Awaitable, otherwise we would pass an
+        # awaitable to htmy.page() and rendering that would fail.
+        if isinstance(result, Awaitable):
+            result = await result
+
+        return result, metadata
+
+    return path_operation
