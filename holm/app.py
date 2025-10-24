@@ -103,7 +103,8 @@ def _build_api(
             api.get(
                 "/",
                 response_model=None,
-                name="page",
+                # mypy can't infer that the modules is not None.
+                name=page_module.__name__,  # type: ignore[union-attr]
                 description=page_dep.__doc__,
                 tags=["Page"],
             )(htmy.page(components_with_metadata)(path_operation))
@@ -119,7 +120,8 @@ def _build_api(
             api.post(
                 "/",
                 response_model=None,
-                name="submit",
+                # mypy can't infer that the modules is not None.
+                name=f"{page_module.__name__}.handle_submit",  # type: ignore[union-attr]
                 description=submit_handler_dep.__doc__,
                 tags=["Page", "Submit"],
             )(htmy.page(components_with_metadata)(path_operation))

@@ -88,3 +88,17 @@ In the example, `my_app/navbar.py` is not a special file, so it is not routable.
 For any `page.py` file, you can also define a `handle_submit` function. This automatically creates a `POST` route at the same URL as the page. This is a convenient pattern for handling HTML form submissions that modify data.
 
 If `my_app/users/page.py` defines a `handle_submit` function, it will handle `POST /users` requests, and the `page` function in the same file will handle `GET /users` requests as usual.
+
+## Constructing URLs
+
+FastAPI provides two ways for constructing valid URLs for registered routes: `FastAPI.url_path_for()` and `Request.url_for()`. Both of these methods expect the path operation's name, and the route's path parameters (if any) as keyword arguments.
+
+To let you use these built-in FastAPI utilities, `holm` automatically assigns a name to every page route it registers. The name assignment logic is very simple: the name (import path) of the corresponding `page.py` module.
+
+Here are some examples:
+
+- `app.url_path_for("my_app.page")`: `/`
+- `app.url_path_for("my_app.users.page")`: `/users/`
+- `app.url_path_for("my_app.users._user_id_.page", user_id=1)`: `/users/1/`
+
+Submit handlers are also assigned a name: the name of the corresponding page's name, followed by the `.handle_submit` suffix. Since the only difference between pages and submit handlers is the used HTTP method, the URL for a submit handler is the same as the URL for the corresponding page.
