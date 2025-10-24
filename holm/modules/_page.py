@@ -17,7 +17,17 @@ class PageDefinition(Protocol):
     """Protocol definition for objects (usually modules) that define a page."""
 
     @property
-    def page(self) -> Page: ...
+    def __name__(self) -> str:
+        """
+        Page definitions are expected to have a `__name__` attribute,
+        since they are modules.
+        """
+        ...
+
+    @property
+    def page(self) -> Page:
+        """The page implementation."""
+        ...
 
 
 def is_page_definition(obj: Any) -> TypeGuard[PageDefinition]:
