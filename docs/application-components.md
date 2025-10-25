@@ -13,7 +13,7 @@ Rules for *layouts*:
 - `layout` can have additional arguments (position or keyword and keyword-only, but not positional-only). These arguments must be FastAPI dependencies. They will be automatically resolved during each request.
 - Returning a tuple or a list from a layout is **not allowed** unless the value is a `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
 
-Layouts automatically wrap all layouts and pages in subpackages.
+By default, layouts automatically wrap all layouts and pages in subpackages. You can opt out of this behavior by wrapping the return value of a layout or page with the [`without_layout` utility](utilities.md#without_layout)
 
 *Tip: layouts can provide context for their entire subtree by wrapping the subtree with a `htmy` `ContextProvider` component.*
 

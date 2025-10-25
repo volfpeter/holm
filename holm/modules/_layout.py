@@ -1,10 +1,11 @@
 import inspect
 from asyncio import iscoroutinefunction
 from collections.abc import Awaitable, Callable, Coroutine
+from dataclasses import dataclass
 from typing import Any, Protocol, TypeAlias, TypeGuard
 
 from fastapi import Depends
-from htmy import as_component_type
+from htmy import Component, as_component_type
 
 from holm.fastapi import FastAPIDependency
 
@@ -56,15 +57,38 @@ def is_layout_definition(obj: Any) -> TypeGuard[LayoutDefinition]:
     return callable(layout)
 
 
+@dataclass(frozen=True, slots=True)
+class without_layout:
+    """
+    Marker that signals that the component it contains should not be
+    wrapped by the application in any parent layouts.
+
+    This utility must only be used as a return value wrapper in application
+    components whose return value could be wrapped in a parent layout by
+    `holm`. For example pages, submit handlers, layouts.
+
+    Attempting to render an instance of this class results in a `RuntimeError`.
+    The only reason it implements the `htmy()` method is to make static code
+    analysis tools accept it as an `htmy.Component`.
+    """
+
+    component: Component
+    """The wrapped component."""
+
+    def htmy(self, _: Any) -> Component:
+        raise RuntimeError(f"{type(self).__name__} must never be part of the htmy component tree!")
+
+
 def combine_layouts_to_dependency(
-    outer_dep: FastAPIDependency[LayoutFactory], inner: Layout | None
+    outer_dep: FastAPIDependency[LayoutFactory],
+    inner: Layout | None,
 ) -> FastAPIDependency[LayoutFactory]:
     """
     Creates a layout factory dependency that wraps the inner layout inside the outer layout.
 
     Arguments:
-        outer: The outer layout factory.
-        inner: The inner layout factory.
+        outer_dep: FastAPI dependency that returns the layout factory of the outer layout.
+        inner: The inner layout component.
     """
     if inner is None:
         return outer_dep
@@ -79,6 +103,9 @@ def combine_layouts_to_dependency(
             inner_result = inner(props)
             if isinstance(inner_result, Awaitable):
                 inner_result = await inner_result
+
+            if isinstance(inner_result, without_layout):
+                return inner_result.component
 
             result = outer(as_component_type(inner_result))
             if isinstance(result, Awaitable):

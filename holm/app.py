@@ -24,6 +24,7 @@ from .modules._layout import (
     combine_layouts_to_dependency,
     empty_layout_dependency,
     is_layout_definition,
+    without_layout,
 )
 from .modules._page import is_page_definition
 from .typing import module_names
@@ -224,6 +225,9 @@ def _make_page_path_operation(
     ) -> tuple[Component, MetadataMapping | None] | Response:
         if isinstance(page, Response):
             return page
+
+        if isinstance(page, without_layout):
+            return page.component, metadata
 
         result = layout(as_component_type(page))
         # We must await here if result is an Awaitable, otherwise we would pass an
