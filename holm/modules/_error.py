@@ -9,8 +9,8 @@ from holm.fastapi import FastAPIErrorHandler
 
 ErrorHandlerMapping: TypeAlias = Mapping[type[Exception] | int, FastAPIErrorHandler]
 """
-Mapping whose keys are exception types or HTTP status codes, and the corresponding
-values are FastAPI error handlers.
+Mapping type whose keys are exception types or HTTP status codes, and the
+corresponding values are FastAPI error handlers.
 """
 
 
