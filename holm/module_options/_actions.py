@@ -46,7 +46,7 @@ def get_actions(obj: Any) -> ActionDescriptors | None:
     Loads and returns the action descriptors mapping if it exists in the given object.
 
     Action owners must have a variable whose name must match the value of `_actions_variable`,
-    and the value must be a dictionary mapping action dependencies to action descriptors.
+    and the value must be a dictionary mapping action paths to action descriptors.
     """
     actions = getattr(obj, _actions_variable, None)
     return actions if isinstance(actions, dict) else None
