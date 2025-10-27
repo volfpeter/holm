@@ -10,6 +10,7 @@ from htmy import Component, as_component_type
 
 from ._model import AppConfig, AppNode, PackageInfo
 from .fastapi import FastAPIDependency
+from .module_options._actions import get_actions, has_actions
 from .module_options._metadata import (
     MetadataMapping,
     components_with_metadata,
@@ -77,9 +78,12 @@ def _build_api(
     pkg = node.package
     api = _make_api_router_for_package(pkg, htmy)
     if pkg is not None:
+        # -- Try to import all relevant modules.
         layout_module = pkg.import_module("layout", is_layout_definition)
         page_module = pkg.import_module("page", is_page_definition)
+        actions_module = pkg.import_module("actions", has_actions)
 
+        # -- Resolve dependencies.
         layout_dep = combine_layouts_to_dependency(
             base_layout_dep, None if layout_module is None else layout_module.layout
         )
@@ -93,6 +97,7 @@ def _build_api(
             )
         )
 
+        # -- Register the page.
         if page_dep is not None:
             path_operation = _make_page_path_operation(
                 layout_dep=layout_dep,
@@ -110,6 +115,7 @@ def _build_api(
                 tags=["Page"],
             )(htmy.page(components_with_metadata)(path_operation))
 
+        # -- Register the submit handler.
         if submit_handler_dep is not None:
             path_operation = _make_page_path_operation(
                 layout_dep=layout_dep,
@@ -126,6 +132,21 @@ def _build_api(
                 description=submit_handler_dep.__doc__,
                 tags=["Page", "Submit"],
             )(htmy.page(components_with_metadata)(path_operation))
+
+        # -- Register actions from every action owner.
+        for actions in (a for a in (get_actions(page_module), get_actions(actions_module)) if a):
+            for action_path, desc in actions.items():
+                if desc.with_layout:
+                    path_operation = _make_page_path_operation(
+                        layout_dep=layout_dep,
+                        metadata_dep=empty_metadata_dep,
+                        page_dep=desc.action,
+                    )
+                    route = htmy.page(components_with_metadata)(path_operation)
+                else:
+                    route = htmy.page()(desc.action)
+
+                api.api_route(action_path, **desc.route_args)(route)
 
     for sub_url, child_node in node.subtree.items():
         api.include_router(
