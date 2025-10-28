@@ -8,6 +8,8 @@ from fastapi.params import Depends as DependsParam
 
 from holm.fastapi import FastAPIDependency
 
+from ._metadata import MetadataMappingOrDependency
+
 ActionDependency: TypeAlias = FastAPIDependency[Any]
 """
 FastAPI action dependency.
@@ -22,8 +24,21 @@ ActionDependencyDecorator: TypeAlias = Callable[[ActionDependency], ActionDepend
 @dataclass(slots=True, eq=False, kw_only=True)
 class ActionDescriptor:
     action: ActionDependency
+    """FastAPI action dependency, basically the path operation."""
+
     route_args: dict[str, Any]
+    """Arguments to pass to the created FastAPI route."""
+
     with_layout: bool
+    """Whether the action should be rendered with all wrapping layouts."""
+
+    metadata: MetadataMappingOrDependency | None
+    """
+    Optional metadata declaration for the action. The equivalent of page metadata for actions.
+
+    The name of the attribute means `get_metadata_dependency()` can be used
+    to resolve the attribute's value to a metadata dependency.
+    """
 
 
 ActionDescriptors: TypeAlias = dict[str, ActionDescriptor]
@@ -68,6 +83,7 @@ class ActionDecorator:
         path: str | None = None,
         *,
         with_layout: bool = False,
+        metadata: MetadataMappingOrDependency | None = None,
         methods: Collection[HTTPMethod] | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
@@ -81,6 +97,8 @@ class ActionDecorator:
         Arguments:
             with_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
+            metadata: Metadata mapping or dependency for the action. The equivalent
+                of page metadata for actions.
             path: The action's path (within the package's `APIRouter`). If `None`,
                 the decorated function's name is used as the path.
         """
@@ -89,6 +107,7 @@ class ActionDecorator:
             self._register_action(
                 func,
                 with_layout=with_layout,
+                metadata=metadata,
                 path=path,
                 dependencies=dependencies,
                 deprecated=deprecated,
@@ -104,6 +123,7 @@ class ActionDecorator:
         path: str | None = None,
         *,
         with_layout: bool = False,
+        metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
         tags: list[str | Enum] | None = None,
@@ -116,6 +136,8 @@ class ActionDecorator:
         Arguments:
             with_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
+            metadata: Metadata mapping or dependency for the action. The equivalent
+                of page metadata for actions.
             path: The action's path (within the package's `APIRouter`). If `None`,
                 the decorated function's name is used as the path.
         """
@@ -124,6 +146,7 @@ class ActionDecorator:
             self._register_action(
                 func,
                 with_layout=with_layout,
+                metadata=metadata,
                 path=path,
                 dependencies=dependencies,
                 deprecated=deprecated,
@@ -139,6 +162,7 @@ class ActionDecorator:
         path: str | None = None,
         *,
         with_layout: bool = False,
+        metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
         tags: list[str | Enum] | None = None,
@@ -151,6 +175,8 @@ class ActionDecorator:
         Arguments:
             with_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
+            metadata: Metadata mapping or dependency for the action. The equivalent
+                of page metadata for actions.
             path: The action's path (within the package's `APIRouter`). If `None`,
                 the decorated function's name is used as the path.
         """
@@ -159,6 +185,7 @@ class ActionDecorator:
             self._register_action(
                 func,
                 with_layout=with_layout,
+                metadata=metadata,
                 path=path,
                 dependencies=dependencies,
                 deprecated=deprecated,
@@ -174,6 +201,7 @@ class ActionDecorator:
         path: str | None = None,
         *,
         with_layout: bool = False,
+        metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
         tags: list[str | Enum] | None = None,
@@ -186,6 +214,8 @@ class ActionDecorator:
         Arguments:
             with_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
+            metadata: Metadata mapping or dependency for the action. The equivalent
+                of page metadata for actions.
             path: The action's path (within the package's `APIRouter`). If `None`,
                 the decorated function's name is used as the path.
         """
@@ -194,6 +224,7 @@ class ActionDecorator:
             self._register_action(
                 func,
                 with_layout=with_layout,
+                metadata=metadata,
                 path=path,
                 dependencies=dependencies,
                 deprecated=deprecated,
@@ -209,6 +240,7 @@ class ActionDecorator:
         path: str | None = None,
         *,
         with_layout: bool = False,
+        metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
         tags: list[str | Enum] | None = None,
@@ -221,6 +253,8 @@ class ActionDecorator:
         Arguments:
             with_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
+            metadata: Metadata mapping or dependency for the action. The equivalent
+                of page metadata for actions.
             path: The action's path (within the package's `APIRouter`). If `None`,
                 the decorated function's name is used as the path.
         """
@@ -229,6 +263,7 @@ class ActionDecorator:
             self._register_action(
                 func,
                 with_layout=with_layout,
+                metadata=metadata,
                 path=path,
                 dependencies=dependencies,
                 deprecated=deprecated,
@@ -244,6 +279,7 @@ class ActionDecorator:
         path: str | None = None,
         *,
         with_layout: bool = False,
+        metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
         tags: list[str | Enum] | None = None,
@@ -256,6 +292,8 @@ class ActionDecorator:
         Arguments:
             with_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
+            metadata: Metadata mapping or dependency for the action. The equivalent
+                of page metadata for actions.
             path: The action's path (within the package's `APIRouter`). If `None`,
                 the decorated function's name is used as the path.
         """
@@ -264,6 +302,7 @@ class ActionDecorator:
             self._register_action(
                 func,
                 with_layout=with_layout,
+                metadata=metadata,
                 path=path,
                 dependencies=dependencies,
                 deprecated=deprecated,
@@ -278,7 +317,8 @@ class ActionDecorator:
         self,
         action: ActionDependency,
         *,
-        with_layout: bool = False,
+        with_layout: bool,
+        metadata: MetadataMappingOrDependency | None,
         path: str | None,
         tags: list[str | Enum] | None,
         **route_args: Any,
@@ -289,6 +329,8 @@ class ActionDecorator:
         Arguments:
             with_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
+            metadata: Metadata mapping or dependency for the action. The equivalent
+                of page metadata for actions.
             path: The action's path (within the package's `APIRouter`). If `None`,
                 the decorated function's name is used as the path.
         """
@@ -313,6 +355,7 @@ class ActionDecorator:
             action=action,
             route_args=route_args,
             with_layout=with_layout,
+            metadata=metadata,
         )
 
 
