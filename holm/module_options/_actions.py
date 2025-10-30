@@ -74,12 +74,17 @@ def has_actions(obj: Any) -> TypeGuard[Any]:
     return bool(get_actions(obj))
 
 
-@dataclass(slots=True, repr=False, eq=False)
-class ActionDecorator:
-    """Decorators for registering actions."""
+class action:
+    """
+    Decorator for registering actions.
 
+    Decorator arguments map directly to the corresponding FastAPI route decorator's arguments,
+    unless the documentation states otherwise.
+    """
+
+    @classmethod
     def __call__(
-        self,
+        cls,
         path: str | None = None,
         *,
         with_layout: bool = False,
@@ -104,7 +109,7 @@ class ActionDecorator:
         """
 
         def decorator(func: ActionDependency) -> ActionDependency:
-            self._register_action(
+            cls._register_action(
                 func,
                 with_layout=with_layout,
                 metadata=metadata,
@@ -118,8 +123,9 @@ class ActionDecorator:
 
         return decorator
 
+    @classmethod
     def get(
-        self,
+        cls,
         path: str | None = None,
         *,
         with_layout: bool = False,
@@ -143,7 +149,7 @@ class ActionDecorator:
         """
 
         def decorator(func: ActionDependency) -> ActionDependency:
-            self._register_action(
+            cls._register_action(
                 func,
                 with_layout=with_layout,
                 metadata=metadata,
@@ -157,8 +163,9 @@ class ActionDecorator:
 
         return decorator
 
+    @classmethod
     def post(
-        self,
+        cls,
         path: str | None = None,
         *,
         with_layout: bool = False,
@@ -182,7 +189,7 @@ class ActionDecorator:
         """
 
         def decorator(func: ActionDependency) -> ActionDependency:
-            self._register_action(
+            cls._register_action(
                 func,
                 with_layout=with_layout,
                 metadata=metadata,
@@ -196,8 +203,9 @@ class ActionDecorator:
 
         return decorator
 
+    @classmethod
     def put(
-        self,
+        cls,
         path: str | None = None,
         *,
         with_layout: bool = False,
@@ -221,7 +229,7 @@ class ActionDecorator:
         """
 
         def decorator(func: ActionDependency) -> ActionDependency:
-            self._register_action(
+            cls._register_action(
                 func,
                 with_layout=with_layout,
                 metadata=metadata,
@@ -235,8 +243,9 @@ class ActionDecorator:
 
         return decorator
 
+    @classmethod
     def patch(
-        self,
+        cls,
         path: str | None = None,
         *,
         with_layout: bool = False,
@@ -260,7 +269,7 @@ class ActionDecorator:
         """
 
         def decorator(func: ActionDependency) -> ActionDependency:
-            self._register_action(
+            cls._register_action(
                 func,
                 with_layout=with_layout,
                 metadata=metadata,
@@ -274,8 +283,9 @@ class ActionDecorator:
 
         return decorator
 
+    @classmethod
     def delete(
-        self,
+        cls,
         path: str | None = None,
         *,
         with_layout: bool = False,
@@ -299,7 +309,7 @@ class ActionDecorator:
         """
 
         def decorator(func: ActionDependency) -> ActionDependency:
-            self._register_action(
+            cls._register_action(
                 func,
                 with_layout=with_layout,
                 metadata=metadata,
@@ -313,8 +323,9 @@ class ActionDecorator:
 
         return decorator
 
+    @classmethod
     def _register_action(
-        self,
+        cls,
         action: ActionDependency,
         *,
         with_layout: bool,
@@ -357,12 +368,3 @@ class ActionDecorator:
             with_layout=with_layout,
             metadata=metadata,
         )
-
-
-action = ActionDecorator()
-"""
-Decorator for registering actions.
-
-Decorator arguments map directly to the corresponding FastAPI route decorator's arguments,
-unless the documentation states otherwise.
-"""
