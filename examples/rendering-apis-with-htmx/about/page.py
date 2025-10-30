@@ -19,7 +19,7 @@ async def page(featured: bool = False) -> Component:
             html.p("This is our featured about page!"),
             html.p("You're viewing the special featured version."),
             html.a("Regular version", href="/about"),
-            hx_boost=True,
+            hx_boost="true",
         )
 
     return html.div(
@@ -27,5 +27,5 @@ async def page(featured: bool = False) -> Component:
         html.p("We're building amazing web applications with holm."),
         html.p("Our framework combines the power of FastAPI with server-side rendering."),
         html.a("Featured version", href="/about?featured=true"),
-        hx_boost=True,
+        hx_boost="true",
     )
