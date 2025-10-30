@@ -76,7 +76,7 @@ def has_actions(obj: Any) -> TypeGuard[Any]:
 
 class action:
     """
-    Decorator for registering actions.
+    Decorators for registering actions.
 
     Decorator arguments map directly to the corresponding FastAPI route decorator's arguments,
     unless the documentation states otherwise.
