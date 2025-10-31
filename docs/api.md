@@ -8,7 +8,7 @@
         filters:
             - "!__init__"
             - "!_metadata"
-            
+
 ::: holm.action
     options:
         members:
