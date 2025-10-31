@@ -1,6 +1,6 @@
-# Rendering APIs with HTMX
+# Actions with HTMX
 
-This guide demonstrates how to enhance a basic `holm` application with a rendering API and HTMX for dynamic, interactive web applications. We'll build upon the [quick start guide](quick-start-guide.md) to add server-rendered partial updates and seamless navigation.
+This guide demonstrates how to enhance a basic `holm` application with `holm` actions and HTMX for dynamic, interactive web applications. We'll build upon the [quick start guide](quick-start-guide.md) to add server-rendered partial updates and seamless navigation using `holm`'s action system.
 
 Very basic familiarity with [HTMX](https://htmx.org/) is helpful for this guide, but it can be followed even without it.
 
@@ -10,10 +10,10 @@ We will cover:
 
 - How to integrate HTMX for dynamic content updates.
 - How to enhance navigation with the `hx-boost` HTMX attribute.
-- How to create API endpoints that return rendered HTML components, often called fragments or partials.
-- How to use [fasthx](https://volfpeter.github.io/fasthx/examples/htmy/) for seamless server-side rendering of [htmy](https://volfpeter.github.io/htmy/) components.
+- How to create `holm` actions that return rendered HTML components, often called fragments or partials.
+- How `holm` automatically generates API routes for actions.
 
-The entire source code of this application can be found in the [examples/rendering-apis-with-htmx](https://github.com/volfpeter/holm/tree/main/examples/rendering-apis-with-htmx) directory of the repository.
+The entire source code of this application can be found in the [examples/actions-with-htmx](https://github.com/volfpeter/holm/tree/main/examples/actions-with-htmx) directory of the repository.
 
 ## Add HTMX to the application
 
@@ -66,19 +66,20 @@ The changes in the layout are trivial, we simply:
 - added the HTMX script tag to the `head` element of the webpage with `html.script(src="https://unpkg.com/htmx.org@2.0.7")`;
 - and set the `hx_boost` attribute on the `nav` element in the page `header` to [boost our anchors](https://htmx.org/attributes/hx-boost/).
 
-## Create the rendering API
+## Create actions
 
-Next we create our rendering API in an `api.py` module. We will place it at the root of our project (next to `main.py`), because we want this API to exist directly under the root `/` URL prefix.
+Next, we create our actions in an `actions.py` module. We will place it at the root of our project (next to `main.py`), because we want these actions to exist directly under the root `/` URL prefix.
 
-Note: `holm` applies file-system based routing to both pages and APIs! Actually, if both an API (`api.py`) and a page (`page.py`) exists in a directory, `holm` combines their routes into a single `APIRouter` for that path.
+Note: `holm` applies file-system based routing to both pages and actions! If both an `actions.py` and a `page.py` exists in a directory (as often the case), `holm` combines their routes into a single `APIRouter` for that path.
 
-The API we create will be very simple, it will have a single `/welcome-message` route that returns a welcome message in a randomly chosen language. The returned message is just a string (which happens to be a `htmy` `Component`), so all we need to do is decorate the path operation function with `@htmy.hx()`. You can learn more about using `fasthx.htmy.HTMY` [here](https://volfpeter.github.io/fasthx/examples/htmy/).
+The action we create will be very simple, just a `welcome_message() -> str` function that returns a welcome message in a randomly chosen language. The returned message is just a string (which happens to be a `htmy` `Component`), which `holm` automatically renders into an HTML response.
 
-```python hl_lines="16 18 20-21 25"
+The `welcome_message()` function is registered as an action using the `@action.get()` decorator. Since we don't pass a path to it, it will be registered under `/welcome_message`.
+
+```python hl_lines="15-16"
 import random
 
-from fastapi import APIRouter
-from fasthx.htmy import HTMY
+from holm import action
 
 _welcome_message: list[str] = [
     "Welcome to My App! Powered By HTMX.",
@@ -90,23 +91,25 @@ _welcome_message: list[str] = [
 ]
 
 
-def api(htmy: HTMY) -> APIRouter:
-    """Rendering API factories need a `htmy: fasthx.htmy.HTMY` argument."""
-    api = APIRouter()
+@action.get()
+def welcome_message() -> str:
+    """
+    Action that returns a welcome message component, which in this
+    case is a simple string.
 
-    @api.get("/welcome-message")
-    @htmy.hx()  # type: ignore[arg-type]
-    async def get_welcome_message() -> str:
-        return random.choice(_welcome_message)  # noqa: S311
-
-    return api
+    No path was provided for the action decorator, by default it
+    creates the path from the decorator function's name, so the
+    path will be "/welcome_message" within the router that contains
+    the actions module.
+    """
+    return random.choice(_welcome_message)  # noqa: S311
 ```
 
 Important details:
 
-- The `htmy.hx()` decorator is responsible for rendering the route's return value. It must be wrapped by the `@api` decorator.
-- Within the `api()` function, everything is standard FastAPI and FastHX functionality.
-- While this example only adds a rendering route, you can freely mix rendering and JSON APIs.
+- We use the `@action.get()` decorator to define a HTTP `GET` action. `holm` provides decorators for all standard HTTP methods (e.g., `@action.post()`, `@action.put()`, `@action.delete()`).
+- Since no explicit path was provided to the `@action.get()` decorator, `holm` automatically infers the path from the function name, resulting in a `/welcome_message` endpoint.
+- The return value (a plain string in this case) is automatically rendered by `holm` as an HTML response.
 
 ## Add dynamic behavior to the home page
 
@@ -114,8 +117,8 @@ Finally we add dynamic content to the home page (`page.py` in the root directory
 
 On the `h1` element, which contains our welcome message, we set:
 
-- `hx_get` to the use our newly created `/welcome-message` route when HTMX is triggered.
-- `hx_trigger` to `every 2s` to make the page load a new welcome message from our API every 2 seconds.
+- `hx_get` to use our newly created `/welcome_message` route (`welcome_message()` action) when HTMX is triggered.
+- `hx_trigger` to `every 2s` to make the page load a new welcome message from our action every 2 seconds.
 
 These two attributes together will replace the displayed welcome message every two seconds without reloading the entire page.
 
@@ -133,7 +136,7 @@ def page() -> Component:
     return html.div(
         html.h1(
             "Welcome to My App",
-            hx_get="/welcome-message",
+            hx_get="/welcome_message",
             hx_trigger="every 2s",
         ),
         html.p("This is a minimal holm application demonstrating:"),
@@ -142,8 +145,7 @@ def page() -> Component:
             html.li("Automatic layout composition"),
             html.li("Dynamic metadata"),
             html.li("Server-side rendering with htmy"),
-            html.li("Custom API with HTML rendering support"),
-            html.li("HTMX integration"),
+            html.li("Actions with HTMX integration"),
         ),
         html.div(
             html.a("Learn more about us", href="/about"),
@@ -168,4 +170,4 @@ You can now open your browser and navigate to `http://localhost:8000/` to see yo
 
 If you followed every step correctly, then you will see the welcome message changing every two seconds on the home page.
 
-If you are curious to see how your API is called and how it responds, you can inspect requests on the Network tab of your browser's developer tools.
+If you are curious to see how your action is called and how it responds, you can inspect requests on the Network tab of your browser's developer tools.
