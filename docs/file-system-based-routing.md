@@ -9,9 +9,10 @@ Going through the [Application components](application-components.md) documentat
 ## Core concepts
 
 - Packages define URL segments: Each Python package within your application's root maps to a URL segment. Nesting directories creates nested routes. For example, the `my_app/users/` package will create routes under the `/users` URL path.
-- Special files mark application endpoints: `holm` looks for specific filenames within your application directory to discover pages, layouts, custom APIs, and compose your application.
+- Special files mark application components: `holm` looks for specific filenames within your application directory to discover application components and compose your application.
   - `page.py`: Creates a publicly accessible URL for a route segment.
   - `layout.py`: Defines a shared UI that wraps a route segment and its children.
+  - `actions.py`: Defines custom action endpoints for a route segment.
   - `api.py`: Creates custom API endpoints for a route segment.
 
 ## Routing conventions
@@ -27,6 +28,7 @@ my_app/
 ├── page.py
 ├── users/
 │   ├── __init__.py
+│   ├── actions.py
 │   ├── api.py
 │   ├── layout.py
 │   ├── page.py
@@ -53,6 +55,15 @@ Layouts defined in `layout.py` files automatically wrap layouts and pages within
 
 - The layout in `my_app/layout.py` is the root layout, wrapping all layouts and pages.
 - The layout in `my_app/users/layout.py` wraps the page at `/users` and the dynamic page at `/users/{user_id}`. The `users` layout is itself wrapped by the root layout.
+
+### Actions
+
+An `actions.py` file offers a dedicated place to define actions, which are flexible HTML endpoints for handling client interactions. Actions can also be defined in `page.py` modules, but if you have a large number of actions, using `actions.py` can help with code organization.
+
+Actions are declared using the `@action` decorators (for example `@action.post()`). Their paths are always prefixed with the package's URL path.
+
+- An action in `my_app/users/actions.py` (or `my_app/users/page.py`) decorated with `@action.post("/enable")` creates a route that handles `POST /users/enable` requests.
+- If no path is specified in the decorator, the action function's name is used. Decorating a `def disable(): ...` function without setting a path would create a route at `/users/disable`.
 
 ### APIs
 
@@ -102,3 +113,5 @@ Here are some examples:
 - `app.url_path_for("my_app.users._user_id_.page", user_id=1)`: `/users/1/`
 
 Submit handlers are also assigned a name: the name of the corresponding page's name, followed by the `.handle_submit` suffix. Since the only difference between pages and submit handlers is the used HTTP method, the URL for a submit handler is the same as the URL for the corresponding page.
+
+Actions are named using their module's import path and the action function's name: `{module_path}.{function_name}`. For an action named `enable_user` inside `my_app/users/actions.py`, the name would be `my_app.users.actions.enable_user`.
