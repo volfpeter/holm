@@ -58,7 +58,7 @@ Layouts defined in `layout.py` files automatically wrap layouts and pages within
 
 ### Actions
 
-An `actions.py` file offers a dedicated place to define actions, which are flexible HTML endpoints for handling client interactions. Actions can also be defined in `page.py` modules, but if you have a large number of actions, using `actions.py` can help with code organization.
+An `actions.py` file offers a dedicated place to define actions, which are flexible HTML endpoints for handling client interactions. Actions can also be defined in `page.py` modules, but if you have many actions, using `actions.py` can help with code organization.
 
 Actions are declared using the `@action` decorators (for example `@action.post()`). Their paths are always prefixed with the package's URL path.
 
