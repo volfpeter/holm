@@ -70,7 +70,7 @@ The changes in the layout are trivial, we simply:
 
 Next, we create our actions in an `actions.py` module. We will place it at the root of our project (next to `main.py`), because we want these actions to exist directly under the root `/` URL prefix.
 
-Note: `holm` applies file-system based routing to both pages and actions! If both an `actions.py` and a `page.py` exists in a directory (as often the case), `holm` combines their routes into a single `APIRouter` for that path.
+Note: `holm` applies file-system based routing to both pages and actions! If both an `actions.py` and a `page.py` exist in a directory (as often the case), `holm` combines their routes into a single `APIRouter` for that path.
 
 The action we create will be very simple, just a `welcome_message() -> str` function that returns a welcome message in a randomly chosen language. The returned message is just a string (which happens to be a `htmy` `Component`), which `holm` automatically renders into an HTML response.
 

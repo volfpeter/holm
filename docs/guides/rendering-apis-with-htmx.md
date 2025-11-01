@@ -70,7 +70,7 @@ The changes in the layout are trivial, we simply:
 
 Next we create our rendering API in an `api.py` module. We will place it at the root of our project (next to `main.py`), because we want this API to exist directly under the root `/` URL prefix.
 
-Note: `holm` applies file-system based routing to both pages and APIs! Actually, if both an API (`api.py`) and a page (`page.py`) exists in a directory, `holm` combines their routes into a single `APIRouter` for that path.
+Note: `holm` applies file-system based routing to both pages and APIs! If both an API (`api.py`) and a page (`page.py`) exists in a directory, `holm` combines their routes into a single `APIRouter` for that path.
 
 The API we create will be very simple, it will have a single `/welcome-message` route that returns a welcome message in a randomly chosen language. The returned message is just a string (which happens to be a `htmy` `Component`), so all we need to do is decorate the path operation function with `@htmy.hx()`. You can learn more about using `fasthx.htmy.HTMY` [here](https://volfpeter.github.io/fasthx/examples/htmy/).
 
