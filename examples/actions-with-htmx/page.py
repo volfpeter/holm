@@ -9,7 +9,7 @@ def page() -> Component:
     return html.div(
         html.h1(
             "Welcome to My App",
-            hx_get="/welcome-message",
+            hx_get="/welcome_message",
             hx_trigger="every 2s",
         ),
         html.p("This is a minimal holm application demonstrating:"),
@@ -18,8 +18,7 @@ def page() -> Component:
             html.li("Automatic layout composition"),
             html.li("Dynamic metadata"),
             html.li("Server-side rendering with htmy"),
-            html.li("Custom API with HTML rendering support"),
-            html.li("HTMX integration"),
+            html.li("Actions with HTMX integration"),
         ),
         html.div(
             html.a("Learn more about us", href="/about"),

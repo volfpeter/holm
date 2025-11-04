@@ -13,7 +13,7 @@ Rules for *layouts*:
 - `layout` can have additional arguments (position or keyword and keyword-only, but not positional-only). These arguments must be FastAPI dependencies. They will be automatically resolved during each request.
 - Returning a tuple or a list from a layout is **not allowed** unless the value is a `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
 
-By default, layouts automatically wrap all layouts and pages in subpackages. You can opt out of this behavior by wrapping the return value of a layout or page with the [`without_layout` utility](utilities.md#without_layout)
+By default, layouts automatically wrap all layouts and pages in subpackages. You can opt out of this behavior by wrapping the return value of a layout or page with the [`without_layout` utility](utilities.md#without_layout).
 
 *Tip: layouts can provide context for their entire subtree by wrapping the subtree with a `htmy` `ContextProvider` component.*
 
@@ -49,17 +49,38 @@ For forms that trigger state change on the server, you should set the form `meth
 
 You can of course set `action` to some URL. In that case the same logic applies, but instead of triggering the `page` or `handle_submit` function that belong to the current URL, it will trigger them in the `page.py` or `api.py` module that handles the given URL.
 
+## Actions
+
+*Actions* provide a convenient and flexible way to create custom HTML rendering routes that don't fit the standard `page` pattern. They are functions decorated with one of the `@action` decorators (`@action.get()`, `@action.post()`, etc.), and they can be defined in either a `page.py` or `actions.py` module.
+
+Rules for *actions*:
+
+- An action must be a FastAPI dependency, just like a page.
+- Actions can be registered with any HTTP method (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`), using the appropriate `@action` decorator.
+- You can specify a custom URL path for an action (e.g., `@action.post("/do-something")`), but it is optional. If no path is provided, the function's name is used as the path. In both cases, the path is relative to the URL corresponding to the package that contains the action.
+- By default, components returned from actions are not wrapped in layouts. This is ideal for returning HTML fragments for client frameworks like HTMX.
+- To render an action's return value in its owner layouts (like it is done by default for pages), you can set `use_layout=True` in the decorator: `@action.get(use_layout=True)`. This behavior can of course be combined with the [`without_layout` utility](utilities.md#without_layout).
+- Actions can also have `metadata`: `@action.get(metadata={"title": "Hello"})`. `metadata` works identically to page metadata and is particularly useful when combined with `use_layout`.
+- An action can directly return a FastAPI `Response`, which is always returned as is.
+
 ## APIs
 
 APIs are defined in the `api.py` module or packages as an `APIRouter` variable or a callable that returns an `APIRouter`.
 
+`api.py` modules serve two primary use-cases:
+
+- They allow creating a custom `APIRouter` configuration for the package, for example by adding `APIRouter` dependencies.
+- They allow creating standard FastAPI routes that serve JSON.
+
 These are standard FastAPI `APIRouter`s, but you should still follow these recommendations:
 
-- If routes in the API don't do any rendering, then the `api()` callable should have no arguments or simply an `api` variable should be used. Otherwise the `api()` callable should have a single `fasthx.htmy.HTMY` positional argument. The application's renderer will be passed to this function automatically by `holm`.
+- If routes in the API don't do any rendering, then the `api()` callable should have no arguments or simply an `api` variable should be used.
+- If the API has rendering routes, the `api()` callable should have a single `fasthx.htmy.HTMY` positional argument. The application's renderer will be passed to this function automatically by `holm`.
 - If an `api()` callable is used, it may have further arguments as long as they all have default values. This pattern can simplify API testing for example, by allowing custom configurations for tests.
 
 Note on rendering APIs:
 
+- They are a lower-level alternative to [actions](#actions). In most cases, you should prefer using actions instead: they are simpler and more powerful.
 - The primary role of these APIs is to return so called "partials" (small HTML snippets instead of entire HTML pages) to clients such as HTMX for swapping.
 - The components returned by rendering routes are not automatically wrapped in layouts like pages are.
 

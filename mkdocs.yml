@@ -43,6 +43,7 @@ markdown_extensions:
 
 nav:
   - Holm: index.md
+  - In a hurry: in-a-hurry.md
   - application-components.md
   - file-system-based-routing.md
   - utilities.md
@@ -50,6 +51,7 @@ nav:
   - Guides:
     - guides/quick-start-guide.md
     - guides/path-parameters.md
+    - guides/actions-with-htmx.md
     - guides/forms.md
     - guides/rendering-apis-with-htmx.md
     - guides/custom-applications.md

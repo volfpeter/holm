@@ -1,5 +1,5 @@
 from collections.abc import ItemsView, Iterator, KeysView, Mapping, ValuesView
-from typing import Any, Protocol, TypeAlias, overload
+from typing import Any, TypeAlias, overload
 
 from htmy import Component, ContextAware, as_component_sequence
 
@@ -13,17 +13,14 @@ It is usually a dictionary with string keys and values, but it is not enforced i
 so the typing is more lenient.
 """
 
+MetadataDependency: TypeAlias = FastAPIDependency[MetadataMapping | None]
+"""Metadata dependency type."""
 
-class MetadataOwner(Protocol):
-    """
-    Protocol definition for objects (usually modules) that define page metadata.
-    """
-
-    @property
-    def metadata(self) -> MetadataMapping | FastAPIDependency[MetadataMapping | None]: ...
+MetadataMappingOrDependency: TypeAlias = MetadataMapping | MetadataDependency
+"""Metadata mapping or dependency type."""
 
 
-def get_metadata_dependency(obj: Any) -> FastAPIDependency[MetadataMapping | None]:
+def get_metadata_dependency(obj: Any) -> MetadataDependency:
     """
     Loads and returns the FastAPI `MetadataMapping` dependency based on the metadata definition
     in the given object.

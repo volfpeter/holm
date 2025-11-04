@@ -9,8 +9,15 @@
             - "!__init__"
             - "!_metadata"
 
-::: holm.ErrorHandlerMapping
+::: holm.action
     options:
+        members:
+            - get
+            - post
+            - put
+            - patch
+            - delete
+            - __call__
         show_root_heading: true
 
 ::: holm.without_layout
@@ -18,3 +25,7 @@
         show_root_heading: true
         filters:
             - "!component"
+
+::: holm.ErrorHandlerMapping
+    options:
+        show_root_heading: true

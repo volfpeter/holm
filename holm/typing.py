@@ -1,6 +1,6 @@
 from typing import Literal, TypeAlias, get_args
 
-PackageModuleName: TypeAlias = Literal["api", "layout", "page"]
+PackageModuleName: TypeAlias = Literal["actions", "api", "layout", "page"]
 """Recognized module names."""
 
 RootOnlyModuleName: TypeAlias = Literal["error"]

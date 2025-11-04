@@ -26,17 +26,20 @@ Web development framework that brings the Next.js developer experience to Python
 
 ## Pre-requisite knowledge
 
-*Don't be intimidated by this section. By the time you go through the [Application components](https://volfpeter.github.io/holm/application-components) document and the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide), you will have a very good intuition of how to use `holm`.*
-
 To get started, all you need is a *basic* understanding of:
 
 - [FastAPI](https://fastapi.tiangolo.com/tutorial/): the underlying web framework.
-- [htmy](https://volfpeter.github.io/htmy/): the used component / templating and rendering library.
 - HTML and CSS fundamentals.
 
-Familiarity with [FastHX](https://volfpeter.github.io/fasthx/) (the rendering layer between `htmy` and `FastAPI`), and especially its `htmy` integration is useful, but not necessary, unless you are building an HTMX application.
+The [`holm` in a hurry](https://volfpeter.github.io/holm/in-a-hurry) guide walks you through all the essentials in **under five minutes**, and helps you build up all the intuition you need to start using `holm` effectively.
+
+For a deeper understanding of `holm`, it is recommended to also read the [Application components](https://volfpeter.github.io/holm/application-components) document and the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide).
+
+Checking out the [htmy](https://volfpeter.github.io/htmy/) documentation can help you understand how components and HTML rendering works in `holm`.
 
 It is recommended to use [HTMX](https://htmx.org/), if for nothing else, then to avoid hard page loads on navigation. [hx-boost](https://htmx.org/attributes/hx-boost/) (or navigation with `hx-get`) offers the same benefits as the `Link` component in Next.js.
+
+Familiarity with [FastHX](https://volfpeter.github.io/fasthx/) (the rendering layer between `htmy` and `FastAPI`), and its `htmy` integration can occasionally be useful, but not necessary at all.
 
 ## Installation
 
@@ -74,17 +77,11 @@ All you need to do is follow these simple rules:
 
 ## Examples
 
-If you prefer to learn through examples, the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide) is the best place to start.
+The documentation contains guides and example applications for every major feature. They all build on the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide), so that is the best place to start if you prefer to learn through examples.
 
-To learn about creating rendering APIs and adding HTMX to your application, you should have a look at the [Rendering APIs with HTMX](https://volfpeter.github.io/holm/guides/rendering-apis-with-htmx) guide.
+You can discover even more nuances by exploring the [test application](https://github.com/volfpeter/holm/tree/main/test_app) of the project.
 
-The [Custom applications](https://volfpeter.github.io/holm/guides/custom-applications) guide shows you how to customize the FastAPI application instance as well as HTML rendering.
-
-For error handling examples, you should check out the [Error Handling](https://volfpeter.github.io/holm/guides/error-handling) guide.
-
-You can discover even more features by exploring the [test application](https://github.com/volfpeter/holm/tree/main/test_app) of the project.
-
-If you are looking for the simplest possible application you can create, then can find it in the [examples/minimal](https://github.com/volfpeter/holm/tree/main/examples/minimal) directory of the repository.
+If you are looking for the simplest possible application you can create, then you can find it in the [examples/minimal](https://github.com/volfpeter/holm/tree/main/examples/minimal) directory of the repository.
 
 ## AI assistance
 
