@@ -59,8 +59,8 @@ Rules for *actions*:
 - Actions can be registered with any HTTP method (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`), using the appropriate `@action` decorator.
 - You can specify a custom URL path for an action (e.g., `@action.post("/do-something")`), but it is optional. If no path is provided, the function's name is used as the path. In both cases, the path is relative to the URL corresponding to the package that contains the action.
 - By default, components returned from actions are not wrapped in layouts. This is ideal for returning HTML fragments for client frameworks like HTMX.
-- To render an action's return value in its owner layouts (like it is done by default for pages), you can set `with_layout=True` in the decorator: `@action.get(with_layout=True)`. This behavior can of course be combined with the [`without_layout` utility](utilities.md#without_layout).
-- Actions can also have `metadata`: `@action.get(metadata={"title": "Hello"})`. `metadata` works identically to page metadata and is particularly useful when combined with `with_layout`.
+- To render an action's return value in its owner layouts (like it is done by default for pages), you can set `use_layout=True` in the decorator: `@action.get(use_layout=True)`. This behavior can of course be combined with the [`without_layout` utility](utilities.md#without_layout).
+- Actions can also have `metadata`: `@action.get(metadata={"title": "Hello"})`. `metadata` works identically to page metadata and is particularly useful when combined with `use_layout`.
 - An action can directly return a FastAPI `Response`, which is always returned as is.
 
 ## APIs

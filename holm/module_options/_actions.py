@@ -29,7 +29,7 @@ class ActionDescriptor:
     route_args: dict[str, Any]
     """Arguments to pass to the created FastAPI route."""
 
-    with_layout: bool
+    use_layout: bool
     """Whether the action should be rendered with all wrapping layouts."""
 
     metadata: MetadataMappingOrDependency | None
@@ -87,7 +87,7 @@ class action:
         cls,
         path: str | None = None,
         *,
-        with_layout: bool = False,
+        use_layout: bool = False,
         metadata: MetadataMappingOrDependency | None = None,
         methods: Collection[HTTPMethod] | None = None,
         dependencies: Sequence[DependsParam] | None = None,
@@ -100,7 +100,7 @@ class action:
         Corresponding FastAPI route decorator: `APIRouter.api_route()`.
 
         Arguments:
-            with_layout: Whether to render the action's return value in the
+            use_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
             metadata: Metadata mapping or dependency for the action. The equivalent
                 of page metadata for actions.
@@ -111,7 +111,7 @@ class action:
         def decorator(func: ActionDependency) -> ActionDependency:
             cls._register_action(
                 func,
-                with_layout=with_layout,
+                use_layout=use_layout,
                 metadata=metadata,
                 path=path,
                 dependencies=dependencies,
@@ -128,7 +128,7 @@ class action:
         cls,
         path: str | None = None,
         *,
-        with_layout: bool = False,
+        use_layout: bool = False,
         metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
@@ -140,7 +140,7 @@ class action:
         Corresponding FastAPI route decorator: `APIRouter.get()`.
 
         Arguments:
-            with_layout: Whether to render the action's return value in the
+            use_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
             metadata: Metadata mapping or dependency for the action. The equivalent
                 of page metadata for actions.
@@ -151,7 +151,7 @@ class action:
         def decorator(func: ActionDependency) -> ActionDependency:
             cls._register_action(
                 func,
-                with_layout=with_layout,
+                use_layout=use_layout,
                 metadata=metadata,
                 path=path,
                 dependencies=dependencies,
@@ -168,7 +168,7 @@ class action:
         cls,
         path: str | None = None,
         *,
-        with_layout: bool = False,
+        use_layout: bool = False,
         metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
@@ -180,7 +180,7 @@ class action:
         Corresponding FastAPI route decorator: `APIRouter.post()`.
 
         Arguments:
-            with_layout: Whether to render the action's return value in the
+            use_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
             metadata: Metadata mapping or dependency for the action. The equivalent
                 of page metadata for actions.
@@ -191,7 +191,7 @@ class action:
         def decorator(func: ActionDependency) -> ActionDependency:
             cls._register_action(
                 func,
-                with_layout=with_layout,
+                use_layout=use_layout,
                 metadata=metadata,
                 path=path,
                 dependencies=dependencies,
@@ -208,7 +208,7 @@ class action:
         cls,
         path: str | None = None,
         *,
-        with_layout: bool = False,
+        use_layout: bool = False,
         metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
@@ -220,7 +220,7 @@ class action:
         Corresponding FastAPI route decorator: `APIRouter.put()`.
 
         Arguments:
-            with_layout: Whether to render the action's return value in the
+            use_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
             metadata: Metadata mapping or dependency for the action. The equivalent
                 of page metadata for actions.
@@ -231,7 +231,7 @@ class action:
         def decorator(func: ActionDependency) -> ActionDependency:
             cls._register_action(
                 func,
-                with_layout=with_layout,
+                use_layout=use_layout,
                 metadata=metadata,
                 path=path,
                 dependencies=dependencies,
@@ -248,7 +248,7 @@ class action:
         cls,
         path: str | None = None,
         *,
-        with_layout: bool = False,
+        use_layout: bool = False,
         metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
@@ -260,7 +260,7 @@ class action:
         Corresponding FastAPI route decorator: `APIRouter.patch()`.
 
         Arguments:
-            with_layout: Whether to render the action's return value in the
+            use_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
             metadata: Metadata mapping or dependency for the action. The equivalent
                 of page metadata for actions.
@@ -271,7 +271,7 @@ class action:
         def decorator(func: ActionDependency) -> ActionDependency:
             cls._register_action(
                 func,
-                with_layout=with_layout,
+                use_layout=use_layout,
                 metadata=metadata,
                 path=path,
                 dependencies=dependencies,
@@ -288,7 +288,7 @@ class action:
         cls,
         path: str | None = None,
         *,
-        with_layout: bool = False,
+        use_layout: bool = False,
         metadata: MetadataMappingOrDependency | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
@@ -300,7 +300,7 @@ class action:
         Corresponding FastAPI route decorator: `APIRouter.delete()`.
 
         Arguments:
-            with_layout: Whether to render the action's return value in the
+            use_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
             metadata: Metadata mapping or dependency for the action. The equivalent
                 of page metadata for actions.
@@ -311,7 +311,7 @@ class action:
         def decorator(func: ActionDependency) -> ActionDependency:
             cls._register_action(
                 func,
-                with_layout=with_layout,
+                use_layout=use_layout,
                 metadata=metadata,
                 path=path,
                 dependencies=dependencies,
@@ -328,7 +328,7 @@ class action:
         cls,
         action: ActionDependency,
         *,
-        with_layout: bool,
+        use_layout: bool,
         metadata: MetadataMappingOrDependency | None,
         path: str | None,
         tags: list[str | Enum] | None,
@@ -338,7 +338,7 @@ class action:
         Registers the given action in the module that contains it.
 
         Arguments:
-            with_layout: Whether to render the action's return value in the
+            use_layout: Whether to render the action's return value in the
                 containing package's layout (same as a page).
             metadata: Metadata mapping or dependency for the action. The equivalent
                 of page metadata for actions.
@@ -365,6 +365,6 @@ class action:
         module_actions[path] = ActionDescriptor(
             action=action,
             route_args=route_args,
-            with_layout=with_layout,
+            use_layout=use_layout,
             metadata=metadata,
         )

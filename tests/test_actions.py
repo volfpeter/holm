@@ -14,17 +14,17 @@ from test_app.actions import RenderedAction
         ("/patch", "PATCH", RenderedAction.patch.without_layout),
         ("/delete", "DELETE", RenderedAction.delete.without_layout),
         # Actions with layout.
-        ("/get/wl", "GET", RenderedAction.get.with_layout),
-        ("/post/wl", "POST", RenderedAction.post.with_layout),
-        ("/put/wl", "PUT", RenderedAction.put.with_layout),
-        ("/patch/wl", "PATCH", RenderedAction.patch.with_layout),
-        ("/delete/wl", "DELETE", RenderedAction.delete.with_layout),
+        ("/get/wl", "GET", RenderedAction.get.use_layout),
+        ("/post/wl", "POST", RenderedAction.post.use_layout),
+        ("/put/wl", "PUT", RenderedAction.put.use_layout),
+        ("/patch/wl", "PATCH", RenderedAction.patch.use_layout),
+        ("/delete/wl", "DELETE", RenderedAction.delete.use_layout),
         # Actions with layout and metadata
-        ("/get/wlm", "GET", RenderedAction.get.with_layout_and_metadata),
-        ("/post/wlm", "POST", RenderedAction.post.with_layout_and_metadata),
-        ("/put/wlm", "PUT", RenderedAction.put.with_layout_and_metadata),
-        ("/patch/wlm", "PATCH", RenderedAction.patch.with_layout_and_metadata),
-        ("/delete/wlm", "DELETE", RenderedAction.delete.with_layout_and_metadata),
+        ("/get/wlm", "GET", RenderedAction.get.use_layout_and_metadata),
+        ("/post/wlm", "POST", RenderedAction.post.use_layout_and_metadata),
+        ("/put/wlm", "PUT", RenderedAction.put.use_layout_and_metadata),
+        ("/patch/wlm", "PATCH", RenderedAction.patch.use_layout_and_metadata),
+        ("/delete/wlm", "DELETE", RenderedAction.delete.use_layout_and_metadata),
     ],
 )
 def test_action(client: TestClient, action_path: str, method: str, expected: str) -> None:
