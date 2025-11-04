@@ -113,4 +113,4 @@ A `page.py` file can define a `handle_submit()` function (also a **FastAPI depen
 
 This is where you can create a custom `APIRouter` for the package, as an `api` variable which can be an `APIRouter` instance or a function that returns an `APIRouter`.
 
-It is most often used to configure the `APIRouter` of the package, for example by settings its dependencies, tags, or other options. It also serves as the primary way for defining JSON endpoints. It can also be used for serving HTML fragments (using the FastHX library), although actions provide a more convenient way for that.
+It is most often used to configure the `APIRouter` of the package, for example by settings its dependencies, tags, or other options. You can also use it for defining JSON endpoints. Additionally, it can be used for serving HTML fragments (using the FastHX library), although actions provide a more convenient way for that.
