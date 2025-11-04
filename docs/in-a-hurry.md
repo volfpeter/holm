@@ -5,7 +5,7 @@
 - Standard FastAPI as its web server layer.
 - `htmy` as its engine for building HTML components in pure Python, with full typing and async support.
 
-**File-system based routing** takes a central roles in `holm`. Instead of manually defining routes, your application's package structure is automatically discovered and mapped to a corresponding API structure. This process also included full UI composition from your layouts and pages.
+**File-system based routing** takes a central role in `holm`. Instead of manually defining routes, your application's package structure is automatically discovered and mapped to a corresponding API structure. This process also included full UI composition from your layouts and pages.
 
 ## Application initialization
 

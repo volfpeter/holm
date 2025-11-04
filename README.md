@@ -77,7 +77,7 @@ All you need to do is follow these simple rules:
 
 ## Examples
 
-The documentation contains guides and example applications for every major feature. They all build on the [Quick start guide]([guides/quick-start-guide.md](https://volfpeter.github.io/holm/guides/quick-start-guide)), so that is the best place to start if you prefer to learn through examples.
+The documentation contains guides and example applications for every major feature. They all build on the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide), so that is the best place to start if you prefer to learn through examples.
 
 You can discover even more nuances by exploring the [test application](https://github.com/volfpeter/holm/tree/main/test_app) of the project.
 
