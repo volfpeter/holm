@@ -5,7 +5,7 @@ from fastapi.testclient import TestClient
 
 import test_app.calculator.page as calculator_page
 import test_app.page as test_app_page
-import test_app.user._id_.page as user_by_id_page
+import test_app.user._user_id_.page as user_by_id_page
 import test_app.user.page as user_page
 from test_app.main import app
 
@@ -19,10 +19,10 @@ from test_app.main import app
         (calculator_page.__name__, "/calculator/", {}),
         ("test_app.user.page", "/user/", {}),
         (user_page.__name__, "/user/", {}),
-        ("test_app.user._id_.page", "/user/1/", {"id": 1}),
-        (user_by_id_page.__name__, "/user/1/", {"id": 1}),
-        ("test_app.user._id_.page", "/user/C0FF33/", {"id": "C0FF33"}),
-        (user_by_id_page.__name__, "/user/C0FF33/", {"id": "C0FF33"}),
+        ("test_app.user._user_id_.page", "/user/1/", {"user_id": 1}),
+        (user_by_id_page.__name__, "/user/1/", {"user_id": 1}),
+        ("test_app.user._user_id_.page", "/user/C0FF33/", {"user_id": "C0FF33"}),
+        (user_by_id_page.__name__, "/user/C0FF33/", {"user_id": "C0FF33"}),
     ),
 )
 def test_app_url_path_for_page(path_name: str, url: str, path_params: dict[str, Any]) -> None:

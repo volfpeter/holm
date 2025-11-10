@@ -172,7 +172,14 @@ class PackageInfo:
         # That option is to use the `_name_` pattern instead and convert such package/directory
         # names to the `{name}` format here and use that as the URL segment.
         url = "/".join(
-            (f"{{{p[1:-1]}}}" if len(p) > 2 and p[0] == p[-1] == "_" else p for p in url.split("/"))
+            (
+                f"{{{p[1:-1]}}}"
+                if len(p) > 2 and p[0] == p[-1] == "_"
+                else p.replace(
+                    "_", "-"
+                )  # Replace underscores with hyphens if the given part is not a path parameter.
+                for p in url.split("/")
+            )
         )
         return cls(package_dir=package_dir, package_name=package_name, url=url)
 

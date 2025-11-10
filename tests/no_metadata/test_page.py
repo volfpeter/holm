@@ -7,7 +7,7 @@ from test_app.no_metadata.page import rendered_page
 
 
 def test_page(client: TestClient) -> None:
-    response = client.get("/no_metadata")
+    response = client.get("/no-metadata")
     assert response.status_code == 200
     assert response.headers["Content-Type"] == "text/html; charset=utf-8"
     assert response.text == rendered_page

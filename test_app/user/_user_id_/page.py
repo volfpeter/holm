@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from htmy import Component, Context, html
 
 
-async def metadata(id: str) -> dict[str, str]:
+async def metadata(user_id: str) -> dict[str, str]:
     return {
-        "title": f"User {id}",
+        "title": f"User {user_id}",
     }
 
 
@@ -13,13 +13,13 @@ async def metadata(id: str) -> dict[str, str]:
 class page:
     """The generated `__init__()` method can be used as a FastAPI dependency."""
 
-    id: str
+    user_id: str
     page_variant: str = "default"
 
     async def htmy(self, _: Context) -> Component:
         return html.div(
-            html.h1(f"User {self.id}"),
-            html.p(f"This is the user page for {self.id}."),
+            html.h1(f"User {self.user_id}"),
+            html.p(f"This is the user page for {self.user_id}."),
             html.p(f"Requested page variant is {self.page_variant}."),
         )
 

@@ -74,7 +74,7 @@ Note: `holm` applies file-system based routing to both pages and actions! If bot
 
 The action we create will be very simple, just a `welcome_message() -> str` function that returns a welcome message in a randomly chosen language. The returned message is just a string (which happens to be a `htmy` `Component`), which `holm` automatically renders into an HTML response.
 
-The `welcome_message()` function is registered as an action using the `@action.get()` decorator. Since we don't pass a path to it, it will be registered under `/welcome_message`.
+The `welcome_message()` function is registered as an action using the `@action.get()` decorator. Since we don't pass a path to it and underscores (`_`) are replaced with hyphens (`-`) by default, it will be registered under `/welcome-message`.
 
 ```python hl_lines="15-16"
 import random
@@ -136,7 +136,7 @@ def page() -> Component:
     return html.div(
         html.h1(
             "Welcome to My App",
-            hx_get="/welcome_message",
+            hx_get="/welcome-message",
             hx_trigger="every 2s",
         ),
         html.p("This is a minimal holm application demonstrating:"),

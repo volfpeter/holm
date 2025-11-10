@@ -9,7 +9,7 @@ def page() -> Component:
     return html.div(
         html.h1(
             "Welcome to My App",
-            hx_get="/welcome_message",
+            hx_get="/welcome-message",
             hx_trigger="every 2s",
         ),
         html.p("This is a minimal holm application demonstrating:"),
