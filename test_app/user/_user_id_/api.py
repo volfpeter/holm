@@ -14,8 +14,8 @@ def api(htmy: HTMY) -> APIRouter:
         # and with the plain JSON payload to non-HTMX ones.
         user_card,
     )
-    async def get_user(id: str) -> dict[str, str]:
-        return {"id": id, "name": "John"}
+    async def get_user(user_id: str) -> dict[str, str]:
+        return {"id": user_id, "name": "John"}
 
     # Don't forget to return the API.
 

@@ -10,5 +10,5 @@ def list_urls(request: Request) -> list[str]:
         str(request.url_for("test_app.page")),
         str(request.url_for("test_app.calculator.page")),
         str(request.url_for("test_app.user.page")),
-        str(request.url_for("test_app.user._id_.page", id="1")),
+        str(request.url_for("test_app.user._user_id_.page", user_id="1")),
     ]

@@ -354,7 +354,7 @@ class action:
             setattr(module, _actions_variable, module_actions)
 
         if path is None:
-            path = f"/{action_name}"
+            path = f"/{action_name.replace('_', '-')}"
 
         route_args["name"] = f"{action_module}.{action_name}"
         # Use the Action tag if no tags were set by the user.

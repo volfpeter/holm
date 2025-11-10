@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from test_app.user._id_.page import rendered_page_dense_layout_grid_eric
+from test_app.user._user_id_.page import rendered_page_dense_layout_grid_eric
 
 
 def test_page(client: TestClient) -> None:

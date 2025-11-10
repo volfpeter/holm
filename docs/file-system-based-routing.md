@@ -9,6 +9,7 @@ Going through the [Application components](application-components.md) documentat
 ## Core concepts
 
 - Packages define URL segments: Each Python package within your application's root maps to a URL segment. Nesting directories creates nested routes. For example, the `my_app/users/` package will create routes under the `/users` URL path.
+- Underscores (`_`) are replaced with hyphens (`-`) in paths by default, unless a path segment corresponds to a path parameter, in which case the underscore is preserved.
 - Special files mark application components: `holm` looks for specific filenames within your application directory to discover application components and compose your application.
   - `page.py`: Creates a publicly accessible URL for a route segment.
   - `layout.py`: Defines a shared UI that wraps a route segment and its children.
@@ -63,7 +64,7 @@ An `actions.py` file offers a dedicated place to define actions, which are flexi
 Actions are declared using the `@action` decorators (for example `@action.post()`). Their paths are always prefixed with the package's URL path.
 
 - An action in `my_app/users/actions.py` (or `my_app/users/page.py`) decorated with `@action.post("/enable")` creates a route that handles `POST /users/enable` requests.
-- If no path is specified in the decorator, the action function's name is used. Decorating a `def disable(): ...` function without setting a path would create a route at `/users/disable`.
+- If no path is specified in the decorator, the action function's name is used with underscores (`_`) being replaced by hyphens (`-`). Decorating a `def deactivate_user(): ...` function without setting a path would create a route at `/users/deactivate-user`.
 
 ### APIs
 

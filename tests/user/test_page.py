@@ -15,12 +15,12 @@ def test_page(client: TestClient) -> None:
     ("action_path", "method", "expected"),
     [
         # -- Automatic action path generation from function name.
-        ("/list_users", "GET", RenderedAction.list_users),
-        ("/create_user", "POST", RenderedAction.create_user),
-        ("/update_user_with_put", "PUT", RenderedAction.update_user_with_put),
-        ("/update_user_with_patch", "PATCH", RenderedAction.update_user_with_patch),
-        ("/delete_user", "DELETE", RenderedAction.delete_user),
-        # -- Custom path support.
+        ("/list-users", "GET", RenderedAction.list_users),
+        ("/create-user", "POST", RenderedAction.create_user),
+        ("/update-user-with-put", "PUT", RenderedAction.update_user_with_put),
+        ("/update-user-with-patch", "PATCH", RenderedAction.update_user_with_patch),
+        ("/delete-user", "DELETE", RenderedAction.delete_user),
+        # -- Custom path support. No underscore replacement.
         ("/a/list_users", "GET", RenderedAction.list_users),
         ("/a/create_user", "POST", RenderedAction.create_user),
         ("/a/update_user_with_put", "PUT", RenderedAction.update_user_with_put),
