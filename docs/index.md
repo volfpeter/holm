@@ -44,7 +44,7 @@ Supported operating systems:
 
 - Linux
 - macOS
-- Windows: WSL only (native support may arrive in the future)
+- Windows
 
 ## Support
 
