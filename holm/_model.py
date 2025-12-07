@@ -161,7 +161,7 @@ class PackageInfo:
         Creates a `PackageInfo` instance from a so called "marker" that is located in the package.
         """
         package_dir = file_path.relative_to(config.root_dir).parent
-        package_dir_str = str(package_dir)
+        package_dir_str = "/".join(package_dir.parts)
         package_name = package_dir_str.replace("/", ".")
         # Create the base version of the URL
         url = "/" if package_dir_str == "." else f"/{package_dir_str[config.app_url_prefix_length :]}"
