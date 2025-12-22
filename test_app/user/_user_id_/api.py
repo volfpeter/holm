@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from fasthx.htmy import HTMY
-from htmy import html
+from htmy import ComponentType, html
 
 
 def api(htmy: HTMY) -> APIRouter:
@@ -22,7 +22,7 @@ def api(htmy: HTMY) -> APIRouter:
     return api
 
 
-def user_card(user: dict[str, str]) -> html.div:
+def user_card(user: dict[str, str]) -> ComponentType:
     return html.div(
         html.h2(user["name"]),
         html.p(f"ID: {user['id']}"),

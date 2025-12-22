@@ -5,7 +5,7 @@ from holm import Metadata
 
 
 @component.context_only
-def head(context: Context) -> html.head:
+def head(context: Context) -> ComponentType:
     """
     Helper component that returns the entire head element of the page.
 
@@ -25,7 +25,7 @@ def head(context: Context) -> html.head:
     )
 
 
-def search_form(q: str, *, autofocus: bool) -> html.form:
+def search_form(q: str, *, autofocus: bool) -> ComponentType:
     """
     Search form for the layout.
 

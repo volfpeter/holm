@@ -44,17 +44,17 @@ Example:
 
 ```python
 # my_app/page.py
-from htmy import html
+from htmy import ComponentType, html
 
-def page() -> html.div:
+def page() -> ComponentType:
     return html.div("Hello, world!")
 ```
 
 ```python
 # my_app/layout.py
-from htmy import html
+from htmy import ComponentType, html
 
-def layout(children: html.div) -> html.html:
+def layout(children: ComponentType) -> ComponentType:
     return html.html(
         html.head(html.title("My App")),
         html.body(children),  # <- The html.div page() returns
@@ -69,30 +69,30 @@ Example:
 
 ```python
 # my_app/page.py
-from htmy import html
+from htmy import ComponentType, html
 
 def metadata() -> dict[str, str]:
     """Metadata dependency for the page."""
     return {"title": "My App"}
 
-def page() -> html.div:
+def page() -> ComponentType:
     return html.div("Hello, world!")
 ```
 
 ```python
 # my_app/layout.py
-from htmy import Context, component, html
+from htmy import ComponentType, Context, component, html
 
 from holm import Metadata
 
 @component
-def head(default_title: str, context: Context) -> html.head:
+def head(default_title: str, context: Context) -> ComponentType:
     """Custom head component that can access page metadata from the htmy context."""
     metadata = Metadata.from_context(context)  # <- The mapping the `metadata` dependency of the page returned
     title = metadata.get("title", default_title)
     return html.head(html.title(title))
 
-def layout(children: html.div) -> html.html:
+def layout(children: ComponentType) -> ComponentType:
     return html.html(
         head("My App"),  # <- Our custom head component
         html.body(children),  # <- The html.div page() returns

@@ -85,6 +85,15 @@ class AppConfig:
         raise ValueError("Could not determine the application package.")
 
 
+_no_app_package_roots: set[str] = {"", "."}
+"""
+Special package names that are encountered when the application is not wrapped in a Python package.
+
+- "": src layout
+- ".": flat layout
+"""
+
+
 @dataclass(frozen=True, kw_only=True, slots=True)
 class PackageInfo:
     """
@@ -131,14 +140,13 @@ class PackageInfo:
             ValueError: If the module is invalid.
         """
         # Check if the module exists. Trying to import it and catching the exception would hide possible
-        # import error that occur in within the module, which is undesired because it would be hard for
+        # import errors that occur within the module, which is undesired because it would be hard for
         # users to find why an API is not registered.
         if not (self.package_dir / f"{name}.py").is_file():
             return None
 
         # Support applications that are not wrapped in a Python package.
-        # In that case `self.package_name` is ".".
-        import_name = name if self.package_name == "." else f"{self.package_name}.{name}"
+        import_name = name if self.package_name in _no_app_package_roots else f"{self.package_name}.{name}"
         try:
             module = import_module(import_name)
         except Exception:
