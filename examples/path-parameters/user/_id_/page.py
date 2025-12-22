@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import Depends
-from htmy import html
+from htmy import ComponentType, html
 
 from ..service import User, get_user
 
@@ -33,7 +33,7 @@ def metadata(id: int, user: DependsUser) -> dict[str, str]:
     }
 
 
-async def page(user: DependsUser) -> html.div:
+async def page(user: DependsUser) -> ComponentType:
     """
     Page function that uses the `DependsUser` annotated FastAPI dependency
     to get the user whose ID was submitted in the `{id}` path parameter.

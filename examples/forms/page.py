@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import Form
-from htmy import Component, XBool, html
+from htmy import Component, ComponentType, XBool, html
 from todo_service import create_todo, find_todos
 
 
@@ -12,7 +12,7 @@ def page_content(
     title_invalid: bool = False,
     description: str = "",
     description_invalid: bool = False,
-) -> html.div:
+) -> ComponentType:
     """
     Returns the common page content for `page()` and `handle_submit()`.
 

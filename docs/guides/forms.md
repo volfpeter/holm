@@ -106,7 +106,7 @@ from holm import Metadata
 
 
 @component.context_only
-def head(context: Context) -> html.head:
+def head(context: Context) -> ComponentType:
     """
     Helper component that returns the entire head element of the page.
 
@@ -130,7 +130,7 @@ def head(context: Context) -> html.head:
 Next we can add the search form:
 
 ```python
-def search_form(q: str, *, autofocus: bool) -> html.form:
+def search_form(q: str, *, autofocus: bool) -> ComponentType:
     """
     Search form for the layout.
 
@@ -200,7 +200,7 @@ The description implies that the page looks essentially the same both on initial
 from typing import Annotated
 
 from fastapi import Form
-from htmy import Component, XBool, html
+from htmy import ComponentType, Component, XBool, html
 from todo_service import create_todo, find_todos
 
 
@@ -211,7 +211,7 @@ def page_content(
     title_invalid: bool = False,
     description: str = "",
     description_invalid: bool = False,
-) -> html.div:
+) -> ComponentType:
     """
     Returns the common page content for `page()` and `handle_submit()`.
 
