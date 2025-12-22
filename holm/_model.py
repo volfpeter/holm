@@ -137,8 +137,8 @@ class PackageInfo:
             return None
 
         # Support applications that are not wrapped in a Python package.
-        # In that case `self.package_name` is ".".
-        import_name = name if self.package_name == "." else f"{self.package_name}.{name}"
+        # In that case `self.package_name` is "" for src layouts and "." for package layouts.
+        import_name = name if self.package_name in {"", "."} else f"{self.package_name}.{name}"
         try:
             module = import_module(import_name)
         except Exception:
