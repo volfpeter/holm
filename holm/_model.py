@@ -85,6 +85,15 @@ class AppConfig:
         raise ValueError("Could not determine the application package.")
 
 
+_no_app_package_roots: set[str] = {"", "."}
+"""
+Special package names that are encountered when the application is not wrapped in a Python package.
+
+- "": src layout
+- ".": flat layout
+"""
+
+
 @dataclass(frozen=True, kw_only=True, slots=True)
 class PackageInfo:
     """
@@ -137,8 +146,7 @@ class PackageInfo:
             return None
 
         # Support applications that are not wrapped in a Python package.
-        # In that case `self.package_name` is "" for src layouts and "." for package layouts.
-        import_name = name if self.package_name in {"", "."} else f"{self.package_name}.{name}"
+        import_name = name if self.package_name in _no_app_package_roots else f"{self.package_name}.{name}"
         try:
             module = import_module(import_name)
         except Exception:
