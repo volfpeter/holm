@@ -140,7 +140,7 @@ class PackageInfo:
             ValueError: If the module is invalid.
         """
         # Check if the module exists. Trying to import it and catching the exception would hide possible
-        # import error that occur in within the module, which is undesired because it would be hard for
+        # import errors that occur within the module, which is undesired because it would be hard for
         # users to find why an API is not registered.
         if not (self.package_dir / f"{name}.py").is_file():
             return None
