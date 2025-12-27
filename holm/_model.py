@@ -13,6 +13,15 @@ from .typing import ModuleName, URLSegment
 _TModule = TypeVar("_TModule")
 
 
+_no_app_package_roots: set[str] = {"", "."}
+"""
+Special package names that are encountered when the application is not wrapped in a Python package.
+
+- "": src layout
+- ".": flat layout
+"""
+
+
 @dataclass(frozen=True, kw_only=True, slots=True)
 class AppConfig:
     """
@@ -44,29 +53,40 @@ class AppConfig:
         Raises:
             ValueError: If the application package cannot be determined.
         """
-        root_dir = Path.cwd()
-        app_dir_name = cls._find_app_package_name()
-        len_app_dir_name = len(app_dir_name)
+        caller_package, caller_package_path = cls._find_app_root()
 
-        return cls(
-            root_dir=root_dir,
-            app_dir_name=app_dir_name,
+        if caller_package not in _no_app_package_roots:
+            # Walk up the package hierarchy until we reach the root.
+            for _ in range(len(caller_package.split("."))):
+                caller_package_path = caller_package_path.parent
+
+        len_caller_package = len(caller_package)
+
+        result = cls(
+            root_dir=caller_package_path,
+            app_dir_name=caller_package,
             # Support applications that are not wrapped in a Python package.
             # In that case app_dir_name is "".
-            app_url_prefix_length=len_app_dir_name + 1 if len_app_dir_name > 0 else 0,
-            app_dir=root_dir / app_dir_name,
+            app_url_prefix_length=len_caller_package + 1 if len_caller_package > 0 else 0,
+            app_dir=caller_package_path / caller_package,
         )
+        return result
 
     @classmethod
-    def _find_app_package_name(cls) -> str:
+    def _find_app_root(cls) -> tuple[str, Path]:
         """
-        Attempts to find and return the application package name.
+        Attempts to find the application's root and return the application
+        package name and the corresponding file.
 
-        The method uses the assumption that the application package is the one from which
-        the call stack directly led to this library.
+        The method uses the assumption that the application package is the
+        one from which the call stack directly led to this library.
+
+        Returns:
+            A tuple consisting of the application package name (import path)
+            and the corresponding directory path.
 
         Raises:
-            ValueError: If the application package cannot be determined.
+            ValueError: If the application root cannot be determined.
         """
         # We assume the app package is the one from which the call stack led to this library.
         lib_root = __name__.split(".")[0]
@@ -80,18 +100,10 @@ class AppConfig:
 
             if not caller_package.startswith(lib_root):
                 # The call stack is no longer in this library, so we've found the app package.
-                return caller_package
+                # Find the matching path, that marks the application root.
+                return caller_package, Path(caller_frame.filename).parent
 
         raise ValueError("Could not determine the application package.")
-
-
-_no_app_package_roots: set[str] = {"", "."}
-"""
-Special package names that are encountered when the application is not wrapped in a Python package.
-
-- "": src layout
-- ".": flat layout
-"""
 
 
 @dataclass(frozen=True, kw_only=True, slots=True)
@@ -101,13 +113,6 @@ class PackageInfo:
 
     This class most importantly describes how a package can be imported and
     what should be the web URL of its contents.
-    """
-
-    package_dir: Path
-    """
-    Relative path to the package directory.
-
-    It is basically the path matching the package name / import path.
     """
 
     package_name: str
@@ -139,17 +144,15 @@ class PackageInfo:
         Raises:
             ValueError: If the module is invalid.
         """
-        # Check if the module exists. Trying to import it and catching the exception would hide possible
-        # import errors that occur within the module, which is undesired because it would be hard for
-        # users to find why an API is not registered.
-        if not (self.package_dir / f"{name}.py").is_file():
-            return None
-
         # Support applications that are not wrapped in a Python package.
         import_name = name if self.package_name in _no_app_package_roots else f"{self.package_name}.{name}"
         try:
             module = import_module(import_name)
+        except ModuleNotFoundError:
+            # Not a problem, the module does not exist.
+            return None
         except Exception:
+            # Problem, there is likely an error in the module that causes the import to fail.
             import traceback
 
             # Handle potential misconfigurations with a simple warning, instead of an exception.
@@ -189,7 +192,7 @@ class PackageInfo:
                 for p in url.split("/")
             )
         )
-        return cls(package_dir=package_dir, package_name=package_name, url=url)
+        return cls(package_name=package_name, url=url)
 
     def __lt__(self, other: PackageInfo) -> bool:
         return self.package_name < other.package_name
