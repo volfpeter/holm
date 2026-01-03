@@ -19,7 +19,7 @@ from .module_options._metadata import (
 )
 from .module_options._submit_handler import get_submit_handler
 from .modules._api import PlainAPIFactory, RenderingAPIFactory, is_api_definition
-from .modules._error import is_error_handler_owner, register_error_handlers
+from .modules._error import load_error_handler_owner, register_error_handlers
 from .modules._layout import (
     LayoutFactory,
     combine_layouts_to_dependency,
@@ -52,7 +52,7 @@ def App(*, app: FastAPI | None = None, htmy: HTMY | None = None) -> FastAPI:
 
     # Register error handlers
     if pkg := root_node.package:
-        register_error_handlers(app, pkg.import_module("error", is_error_handler_owner), htmy=htmy)
+        register_error_handlers(app, load_error_handler_owner(pkg), htmy=htmy)
 
     # Build the API
     app.include_router(_build_api(root_node, htmy=htmy))

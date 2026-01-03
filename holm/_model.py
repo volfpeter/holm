@@ -1,13 +1,13 @@
 from __future__ import annotations
 
 import inspect
-import logging
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from importlib import import_module
 from pathlib import Path
 from typing import Any, TypeGuard, TypeVar
 
+from .logging import logger
 from .typing import ModuleName, URLSegment
 
 _TModule = TypeVar("_TModule")
@@ -149,7 +149,6 @@ class PackageInfo:
             import traceback
 
             # Handle potential misconfigurations with a simple warning, instead of an exception.
-            logger = logging.getLogger("holm")
             logger.warning(f"Failed to import module {name} at: {import_name}")
             logger.warning(traceback.format_exc())
             return None
