@@ -45,11 +45,12 @@ class AppConfig:
         Raises:
             ValueError: If the application package cannot be determined.
         """
+        # The application directory and the root directory may be different.
         caller_package, caller_package_path = cls._find_app_root()
         root_dir = caller_package_path
 
         if caller_package not in _no_app_package_roots:
-            # Walk up the package hierarchy until we reach the root.
+            # Walk up the package hierarchy until we reach the actual root directory.
             for _ in range(len(caller_package.split("."))):
                 root_dir = root_dir.parent
 
@@ -59,7 +60,7 @@ class AppConfig:
             app_dir=caller_package_path,
             root_dir=root_dir,
             # Support applications that are not wrapped in a Python package.
-            # In that case app_dir_name is "".
+            # In that case caller package is string is empty.
             app_url_prefix_length=len_caller_package + 1 if len_caller_package > 0 else 0,
         )
         return result
