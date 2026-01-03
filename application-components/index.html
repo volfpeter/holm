@@ -1,0 +1,1135 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../in-a-hurry/">
+      
+      
+        <link rel="next" href="../file-system-based-routing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Application components - holm</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#application-components" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="holm" class="md-header__button md-logo" aria-label="holm" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            holm
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Application components
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/volfpeter/holm" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    volfpeter/holm
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="holm" class="md-nav__button md-logo" aria-label="holm" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    holm
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/volfpeter/holm" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    volfpeter/holm
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Holm
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../in-a-hurry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    In a hurry
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application components
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Application components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#layouts-and-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layouts and pages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Layouts and pages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#page-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Page metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-submit-handlers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Page submit handlers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APIs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-parameters-as-package-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path parameters as package names
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#private-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private packages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../file-system-based-routing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    File-system based routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utilities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utilities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/quick-start-guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/path-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Path parameters and dynamic routing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/actions-with-htmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Actions with HTMX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/forms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Forms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rendering-apis-with-htmx/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering APIs with HTMX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/custom-applications/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom applications
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/error-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Error handling
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#layouts-and-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layouts and pages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Layouts and pages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#page-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Page metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#page-submit-handlers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Page submit handlers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        APIs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#path-parameters-as-package-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path parameters as package names
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#private-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private packages
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error handling
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="application-components">Application components</h1>
+<p>This section summarizes the different components of <code>holm</code> applications. If you have used Next.js before, you will find these concepts very familiar. If not, don't worry, they may seem complex at first, but they are quite intuitive and natural.</p>
+<h2 id="layouts-and-pages">Layouts and pages</h2>
+<p><em>Layouts</em> are defined in the <code>layout.py</code> modules of packages as a callable <code>layout</code> variable (note that for example classes with an <code>__init__()</code> method, or <code>htmy.Component</code>s are callable, so they also qualify).</p>
+<p>Rules for <em>layouts</em>:</p>
+<ul>
+<li>The root layout must always return a <code>htmy.Component</code>.</li>
+<li><code>layout</code> must be a callable and it must accept a positional argument (other than <code>self</code> if the layout is a method of a class), the data / properties of the layout that are returned by the pages or layouts this layout directly wraps.</li>
+<li><code>layout</code> can have additional arguments (position or keyword and keyword-only, but not positional-only). These arguments must be FastAPI dependencies. They will be automatically resolved during each request.</li>
+<li>Returning a tuple or a list from a layout is <strong>not allowed</strong> unless the value is a <code>htmy.ComponentSequence</code>. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See <code>htmy.is_component_sequence()</code> for more information.</li>
+</ul>
+<p>By default, layouts automatically wrap all layouts and pages in subpackages. You can opt out of this behavior by wrapping the return value of a layout or page with the <a href="../utilities/#without_layout"><code>without_layout</code> utility</a>.</p>
+<p><em>Tip: layouts can provide context for their entire subtree by wrapping the subtree with a <code>htmy</code> <code>ContextProvider</code> component.</em></p>
+<p><em>Pages</em> are defined in the <code>page.py</code> module of packages as a callable <code>page</code> variable (note that classes with an <code>__init__()</code> method are callable, so they also qualify).</p>
+<p>Rules for <em>pages</em>:</p>
+<ul>
+<li><code>page</code> must be a FastAPI dependency, meaning it can have any arguments as long as they can all be resolved by FastAPI as dependencies.</li>
+<li><code>page</code> must return the properties object for the layout that directly wraps it.</li>
+<li>If a page is not wrapped by a layout, then it must return a <code>htmy.Component</code>.</li>
+<li>Returning a tuple or a list from a page is <strong>not allowed</strong> unless the value is a <code>htmy.ComponentSequence</code>. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See <code>htmy.is_component_sequence()</code> for more information.</li>
+<li><code>page</code> can directly return a FastAPI <code>Response</code> as well, which is always returned as is.</li>
+</ul>
+<h3 id="page-metadata">Page metadata</h3>
+<p><code>page.py</code> modules can have a <code>metadata</code> variable, which can be an arbitrary mapping or a FastAPI dependency that returns an arbitrary mapping.</p>
+<p>If the <code>metadata</code> variable is a callable, it can have any FastAPI dependencies, even different ones than what the <code>page</code> or wrapper layouts use.</p>
+<p>The metadata provided by the currently served page is made available to every <code>htmy.Component</code> (from the root layout to the page itself) through the built-in <code>Metadata</code> utility. It can be accessed as <code>Metadata.from_context(context)</code> where <code>context</code> is the <code>htmy</code> rendering context which is passed to every component. See the <a href="https://volfpeter.github.io/htmy/#context">htmy documentation</a> for more information.</p>
+<p>This feature is particularly useful when page-specific information - for example title, description, or keywords - must be set dynamically (for example, in layouts) on a page-by-page basis. <code>Metadata</code> implements the <code>Mapping</code> protocol, so once loaded from the <code>htmy</code> rendering context in a component with <code>metadata = Metadata.from_context(context)</code>, you can use it simply like this to set page-specific information in any layout, component, or the page itself: <code>htmy.html.title(metadata["title"])</code>.</p>
+<h3 id="page-submit-handlers">Page submit handlers</h3>
+<p><code>page.py</code> modules can also define a callable <code>handle_submit</code> variable. The same rendering logic and rules apply to it as to the <code>page</code> variable itself. The only difference is that for <code>handle_submit</code>, a HTTP <code>POST</code> route is created.</p>
+<p><code>handle_submit</code>, together with <code>page</code>, offer a convenient way to handle form submission in your application.</p>
+<p>The default HTML <code>&lt;form&gt;</code> action is to submit the form to the current URL using a HTTP GET request. This means if you have a form in your <code>page</code> (or <code>layout</code>), and you do not set <code>action</code> and <code>method</code>, your form's submission will be handled by your current <code>page</code> by default (your GET route). This is useful for search and filtering forms for example.</p>
+<p>For forms that trigger state change on the server, you should set the form <code>method</code> to <code>POST</code>. This is important from a CSRF prevention perspective, and it also ensures the submitted form will be handled by your <code>handle_submit</code> function (your POST route), instead of your <code>page</code> function.</p>
+<p>You can of course set <code>action</code> to some URL. In that case the same logic applies, but instead of triggering the <code>page</code> or <code>handle_submit</code> function that belong to the current URL, it will trigger them in the <code>page.py</code> or <code>api.py</code> module that handles the given URL.</p>
+<h2 id="actions">Actions</h2>
+<p><em>Actions</em> provide a convenient and flexible way to create custom HTML rendering routes that don't fit the standard <code>page</code> pattern. They are functions decorated with one of the <code>@action</code> decorators (<code>@action.get()</code>, <code>@action.post()</code>, etc.), and they can be defined in either a <code>page.py</code> or <code>actions.py</code> module.</p>
+<p>Rules for <em>actions</em>:</p>
+<ul>
+<li>An action must be a FastAPI dependency, just like a page.</li>
+<li>Actions can be registered with any HTTP method (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>), using the appropriate <code>@action</code> decorator.</li>
+<li>You can specify a custom URL path for an action (e.g., <code>@action.post("/do-something")</code>), but it is optional. If no path is provided, the function's name is used as the path, with underscores (<code>_</code>) being replaced by hyphens (<code>-</code>). In both cases, the path is relative to the URL corresponding to the package that contains the action.</li>
+<li>By default, components returned from actions are not wrapped in layouts. This is ideal for returning HTML fragments for client frameworks like HTMX.</li>
+<li>To render an action's return value in its owner layouts (like it is done by default for pages), you can set <code>use_layout=True</code> in the decorator: <code>@action.get(use_layout=True)</code>. This behavior can of course be combined with the <a href="../utilities/#without_layout"><code>without_layout</code> utility</a>.</li>
+<li>Actions can also have <code>metadata</code>: <code>@action.get(metadata={"title": "Hello"})</code>. <code>metadata</code> works identically to page metadata and is particularly useful when combined with <code>use_layout</code>.</li>
+<li>An action can directly return a FastAPI <code>Response</code>, which is always returned as is.</li>
+</ul>
+<h2 id="apis">APIs</h2>
+<p>APIs are defined in the <code>api.py</code> module or packages as an <code>APIRouter</code> variable or a callable that returns an <code>APIRouter</code>.</p>
+<p><code>api.py</code> modules serve two primary use-cases:</p>
+<ul>
+<li>They allow creating a custom <code>APIRouter</code> configuration for the package, for example by adding <code>APIRouter</code> dependencies.</li>
+<li>They allow creating standard FastAPI routes that serve JSON.</li>
+</ul>
+<p>These are standard FastAPI <code>APIRouter</code>s, but you should still follow these recommendations:</p>
+<ul>
+<li>If routes in the API don't do any rendering, then the <code>api()</code> callable should have no arguments or simply an <code>api</code> variable should be used.</li>
+<li>If the API has rendering routes, the <code>api()</code> callable should have a single <code>fasthx.htmy.HTMY</code> positional argument. The application's renderer will be passed to this function automatically by <code>holm</code>.</li>
+<li>If an <code>api()</code> callable is used, it may have further arguments as long as they all have default values. This pattern can simplify API testing for example, by allowing custom configurations for tests.</li>
+</ul>
+<p>Note on rendering APIs:</p>
+<ul>
+<li>They are a lower-level alternative to <a href="#actions">actions</a>. In most cases, you should prefer using actions instead: they are simpler and more powerful.</li>
+<li>The primary role of these APIs is to return so called "partials" (small HTML snippets instead of entire HTML pages) to clients such as HTMX for swapping.</li>
+<li>The components returned by rendering routes are not automatically wrapped in layouts like pages are.</li>
+</ul>
+<h2 id="path-parameters-as-package-names">Path parameters as package names</h2>
+<p>Routes with path parameters, also often referred to as "dynamic routes", are essential to almost all applications. A simple example is a user profile page, served at <code>/user/{id}</code> for example, where we want to display information about the user with the given ID.</p>
+<p>You can capture dynamic URL path parameters by using special package names. Two formats are supported:</p>
+<ul>
+<li><code>_param_</code> format: package names like <code>_id_</code> or <code>_user_id_</code>.</li>
+<li><code>{param}</code> format: package names like <code>{id}</code> or <code>{user_id}</code>. <em>(Note: it works with <code>holm</code>, but static code analysis tools flag it because <code>{id}</code> is not a valid Python identifier.)</em></li>
+</ul>
+<p>Both formats are converted to FastAPI path parameters. For example:</p>
+<ul>
+<li>File path <code>user/_id_/page.py</code> becomes URL <code>/user/{id}</code>.</li>
+<li>File path <code>user/{user_id}/settings/page.py</code> becomes URL <code>/user/{user_id}/settings</code>.</li>
+</ul>
+<p>Any layout or page within these packages can access the path parameter as a FastAPI dependency by adding it to their function signature (e.g., <code>id: int</code> or <code>user_id: str</code>).</p>
+<h2 id="private-packages">Private packages</h2>
+<p>You can prefix package names with one or more underscores to opt the entire package (including its subpackages) out of the automatic application component discovery.</p>
+<p>For example, if you have a package named <code>_private</code> somewhere in your application folder, you can freely place valid page, layout, or API files within it or its subpackages. These modules will not be processed and included in the application.</p>
+<p>Reminder: if the package name also ends with an underscore, it will be treated as a path parameter, as described <a href="#path-parameters-as-package-names">above</a>.</p>
+<h2 id="error-handling">Error handling</h2>
+<p>Error handlers are defined in the <code>error.py</code> or <code>errors.py</code> module of the root package as a <code>handlers</code> variable, which can be a mapping from exception types or HTTP status codes to standard FastAPI exception handler functions, or a callable that expects a <code>fasthx.htmy.HTMY</code> positional argument and returns such a mapping. The latter option is useful if you want to do custom HTML rendering in an error handler.</p>
+<p>Error handlers must return either a <code>htmy.Component</code> or a <code>fastapi.Response</code>. Responses are returned to the client as is, and components are automatically rendered and returned as a <code>HTMLResponse</code>.</p>
+<p>It is important to know that rendered errors are <strong>not</strong> automatically wrapped in the root layout of your application. The main reason for this is <code>holm</code> can not always know what the client (be it HTMX or simply the browser) expects.</p>
+<p>The recommended way to handle this is to create an HTML skeleton component somewhere in your codebase, and use it both in the root layout and in error handlers to wrap page content. This, together with application-specific exceptions make it easy to handle every error correctly with minimal manual effort.</p>
+<p>Also, you can simply return redirect responses in error handlers that navigate users to the appropriate error page, passing context as query parameters.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.indexes", "navigation.instant", "navigation.tracking", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
