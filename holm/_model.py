@@ -60,7 +60,7 @@ class AppConfig:
             app_dir=caller_package_path,
             root_dir=root_dir,
             # Support applications that are not wrapped in a Python package.
-            # In that case caller package is string is empty.
+            # In that case caller package is an empty string.
             app_url_prefix_length=len_caller_package + 1 if len_caller_package > 0 else 0,
         )
         return result
