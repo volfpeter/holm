@@ -28,22 +28,14 @@ class AppConfig:
     Stores basic configuration Information about the application.
     """
 
-    root_dir: Path
-    """The root directory (as in Python import root)."""
-
-    app_dir_name: str
-    """The name of the application directory/package."""
-
-    app_url_prefix_length: int
-    """The length of the application URL prefix to remove (`len(app_dir_name) + 1`)."""
-
     app_dir: Path
     """Path to the application directory."""
 
-    # Overriding __init__ and calculating inferred values automatically would serve the
-    # default case well, but it would complicate things if we ever need to support
-    # different application structures (for example an app in tests). So we use
-    # alternative initializers instead.
+    root_dir: Path
+    """The root directory (as in Python import root)."""
+
+    app_url_prefix_length: int
+    """The length of the application URL prefix to remove."""
 
     @classmethod
     def default(cls) -> AppConfig:
@@ -54,21 +46,21 @@ class AppConfig:
             ValueError: If the application package cannot be determined.
         """
         caller_package, caller_package_path = cls._find_app_root()
+        root_dir = caller_package_path
 
         if caller_package not in _no_app_package_roots:
             # Walk up the package hierarchy until we reach the root.
             for _ in range(len(caller_package.split("."))):
-                caller_package_path = caller_package_path.parent
+                root_dir = root_dir.parent
 
         len_caller_package = len(caller_package)
 
         result = cls(
-            root_dir=caller_package_path,
-            app_dir_name=caller_package,
+            app_dir=caller_package_path,
+            root_dir=root_dir,
             # Support applications that are not wrapped in a Python package.
             # In that case app_dir_name is "".
             app_url_prefix_length=len_caller_package + 1 if len_caller_package > 0 else 0,
-            app_dir=caller_package_path / caller_package,
         )
         return result
 
