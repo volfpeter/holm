@@ -3,7 +3,7 @@ from typing import Literal, TypeAlias, get_args
 PackageModuleName: TypeAlias = Literal["actions", "api", "layout", "page"]
 """Recognized module names."""
 
-RootOnlyModuleName: TypeAlias = Literal["error"]
+RootOnlyModuleName: TypeAlias = Literal["error", "errors"]
 """Modules names that are only supported at the root level."""
 
 ModuleName: TypeAlias = PackageModuleName | RootOnlyModuleName

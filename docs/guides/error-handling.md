@@ -8,7 +8,7 @@ As a reminder, you must write standard FastAPI error handlers (async functions w
 
 For additional rules and recommendations on error handling, please read the corresponding section of the [Application components](../application-components.md) guide.
 
-With all that said, let's set up error handling by adding the `error.py` file to the root of our project (next to `main.py`).
+With all that said, let's set up error handling by adding the `error.py` or `errors.py` file to the root of our project (next to `main.py`).
 
 With the file in place, we need to:
 

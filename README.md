@@ -24,9 +24,13 @@ Web development framework that brings the Next.js developer experience to Python
 - **Stability** by building only on the core feature set of dependent libraries.
 - **Unopinionated**: use any CSS framework for styling and any JavaScript framework for UI interactivity.
 
+## Testimonials
+
+"Thanks for your work in the `holm`/`htmy`/`FastHX` stack, it's awesome." (David Brochart, Technical Director at QuantStack, Jupyter developer. [ref](https://github.com/volfpeter/holm/issues/41#issuecomment-3682810002))
+
 ## Pre-requisite knowledge
 
-To get started, all you need is a *basic* understanding of:
+To get started, all you need is a _basic_ understanding of:
 
 - [FastAPI](https://fastapi.tiangolo.com/tutorial/): the underlying web framework.
 - HTML and CSS fundamentals.

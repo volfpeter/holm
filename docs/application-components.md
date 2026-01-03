@@ -110,7 +110,7 @@ Reminder: if the package name also ends with an underscore, it will be treated a
 
 ## Error handling
 
-Error handlers are defined in the `error.py` module of the root package as a `handlers` variable, which can be a mapping from exception types or HTTP status codes to standard FastAPI exception handler functions, or a callable that expects a `fasthx.htmy.HTMY` positional argument and returns such a mapping. The latter option is useful if you want to do custom HTML rendering in an error handler.
+Error handlers are defined in the `error.py` or `errors.py` module of the root package as a `handlers` variable, which can be a mapping from exception types or HTTP status codes to standard FastAPI exception handler functions, or a callable that expects a `fasthx.htmy.HTMY` positional argument and returns such a mapping. The latter option is useful if you want to do custom HTML rendering in an error handler.
 
 Error handlers must return either a `htmy.Component` or a `fastapi.Response`. Responses are returned to the client as is, and components are automatically rendered and returned as a `HTMLResponse`.
 
