@@ -18,7 +18,6 @@ build-backend = "pdm.backend"
 [dependency-groups]
 dev = [
     "httpx>=0.28.1",
-    "mkdocs-material>=9.6.20",
     "mkdocstrings[python]>=0.30.1",
     "mypy>=1.19.1",
     "poethepoet>=0.40.0",
@@ -27,6 +26,7 @@ dev = [
     "ruff>=0.14.11",
     "uvicorn>=0.34.1",
     "watchfiles>=1.1.0",
+    "zensical>=0.0.15",
 ]
 
 [tool.mypy]
@@ -100,4 +100,4 @@ check.ignore_fail = "return_non_zero"
 test.cmd = "python -m pytest tests"
 test.env = { APP_ENV = "test" }
 
-serve-docs = "mkdocs serve"
+serve-docs = "zensical serve"
