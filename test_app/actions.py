@@ -1,5 +1,7 @@
 from holm import action
 
+# -- Actions with and without custom paths and metadata
+
 
 @action.get()
 @action.get("/get/wl", use_layout=True)
@@ -34,6 +36,34 @@ def patch() -> str:
 @action.delete("/delete/wlm", use_layout=True, metadata={"title": "DELETE action title"})
 def delete() -> str:
     return "DELETE action"
+
+
+# -- Multiple actions with the same name/path, but different HTTP methods
+
+
+@action.get()
+def multi() -> str:
+    return "GET"
+
+
+@action.post()  # type: ignore[no-redef]
+def multi() -> str:  # noqa: F811
+    return "POST"
+
+
+@action.put()  # type: ignore[no-redef]
+def multi() -> str:  # noqa: F811
+    return "PUT"
+
+
+@action.patch()  # type: ignore[no-redef]
+def multi() -> str:  # noqa: F811
+    return "PATCH"
+
+
+@action.delete()  # type: ignore[no-redef]
+def multi() -> str:  # noqa: F811
+    return "DELETE"
 
 
 def _in_layout(rendered_action: str, title: str = "App") -> str:
