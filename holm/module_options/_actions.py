@@ -1,5 +1,5 @@
 import sys
-from collections.abc import Callable, Collection, Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Literal, TypeAlias, TypeGuard
@@ -41,15 +41,16 @@ class ActionDescriptor:
     """
 
 
-ActionDescriptors: TypeAlias = dict[str, ActionDescriptor]
+HTTPMethod: TypeAlias = Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
+
+
+ActionDescriptors: TypeAlias = dict[tuple[str, HTTPMethod], ActionDescriptor]
 """
 Typing for the value of `_actions_variable`.
 
-Dictionary that maps action paths to action descriptors. This allows
+Dictionary that maps action path-method pairs to action descriptors. This allows
 decorator stacking (registering the same action with multiple paths).
 """
-
-HTTPMethod: TypeAlias = Literal["GET", "POST", "PUT", "PATCH", "DELETE"]
 
 
 _actions_variable = "_holm_action_descriptors"
@@ -89,7 +90,7 @@ class action:
         *,
         use_layout: bool = False,
         metadata: MetadataMappingOrDependency | None = None,
-        methods: Collection[HTTPMethod] | None = None,
+        methods: Sequence[HTTPMethod] | None = None,
         dependencies: Sequence[DependsParam] | None = None,
         deprecated: bool | None = None,
         tags: list[str | Enum] | None = None,
@@ -329,6 +330,7 @@ class action:
         action: ActionDependency,
         *,
         use_layout: bool,
+        methods: Sequence[HTTPMethod] | None,
         metadata: MetadataMappingOrDependency | None,
         path: str | None,
         tags: list[str | Enum] | None,
@@ -362,9 +364,10 @@ class action:
         route_args["response_model"] = None  # Don't generate a response schema.
 
         # Register the action.
-        module_actions[path] = ActionDescriptor(
-            action=action,
-            route_args=route_args,
-            use_layout=use_layout,
-            metadata=metadata,
-        )
+        for method in ("GET",) if not methods else methods:
+            module_actions[(path, method)] = ActionDescriptor(
+                action=action,
+                route_args={**route_args, "methods": (method,)},
+                use_layout=use_layout,
+                metadata=metadata,
+            )

@@ -22,4 +22,10 @@ uv.lock
 
 dist/
 
+# Docs
+
+site/
+
+# Place for local dev stuff
+
 dev/

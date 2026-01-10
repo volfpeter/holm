@@ -135,7 +135,7 @@ def _build_api(
 
         # -- Register actions from every action owner.
         for actions in (a for a in (get_actions(page_module), get_actions(actions_module)) if a):
-            for action_path, desc in actions.items():
+            for action_key, desc in actions.items():
                 if desc.use_layout or (desc.metadata is not None):
                     # Use _make_page_path_operation() if the action requires the layout or has
                     # metadata. If one is missing, the overhead is minimal, but the code is
@@ -150,7 +150,7 @@ def _build_api(
                     # No layout or metadata. Use the most efficient route registration.
                     route = htmy.page()(desc.action)
 
-                api.api_route(action_path, **desc.route_args)(route)
+                api.api_route(action_key[0], **desc.route_args)(route)
 
     for sub_url, child_node in node.subtree.items():
         api.include_router(

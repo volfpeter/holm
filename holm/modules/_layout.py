@@ -1,5 +1,4 @@
 import inspect
-from asyncio import iscoroutinefunction
 from collections.abc import Awaitable, Callable, Coroutine
 from dataclasses import dataclass
 from typing import Any, Protocol, TypeAlias, TypeGuard
@@ -142,7 +141,7 @@ def layout_to_dependency(layout: Layout) -> FastAPIDependency[LayoutFactory]:
         raise ValueError("Layout factory must at least one argument.")
 
     result: FastAPIDependency[LayoutFactory]
-    if iscoroutinefunction(layout):
+    if inspect.iscoroutinefunction(layout):
 
         async def async_layout_factory_dep(**kwargs: Any) -> LayoutFactory:
             async def layout_factory(props: Any) -> Any:

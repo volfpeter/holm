@@ -25,6 +25,12 @@ from test_app.actions import RenderedAction
         ("/put/wlm", "PUT", RenderedAction.put.use_layout_and_metadata),
         ("/patch/wlm", "PATCH", RenderedAction.patch.use_layout_and_metadata),
         ("/delete/wlm", "DELETE", RenderedAction.delete.use_layout_and_metadata),
+        # Multiple actions with the same path but different methods
+        ("/multi", "GET", "GET"),
+        ("/multi", "POST", "POST"),
+        ("/multi", "PUT", "PUT"),
+        ("/multi", "PATCH", "PATCH"),
+        ("/multi", "DELETE", "DELETE"),
     ],
 )
 def test_action(client: TestClient, action_path: str, method: str, expected: str) -> None:
