@@ -24,6 +24,7 @@ from .modules._layout import (
     LayoutFactory,
     combine_layouts_to_dependency,
     empty_layout_dependency,
+    html_to_layout,
     is_layout_definition,
     without_layout,
 )
@@ -79,21 +80,24 @@ def _build_api(
     api = _make_api_router_for_package(pkg, htmy)
     if pkg is not None:
         # -- Try to import all relevant modules.
-        layout_module = pkg.import_module("layout", is_layout_definition)
-        page_module = pkg.import_module("page", is_page_definition)
+        layout_definition = pkg.import_module("layout", is_layout_definition)
+        if layout_definition is None:
+            layout_definition = pkg.import_resource("layout.html", html_to_layout)
+
+        page_definition = pkg.import_module("page", is_page_definition)
         actions_module = pkg.import_module("actions", has_actions)
 
         # -- Resolve dependencies.
         layout_dep = combine_layouts_to_dependency(
-            base_layout_dep, None if layout_module is None else layout_module.layout
+            base_layout_dep, None if layout_definition is None else layout_definition.layout
         )
         page_dep, submit_handler_dep, metadata_dep = (
             (None, None, None)
-            if page_module is None
+            if page_definition is None
             else (
-                page_module.page,
-                get_submit_handler(page_module),
-                get_metadata_dependency(page_module),
+                page_definition.page,
+                get_submit_handler(page_definition),
+                get_metadata_dependency(page_definition),
             )
         )
 
@@ -110,7 +114,7 @@ def _build_api(
                 "/",
                 response_model=None,
                 # mypy can't infer that the modules is not None.
-                name=page_module.__name__,  # type: ignore[union-attr]
+                name=page_definition.__name__,  # type: ignore[union-attr]
                 description=page_dep.__doc__,
                 tags=["Page"],
             )(htmy.page(components_with_metadata)(path_operation))
@@ -128,13 +132,13 @@ def _build_api(
                 "/",
                 response_model=None,
                 # mypy can't infer that the modules is not None.
-                name=f"{page_module.__name__}.handle_submit",  # type: ignore[union-attr]
+                name=f"{page_definition.__name__}.handle_submit",  # type: ignore[union-attr]
                 description=submit_handler_dep.__doc__,
                 tags=["Page", "Submit"],
             )(htmy.page(components_with_metadata)(path_operation))
 
         # -- Register actions from every action owner.
-        for actions in (a for a in (get_actions(page_module), get_actions(actions_module)) if a):
+        for actions in (a for a in (get_actions(page_definition), get_actions(actions_module)) if a):
             for action_key, desc in actions.items():
                 if desc.use_layout or (desc.metadata is not None):
                     # Use _make_page_path_operation() if the action requires the layout or has

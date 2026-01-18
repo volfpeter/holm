@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib.resources
 import inspect
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -11,6 +12,7 @@ from .logging import logger
 from .typing import ModuleName, URLSegment
 
 _TModule = TypeVar("_TModule")
+_TResource = TypeVar("_TResource")
 
 
 _no_app_package_roots: set[str] = {"", "."}
@@ -157,6 +159,35 @@ class PackageInfo:
             raise ValueError(f"Invalid module: {name}")
 
         return module
+
+    def import_resource(self, filename: str, transform: Callable[[str], _TResource]) -> _TResource | None:
+        """
+        Loads a text resource from the package and applies the given transformation function.
+
+        Arguments:
+            filename: The name of the resource to load from the package.
+            transform: A function that transforms the loaded text content into the desired value.
+
+        Returns:
+            The transformed resource or `None` if the resource does not exist.
+
+        Raises:
+            Exception: Exceptions raised by the transformation function are not suppressed.
+        """
+        # Support applications that are not wrapped in a Python package.
+        package_name = self.package_name
+        try:
+            content = importlib.resources.read_text(package_name or ".", filename)
+        except (FileNotFoundError, ModuleNotFoundError):
+            return None
+        except Exception:
+            import traceback
+
+            logger.warning(f"Failed to load resource {filename} from package {package_name}")
+            logger.warning(traceback.format_exc())
+            return None
+
+        return transform(content)
 
     @classmethod
     def from_marker_file(cls, file_path: Path, *, config: AppConfig) -> PackageInfo:
