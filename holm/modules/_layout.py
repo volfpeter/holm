@@ -4,9 +4,11 @@ from dataclasses import dataclass
 from typing import Any, Protocol, TypeAlias, TypeGuard
 
 from fastapi import Depends
-from htmy import Component, as_component_type
+from htmy import Component, Context, Slots, Snippet, Text, as_component_type, component, is_component_type
 
 from holm.fastapi import FastAPIDependency
+
+from ._utils import default_text_processor
 
 
 class SyncLayout(Protocol):
@@ -48,6 +50,43 @@ class LayoutDefinition(Protocol):
 
     @property
     def layout(self) -> Layout: ...
+
+
+@dataclass(frozen=True, slots=True)
+class CustomLayoutDefinition:
+    """
+    Custom layout definition that wraps a layout callable.
+
+    This class allows creating layout definitions from any layout function,
+    including those generated dynamically (e.g., from HTML files).
+    """
+
+    layout: Layout
+    """The layout callable."""
+
+
+def html_to_layout(content: str) -> LayoutDefinition:
+    """
+    Converts the given HTML content to a layout definition.
+
+    Arguments:
+        content: The content from to convert.
+
+    Returns:
+        A `LayoutDefinition` with a layout that renders the given content.
+    """
+
+    @component
+    def layout(props: Any, ctx: Context) -> Component:
+        slots: Slots
+        if isinstance(props, dict) and not is_component_type(props):
+            slots = Slots(props)
+        else:
+            slots = Slots({"children": props})
+
+        return Snippet(Text(content), slots, text_processor=default_text_processor)
+
+    return CustomLayoutDefinition(layout)  # type: ignore[arg-type]
 
 
 def is_layout_definition(obj: Any) -> TypeGuard[LayoutDefinition]:

@@ -7,7 +7,7 @@ requires-python = ">=3.10"
 dependencies = [
     "fastapi>=0.115.12",
     "fasthx>=3.0.1",
-    "htmy[lxml]>=0.8.2",
+    "htmy[lxml]>=0.10.2",
     "python-multipart>=0.0.20"
 ]
 
