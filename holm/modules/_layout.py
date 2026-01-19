@@ -5,6 +5,7 @@ from typing import Any, Protocol, TypeAlias, TypeGuard
 
 from fastapi import Depends
 from htmy import Component, Context, Slots, Snippet, Text, as_component_type, component, is_component_type
+from htmy.typing import TextProcessor
 
 from holm.fastapi import FastAPIDependency
 
@@ -65,7 +66,10 @@ class CustomLayoutDefinition:
     """The layout callable."""
 
 
-def html_to_layout(content: str) -> LayoutDefinition:
+def html_to_layout(
+    content: str,
+    text_processor: TextProcessor = default_text_processor,
+) -> LayoutDefinition:
     """
     Converts the given HTML content to a layout definition.
 
@@ -84,7 +88,7 @@ def html_to_layout(content: str) -> LayoutDefinition:
         else:
             slots = Slots({"children": props})
 
-        return Snippet(Text(content), slots, text_processor=default_text_processor)
+        return Snippet(Text(content), slots, text_processor=text_processor)
 
     return CustomLayoutDefinition(layout)  # type: ignore[arg-type]
 

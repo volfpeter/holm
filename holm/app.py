@@ -1,6 +1,7 @@
 import inspect
 from collections.abc import Awaitable, Iterable
 from functools import lru_cache
+from itertools import chain
 from pathlib import Path
 from typing import Any, cast
 
@@ -199,7 +200,10 @@ def _discover_app_packages(config: AppConfig) -> set[PackageInfo]:
 
     return {
         PackageInfo.from_marker_file(f, config=config)
-        for f in config.app_dir.rglob("*.py")
+        for f in chain(
+            config.app_dir.rglob("*.py"),
+            config.app_dir.rglob("*.html"),
+        )
         if f.stem in module_names
         # Pass the relative path of the parent to make the best use of caching
         and not is_excluded(f.parent.relative_to(config.root_dir))
