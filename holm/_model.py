@@ -172,18 +172,25 @@ class PackageInfo:
             The transformed resource or `None` if the resource does not exist.
 
         Raises:
+            RuntimeError: If the imported resource is not in a package.
             Exception: Exceptions raised by the transformation function are not suppressed.
         """
         # Support applications that are not wrapped in a Python package.
         package_name = self.package_name
+
         try:
-            content = importlib.resources.read_text(package_name or ".", filename)
+            content = importlib.resources.read_text(package_name, filename)
         except (FileNotFoundError, ModuleNotFoundError):
             return None
+        except ValueError as e:
+            raise RuntimeError(
+                "The resource you're trying to load is not in a package. "
+                "Please wrap your application in a Python package."
+            ) from e
         except Exception:
             import traceback
 
-            logger.warning(f"Failed to load resource {filename} from package {package_name}")
+            logger.warning(f"Failed to load resource {filename} from package '{package_name}'.")
             logger.warning(traceback.format_exc())
             return None
 
