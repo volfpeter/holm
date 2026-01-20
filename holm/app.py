@@ -27,6 +27,7 @@ from .modules._layout import (
     empty_layout_dependency,
     html_to_layout,
     is_layout_definition,
+    make_str_to_layout_definition_transformer,
     without_layout,
 )
 from .modules._page import is_page_definition
@@ -83,7 +84,10 @@ def _build_api(
         # -- Try to import all relevant modules.
         layout_definition = pkg.import_module("layout", is_layout_definition)
         if layout_definition is None:
-            layout_definition = pkg.import_resource("layout.html", html_to_layout)
+            layout_definition = pkg.import_resource(
+                "layout.html",
+                make_str_to_layout_definition_transformer(html_to_layout),
+            )
 
         page_definition = pkg.import_module("page", is_page_definition)
         actions_module = pkg.import_module("actions", has_actions)

@@ -1,5 +1,5 @@
 import inspect
-from collections.abc import Awaitable, Callable, Coroutine
+from collections.abc import Awaitable, Callable, Coroutine, Mapping
 from dataclasses import dataclass
 from typing import Any, Protocol, TypeAlias, TypeGuard
 
@@ -8,8 +8,7 @@ from htmy import Component, Context, Slots, Snippet, Text, as_component_type, co
 from htmy.typing import TextProcessor
 
 from holm.fastapi import FastAPIDependency
-
-from ._utils import default_text_processor
+from holm.utils import default_text_processor
 
 
 class SyncLayout(Protocol):
@@ -28,7 +27,13 @@ class AsyncLayout(Protocol):
     async def __call__(self, __props: Any, /, **dependencies: Any) -> Any: ...
 
 
-Layout: TypeAlias = SyncLayout | AsyncLayout
+PropsOnlySyncLayout: TypeAlias = Callable[[Any], Any]
+"""Sync layout that only accepts a single position argument, the layout's properties."""
+
+PropsOnlyAsyncLayout: TypeAlias = Callable[[Any], Coroutine[Any, Any, Any]]
+"""Async layout that only accepts a single position argument, the layout's properties."""
+
+Layout: TypeAlias = SyncLayout | PropsOnlySyncLayout | AsyncLayout | PropsOnlyAsyncLayout
 """
 Layout type definition.
 
@@ -44,6 +49,9 @@ and returns the properties for its wrapper layout.
 
 The root layout factory must always return a `htmy` `Component`.
 """
+
+TextToLayoutConverter: TypeAlias = Callable[[str], Layout]
+"""Type alias for functions that convert plain `Text` content to a `Layout`."""
 
 
 class LayoutDefinition(Protocol):
@@ -66,31 +74,65 @@ class CustomLayoutDefinition:
     """The layout callable."""
 
 
-def html_to_layout(
-    content: str,
-    text_processor: TextProcessor = default_text_processor,
-) -> LayoutDefinition:
+def html_to_layout(content: str, text_processor: TextProcessor = default_text_processor) -> Layout:
     """
-    Converts the given HTML content to a layout definition.
+    Converts the given HTML string to a `Layout`.
+
+    The created layout function internally uses a `Snippet` component with `Slots` for rendering.
+
+    The slot handling logic depends on the "props" object the layout receives from the page or
+    layout it directly wraps:
+
+    - If "props" is a `Mapping` (and not an `htmy` `Component`), then it must map slot keys to
+      the corresponding `htmy` components, and it is used directly as the slots definition
+      of `Snippet`. This means `<!-- slot[key] -->` placeholders in `content` are replaced
+      with the corresponding components from this mapping during rendering.
+    - Otherwise the props object is assumed to be an `htmy` `Component` and it is assigned to the
+      `children` slot, meaning the `<!-- slot[children] -->` placeholder in `content` is replaced
+      with this component during rendering.
+
+    The default text processor is `holm.utils.default_text_processor()`. It gives you access to
+    the page `Metadata` and the current FastAPI `Request` through the `metadata` and `request`
+    replacement field names. See its documentation for more details.
 
     Arguments:
-        content: The content from to convert.
+        content: The HTML string to convert.
+        text_processor: The text processor for `Snippet` to pre-format `content`.
 
     Returns:
-        A `LayoutDefinition` with a layout that renders the given content.
+        A `Layout` that renders the given string.
     """
+    text = Text(content)
 
-    @component
+    @component  # We need a component so we can access the htmy context.
     def layout(props: Any, ctx: Context) -> Component:
         slots: Slots
-        if isinstance(props, dict) and not is_component_type(props):
+        if isinstance(props, Mapping) and not is_component_type(props):
             slots = Slots(props)
         else:
             slots = Slots({"children": props})
 
-        return Snippet(Text(content), slots, text_processor=text_processor)
+        return Snippet(text, slots, text_processor=text_processor)
 
-    return CustomLayoutDefinition(layout)  # type: ignore[arg-type]
+    return layout
+
+
+def make_str_to_layout_definition_transformer(
+    text_to_layout: TextToLayoutConverter,
+) -> Callable[[str], LayoutDefinition]:
+    """
+    Returns a function that converts plain string content to a `LayoutDefinition`.
+
+    This is just a utility wrapper for creating `CustomLayoutDefinition` instances.
+
+    Arguments:
+        text_to_layout: The function to use to convert the plain string content to a `Layout` function.
+    """
+
+    def make_layout(content: str) -> LayoutDefinition:
+        return CustomLayoutDefinition(text_to_layout(content))
+
+    return make_layout
 
 
 def is_layout_definition(obj: Any) -> TypeGuard[LayoutDefinition]:

@@ -27,7 +27,7 @@ Special package names that are encountered when the application is not wrapped i
 @dataclass(frozen=True, kw_only=True, slots=True)
 class AppConfig:
     """
-    Stores basic configuration Information about the application.
+    Stores basic configuration information about the application.
     """
 
     app_dir: Path
