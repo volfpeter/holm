@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Any, Protocol, TypeAlias, TypeGuard
 
 from fastapi import Depends
-from htmy import Component, Context, Slots, Snippet, Text, as_component_type, component, is_component_type
+from htmy import Component, Slots, Snippet, Text, as_component_type, is_component_type
 from htmy.typing import TextProcessor
 
 from holm.fastapi import FastAPIDependency
@@ -102,10 +102,10 @@ def html_to_layout(content: str, text_processor: TextProcessor = default_text_pr
     Returns:
         A `Layout` that renders the given string.
     """
+    # Avoid doing the str to Text conversion on every request in the layout.
     text = Text(content)
 
-    @component  # We need a component so we can access the htmy context.
-    def layout(props: Any, ctx: Context) -> Component:
+    def layout(props: Any) -> Snippet:
         slots: Slots
         if isinstance(props, Mapping) and not is_component_type(props):
             slots = Slots(props)
