@@ -23,18 +23,24 @@ from .modules._api import PlainAPIFactory, RenderingAPIFactory, is_api_definitio
 from .modules._error import load_error_handler_owner, register_error_handlers
 from .modules._layout import (
     LayoutFactory,
+    TextToLayoutConverter,
     combine_layouts_to_dependency,
     empty_layout_dependency,
-    html_to_layout,
     is_layout_definition,
     make_str_to_layout_definition_transformer,
     without_layout,
 )
 from .modules._page import is_page_definition
 from .typing import module_names
+from .utils import snippet_to_layout
 
 
-def App(*, app: FastAPI | None = None, htmy: HTMY | None = None) -> FastAPI:
+def App(
+    *,
+    app: FastAPI | None = None,
+    htmy: HTMY | None = None,
+    snippet_to_layout: TextToLayoutConverter = snippet_to_layout,
+) -> FastAPI:
     """
     Creates a FastAPI application with all the routes that are defined in the application package.
 
@@ -42,6 +48,9 @@ def App(*, app: FastAPI | None = None, htmy: HTMY | None = None) -> FastAPI:
         app: Optional FastAPI application to use. If `None`, a new instance will be created.
         htmy: Optional `fasthx.htmy.HTMY` instance to use for server-side rendering. If `None`,
             a default instance will be created.
+        snippet_to_layout: Function that converts a plain string to a `Layout` function. This
+            function is used to convert `layout.html` files to `Layout` functions. See the default
+            implementation for ideas on how to implement your own, custom version.
     """
     if app is None:
         app = FastAPI()
@@ -58,7 +67,7 @@ def App(*, app: FastAPI | None = None, htmy: HTMY | None = None) -> FastAPI:
         register_error_handlers(app, load_error_handler_owner(pkg), htmy=htmy)
 
     # Build the API
-    app.include_router(_build_api(root_node, htmy=htmy))
+    app.include_router(_build_api(root_node, htmy=htmy, snippet_to_layout=snippet_to_layout))
 
     return app
 
@@ -68,6 +77,7 @@ def _build_api(
     *,
     base_layout_dep: FastAPIDependency[LayoutFactory] = empty_layout_dependency,
     htmy: HTMY,
+    snippet_to_layout: TextToLayoutConverter,
 ) -> APIRouter:
     """
     Recursively builds an `APIRouter` based on the application defined by `node`.
@@ -76,6 +86,7 @@ def _build_api(
         node: Application definition.
         base_layout: The base layout dependency to use for the API.
         htmy: The `fasthx.htmy.HTMY` instance to use for server-side rendering.
+        snippet_to_layout: Function that converts a plain string to a `Layout` function.
     """
     layout_dep = base_layout_dep  # In case there is no package or it has no layout module.
     pkg = node.package
@@ -86,7 +97,7 @@ def _build_api(
         if layout_definition is None:
             layout_definition = pkg.import_resource(
                 "layout.html",
-                make_str_to_layout_definition_transformer(html_to_layout),
+                make_str_to_layout_definition_transformer(snippet_to_layout),
             )
 
         page_definition = pkg.import_module("page", is_page_definition)
@@ -163,7 +174,12 @@ def _build_api(
 
     for sub_url, child_node in node.subtree.items():
         api.include_router(
-            _build_api(child_node, base_layout_dep=layout_dep, htmy=htmy),
+            _build_api(
+                child_node,
+                base_layout_dep=layout_dep,
+                htmy=htmy,
+                snippet_to_layout=snippet_to_layout,
+            ),
             prefix=sub_url,
         )
 

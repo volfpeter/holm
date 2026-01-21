@@ -1,14 +1,12 @@
 import inspect
-from collections.abc import Awaitable, Callable, Coroutine, Mapping
+from collections.abc import Awaitable, Callable, Coroutine
 from dataclasses import dataclass
 from typing import Any, Protocol, TypeAlias, TypeGuard
 
 from fastapi import Depends
-from htmy import Component, Slots, Snippet, Text, as_component_type, is_component_type
-from htmy.typing import TextProcessor
+from htmy import Component, as_component_type
 
 from holm.fastapi import FastAPIDependency
-from holm.utils import default_text_processor
 
 
 class SyncLayout(Protocol):
@@ -51,7 +49,12 @@ The root layout factory must always return a `htmy` `Component`.
 """
 
 TextToLayoutConverter: TypeAlias = Callable[[str], Layout]
-"""Type alias for functions that convert plain `Text` content to a `Layout`."""
+"""
+Type alias for functions that convert plain string to a `Layout` function.
+
+The easiest way to create a `TextToLayoutConverter` is to create a wrapper
+around `holm.utils.snippet_to_layout`.
+"""
 
 
 class LayoutDefinition(Protocol):
@@ -72,49 +75,6 @@ class CustomLayoutDefinition:
 
     layout: Layout
     """The layout callable."""
-
-
-def html_to_layout(content: str, text_processor: TextProcessor = default_text_processor) -> Layout:
-    """
-    Converts the given HTML string to a `Layout`.
-
-    The created layout function internally uses a `Snippet` component with `Slots` for rendering.
-
-    The slot handling logic depends on the "props" object the layout receives from the page or
-    layout it directly wraps:
-
-    - If "props" is a `Mapping` (and not an `htmy` `Component`), then it must map slot keys to
-      the corresponding `htmy` components, and it is used directly as the slots definition
-      of `Snippet`. This means `<!-- slot[key] -->` placeholders in `content` are replaced
-      with the corresponding components from this mapping during rendering.
-    - Otherwise the props object is assumed to be an `htmy` `Component` and it is assigned to the
-      `children` slot, meaning the `<!-- slot[children] -->` placeholder in `content` is replaced
-      with this component during rendering.
-
-    The default text processor is `holm.utils.default_text_processor()`. It gives you access to
-    the page `Metadata` and the current FastAPI `Request` through the `metadata` and `request`
-    replacement field names. See its documentation for more details.
-
-    Arguments:
-        content: The HTML string to convert.
-        text_processor: The text processor for `Snippet` to pre-format `content`.
-
-    Returns:
-        A `Layout` that renders the given string.
-    """
-    # Avoid doing the str to Text conversion on every request in the layout.
-    text = Text(content)
-
-    def layout(props: Any) -> Snippet:
-        slots: Slots
-        if isinstance(props, Mapping) and not is_component_type(props):
-            slots = Slots(props)
-        else:
-            slots = Slots({"children": props})
-
-        return Snippet(text, slots, text_processor=text_processor)
-
-    return layout
 
 
 def make_str_to_layout_definition_transformer(
