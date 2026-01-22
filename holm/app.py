@@ -9,7 +9,7 @@ from fastapi import APIRouter, Depends, FastAPI, Response
 from fasthx.htmy import HTMY
 from htmy import Component, as_component_type
 
-from ._model import AppConfig, AppNode, PackageInfo
+from ._model import AppConfig, AppNode, PackageInfo, module_names
 from .fastapi import FastAPIDependency
 from .module_options._actions import get_actions, has_actions
 from .module_options._metadata import (
@@ -31,7 +31,6 @@ from .modules._layout import (
     without_layout,
 )
 from .modules._page import is_page_definition
-from .typing import module_names
 from .utils import snippet_to_layout
 
 
