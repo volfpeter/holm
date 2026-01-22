@@ -35,6 +35,7 @@ exclude = [
     "examples/actions-with-htmx",
     "examples/forms",
     "examples/html-layout",
+    "examples/html-layout-default-slots",
     "examples/html-multi-slot-layout",
     "examples/minimal",
     "examples/quick-start-guide",
