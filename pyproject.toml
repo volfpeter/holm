@@ -34,6 +34,8 @@ strict = true
 exclude = [
     "examples/actions-with-htmx",
     "examples/forms",
+    "examples/html-layout",
+    "examples/html-multi-slot-layout",
     "examples/minimal",
     "examples/quick-start-guide",
     "examples/rendering-apis-with-htmx",
