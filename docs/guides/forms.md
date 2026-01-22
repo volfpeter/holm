@@ -177,7 +177,7 @@ def layout(children: ComponentType, request: Request, q: str = "") -> Component:
                     class_="container",
                 ),
                 html.main(children, class_="container"),
-                html.footer(html.p("© 2025 TODO App"), class_="container"),
+                html.footer(html.p("© 2026 TODO App"), class_="container"),
                 class_="container-fluid",
             ),
         ),

@@ -34,7 +34,7 @@ def layout(children: ComponentType, context: Context) -> Component:
                     class_="container",
                 ),
                 html.main(children, class_="container"),
-                html.footer(html.p("© 2025 Admin App"), class_="container"),
+                html.footer(html.p("© 2026 Admin App"), class_="container"),
                 class_="container-fluid",
             ),
         ),
