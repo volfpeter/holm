@@ -1,12 +1,18 @@
+from __future__ import annotations
+
 from collections.abc import Mapping
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from fasthx.htmy import CurrentRequest
-from htmy import Component, Context, Slots, Snippet, Text, is_component_type
-from htmy.typing import TextProcessor
+from htmy import Slots, Snippet, Text, is_component_type
 
 from holm.module_options._metadata import Metadata
-from holm.modules._layout import Layout
+
+if TYPE_CHECKING:
+    from htmy import Component, Context
+    from htmy.typing import TextProcessor
+
+    from holm.typing import Layout
 
 
 def default_text_processor(text: str, context: Context) -> str:

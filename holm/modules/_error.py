@@ -1,19 +1,23 @@
-from collections.abc import Callable, Mapping
-from typing import Any, Protocol, TypeAlias, TypeGuard
+from __future__ import annotations
 
-from fastapi import FastAPI, Request, Response
+from collections.abc import Mapping
+from typing import TYPE_CHECKING, Protocol, TypeGuard
+
+from fastapi import Response
 from fastapi.responses import HTMLResponse
-from fasthx.htmy import HTMY
 
-from holm._model import PackageInfo
-from holm.fastapi import FastAPIErrorHandler
 from holm.logging import logger
 
-ErrorHandlerMapping: TypeAlias = Mapping[type[Exception] | int, FastAPIErrorHandler]
-"""
-Mapping type whose keys are exception types or HTTP status codes, and the
-corresponding values are FastAPI error handlers.
-"""
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import Any, TypeGuard
+
+    from fastapi import FastAPI, Request
+    from fasthx.htmy import HTMY
+
+    from holm._model import PackageInfo
+    from holm.fastapi import FastAPIErrorHandler
+    from holm.typing import ErrorHandlerMapping
 
 
 class ErrorHandlerOwner(Protocol):

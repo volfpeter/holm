@@ -1,60 +1,20 @@
+from __future__ import annotations
+
 import inspect
-from collections.abc import Awaitable, Callable, Coroutine
 from dataclasses import dataclass
-from typing import Any, Protocol, TypeAlias, TypeGuard
+from typing import TYPE_CHECKING, Protocol
 
 from fastapi import Depends
-from htmy import Component, as_component_type
+from htmy import as_component_type
 
-from holm.fastapi import FastAPIDependency
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import Any, TypeGuard
 
+    from htmy import Component
 
-class SyncLayout(Protocol):
-    """
-    Sync layout protocol definition.
-    """
-
-    def __call__(self, __props: Any, /, **dependencies: Any) -> Any: ...
-
-
-class AsyncLayout(Protocol):
-    """
-    Async layout protocol definition.
-    """
-
-    async def __call__(self, __props: Any, /, **dependencies: Any) -> Any: ...
-
-
-PropsOnlySyncLayout: TypeAlias = Callable[[Any], Any]
-"""Sync layout that only accepts a single position argument, the layout's properties."""
-
-PropsOnlyAsyncLayout: TypeAlias = Callable[[Any], Coroutine[Any, Any, Any]]
-"""Async layout that only accepts a single position argument, the layout's properties."""
-
-Layout: TypeAlias = SyncLayout | PropsOnlySyncLayout | AsyncLayout | PropsOnlyAsyncLayout
-"""
-Layout type definition.
-
-A layout is a callable that expects a single positional argument the component or data returned
-by the wrapped layout or page, and returns the properties for its wrapper layout. The root layout
-must always return a `Component`.
-"""
-
-LayoutFactory: TypeAlias = Callable[[Any], Any | Coroutine[None, None, Any]]
-"""
-A layout factory is a sync or asynccallable that expects a single argument (the layout's properties)
-and returns the properties for its wrapper layout.
-
-The root layout factory must always return a `htmy` `Component`.
-"""
-
-TextToLayoutConverter: TypeAlias = Callable[[str], Layout]
-"""
-Type alias for functions that convert plain string to a `Layout` function.
-
-The easiest way to create a `TextToLayoutConverter` is to create a wrapper
-around `holm.utils.snippet_to_layout`.
-"""
+    from holm.fastapi import FastAPIDependency
+    from holm.typing import Layout, LayoutFactory, TextToLayoutConverter
 
 
 class LayoutDefinition(Protocol):
@@ -145,14 +105,14 @@ def combine_layouts_to_dependency(
     ) -> LayoutFactory:
         async def layout_factory(props: Any) -> Any:
             inner_result = inner(props)
-            if isinstance(inner_result, Awaitable):
+            if inspect.isawaitable(inner_result):
                 inner_result = await inner_result
 
             if isinstance(inner_result, without_layout):
                 return inner_result.component
 
             result = outer(as_component_type(inner_result))
-            if isinstance(result, Awaitable):
+            if inspect.isawaitable(result):
                 result = await result
 
             return result

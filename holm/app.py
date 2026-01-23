@@ -1,16 +1,16 @@
+from __future__ import annotations
+
 import inspect
-from collections.abc import Awaitable, Iterable
 from functools import lru_cache
 from itertools import chain
 from pathlib import Path
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from fastapi import APIRouter, Depends, FastAPI, Response
 from fasthx.htmy import HTMY
 from htmy import Component, as_component_type
 
 from ._model import AppConfig, AppNode, PackageInfo, module_names
-from .fastapi import FastAPIDependency
 from .module_options._actions import get_actions, has_actions
 from .module_options._metadata import (
     MetadataMapping,
@@ -19,11 +19,9 @@ from .module_options._metadata import (
     get_metadata_dependency,
 )
 from .module_options._submit_handler import get_submit_handler
-from .modules._api import PlainAPIFactory, RenderingAPIFactory, is_api_definition
+from .modules._api import is_api_definition
 from .modules._error import load_error_handler_owner, register_error_handlers
 from .modules._layout import (
-    LayoutFactory,
-    TextToLayoutConverter,
     combine_layouts_to_dependency,
     empty_layout_dependency,
     is_layout_definition,
@@ -31,7 +29,13 @@ from .modules._layout import (
     without_layout,
 )
 from .modules._page import is_page_definition
+from .typing import LayoutFactory, PlainAPIFactory, RenderingAPIFactory, TextToLayoutConverter
 from .utils import snippet_to_layout
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from .fastapi import FastAPIDependency
 
 
 def App(
@@ -284,7 +288,7 @@ def _make_page_path_operation(
         result = layout(as_component_type(page))
         # We must await here if result is an Awaitable, otherwise we would pass an
         # awaitable to htmy.page() and rendering that would fail.
-        if isinstance(result, Awaitable):
+        if inspect.isawaitable(result):
             result = await result
 
         return result, metadata
