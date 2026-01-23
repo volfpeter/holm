@@ -27,7 +27,7 @@ dev = [
     "ruff>=0.14.14",
     "uvicorn>=0.40.0",
     "watchfiles>=1.1.1",
-    "zensical>=0.0.16,<0.0.17",
+    "zensical>=0.0.18",
 ]
 
 [tool.mypy]
