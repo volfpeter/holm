@@ -62,4 +62,7 @@ nav:
       - guides/rendering-apis-with-htmx.md
       - guides/custom-applications.md
       - guides/error-handling.md
-  - API Reference: api.md
+  - API reference:
+      - holm: api/holm.md
+      - holm.utils: api/utils.md
+      - holm.typing: api/typing.md
