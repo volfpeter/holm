@@ -12,7 +12,7 @@ Going through the [Application components](application-components.md) documentat
 - Underscores (`_`) are replaced with hyphens (`-`) in paths by default, unless a path segment corresponds to a path parameter, in which case the underscore is preserved.
 - Special files mark application components: `holm` looks for specific filenames within your application directory to discover application components and compose your application.
   - `page.py`: Creates a publicly accessible URL for a route segment.
-  - `layout.py`: Defines a shared UI that wraps a route segment and its children.
+  - `layout.py`: Defines a shared UI that wraps a route segment and its children. `layout.html` is also supported as an HTML-based alternative (requires package structure at root level), see [Application components](application-components.md).
   - `actions.py`: Defines custom action endpoints for a route segment.
   - `api.py`: Creates custom API endpoints for a route segment.
 

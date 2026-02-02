@@ -62,6 +62,9 @@ nav:
       - guides/rendering-apis-with-htmx.md
       - guides/custom-applications.md
       - guides/error-handling.md
+      - guides/html-layout.md
+      - guides/html-multi-slot-layout.md
+      - guides/html-layout-default-slots.md
   - API reference:
       - holm: api/holm.md
       - holm.utils: api/utils.md
