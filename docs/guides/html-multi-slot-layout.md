@@ -7,7 +7,7 @@ We will cover:
 - How to define multiple slots in an HTML layout.
 - How to return content for multiple slots from a page.
 
-The entire source code of this application can be found in the [examples/html-mutli-slot-layout](https://github.com/volfpeter/holm/tree/main/examples/html-mutli-slot-layout) directory of the repository.
+The entire source code of this application can be found in the [examples/html-multi-slot-layout](https://github.com/volfpeter/holm/tree/main/examples/html-multi-slot-layout) directory of the repository.
 
 Before you continue, make sure you have installed `holm` and either `uvicorn` or `fastapi-cli`!
 

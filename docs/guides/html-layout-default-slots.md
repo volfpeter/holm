@@ -1,6 +1,6 @@
 # HTML layout with default slots
 
-This guide builds on the [HTML layout guide](html-layout.md) and the[HTML multi-slot layout guide](html-multi-slot-layout.md) to demonstrate how to use **default slots** for shared components that appear on every page.
+This guide builds on the [HTML layout guide](html-layout.md) and the [HTML multi-slot layout guide](html-multi-slot-layout.md) to demonstrate how to use **default slots** for shared components that appear on every page.
 
 We will cover:
 
