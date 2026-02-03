@@ -1,4 +1,4 @@
-__version__ = "0.8.1"
+__version__ = "0.9.0"
 
 from .app import App as App
 from .module_options._actions import action as action
