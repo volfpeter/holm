@@ -1,16 +1,11 @@
-from typing import Any, Protocol, TypeAlias, TypeGuard
+from __future__ import annotations
 
-from holm.fastapi import FastAPIDependency
+from typing import TYPE_CHECKING, Protocol
 
-Page: TypeAlias = FastAPIDependency[Any]
-"""FastAPI page dependency.
+if TYPE_CHECKING:
+    from typing import Any, TypeGuard
 
-A page may return either the properties for the layout that wraps it (for example a `Component`)
-or a FastAPI `Response`.
-
-If the page is not wrapped by a layout and it doesn't return a `Response`,
-then it must return a `Component`.
-"""
+    from holm.typing import Page
 
 
 class PageDefinition(Protocol):

@@ -1,17 +1,41 @@
 from __future__ import annotations
 
+import importlib.resources
 import inspect
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from importlib import import_module
 from pathlib import Path
-from typing import Any, TypeGuard, TypeVar
+from typing import Any, Literal, TypeAlias, TypeGuard, TypeVar, get_args
 
 from .logging import logger
-from .typing import ModuleName, URLSegment
 
 _TModule = TypeVar("_TModule")
+_TResource = TypeVar("_TResource")
 
+PackageModuleName: TypeAlias = Literal["actions", "api", "layout", "page"]
+"""Recognized module names."""
+
+RootOnlyModuleName: TypeAlias = Literal["error", "errors"]
+"""Modules names that are only supported at the root level."""
+
+ModuleName: TypeAlias = PackageModuleName | RootOnlyModuleName
+"""All recognized module names, including ones that are only supported at the root level."""
+
+# get_args() doesn't return the correct tuple for the ModuleName union type.
+module_names: set[ModuleName] = {*get_args(PackageModuleName), *get_args(RootOnlyModuleName)}
+"""Set of all recognized module names."""
+
+
+URLSegment: TypeAlias = str
+"""
+A URL that consists of a leading slash followed by a non-empty URL part
+that includes no more slashes.
+
+Valid examples: "/about".
+
+Invalid examples: "/", "/about/us".
+"""
 
 _no_app_package_roots: set[str] = {"", "."}
 """
@@ -25,7 +49,7 @@ Special package names that are encountered when the application is not wrapped i
 @dataclass(frozen=True, kw_only=True, slots=True)
 class AppConfig:
     """
-    Stores basic configuration Information about the application.
+    Stores basic configuration information about the application.
     """
 
     app_dir: Path
@@ -157,6 +181,42 @@ class PackageInfo:
             raise ValueError(f"Invalid module: {name}")
 
         return module
+
+    def import_resource(self, filename: str, transform: Callable[[str], _TResource]) -> _TResource | None:
+        """
+        Loads a text resource from the package and applies the given transformation function.
+
+        Arguments:
+            filename: The name of the resource to load from the package.
+            transform: A function that transforms the loaded text content into the desired value.
+
+        Returns:
+            The transformed resource or `None` if the resource does not exist.
+
+        Raises:
+            ValueError: If the imported resource is not in a Python package.
+            Exception: Exceptions raised by the transformation function are not suppressed.
+        """
+        # Support applications that are not wrapped in a Python package.
+        package_name = self.package_name
+        if package_name in _no_app_package_roots:
+            raise ValueError(
+                f"The resource ({filename}) you are trying to load is not in a Python package "
+                "and can not be safely loaded as a result."
+            )
+
+        try:
+            content = importlib.resources.read_text(package_name, filename)
+        except (FileNotFoundError, ModuleNotFoundError):
+            return None
+        except Exception:
+            import traceback
+
+            logger.warning(f"Failed to load resource {filename} from package '{package_name}'.")
+            logger.warning(traceback.format_exc())
+            return None
+
+        return transform(content)
 
     @classmethod
     def from_marker_file(cls, file_path: Path, *, config: AppConfig) -> PackageInfo:

@@ -1,7 +1,7 @@
 from fastapi import Request
 from htmy import Component, html
 
-from holm import FastAPIErrorHandler
+from holm.fastapi import FastAPIErrorHandler
 
 
 async def _handle_404(_request: Request, _exc: Exception) -> Component:

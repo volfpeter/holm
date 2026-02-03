@@ -6,12 +6,25 @@ This section summarizes the different components of `holm` applications. If you 
 
 *Layouts* are defined in the `layout.py` modules of packages as a callable `layout` variable (note that for example classes with an `__init__()` method, or `htmy.Component`s are callable, so they also qualify).
 
-Rules for *layouts*:
+As an alternative to Python-based layouts, you can also create `layout.html` files in packages, from which a Python layout equivalent is automatically generated.
+
+Note: If both `layout.py` and `layout.html` exist in the same package, the Python layout takes precedence. HTML layouts at the application root level require a Python package structure.
+
+Rules for *Python layouts*:
 
 - The root layout must always return a `htmy.Component`.
 - `layout` must be a callable and it must accept a positional argument (other than `self` if the layout is a method of a class), the data / properties of the layout that are returned by the pages or layouts this layout directly wraps.
 - `layout` can have additional arguments (position or keyword and keyword-only, but not positional-only). These arguments must be FastAPI dependencies. They will be automatically resolved during each request.
 - Returning a tuple or a list from a layout is **not allowed** unless the value is a `htmy.ComponentSequence`. Tuples and lists are always interpreted and treated as component sequences, so you don't need to track what kinds of components pages and layouts return. See `htmy.is_component_sequence()` for more information.
+
+Rules for *HTML layouts*:
+
+- Must follow Python `str.format()` syntax.
+- [Page metadata](#page-metadata) is accessible as `metadata`.
+- The current FastAPI request is accessible as `request`.
+- Use the `<!-- slot[name] -->` slot syntax for content injection (processed by `htmy.Snippet` and `htmy.Slots` components).
+- The default slot is `children` (`<!-- slot[children] -->`), which is filled with the return value of the wrapped layout or page.
+- The entire HTML layout processing pipeline can be customized using the `str_to_layout` argument of `App()`, allowing you to plug in tools like Jinja2 for example.
 
 By default, layouts automatically wrap all layouts and pages in subpackages. You can opt out of this behavior by wrapping the return value of a layout or page with the [`without_layout` utility](utilities.md#without_layout).
 

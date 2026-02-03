@@ -1,3 +1,5 @@
+# `holm`
+
 ::: holm.App
     options:
         show_root_heading: true
@@ -25,7 +27,3 @@
         show_root_heading: true
         filters:
             - "!component"
-
-::: holm.ErrorHandlerMapping
-    options:
-        show_root_heading: true

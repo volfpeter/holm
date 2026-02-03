@@ -32,7 +32,7 @@ def layout(children: ComponentType, context: Context) -> Component:
                     class_="container",
                 ),
                 html.main(children, class_="container"),
-                html.footer(html.p("© 2025 My App"), class_="container"),
+                html.footer(html.p("© 2026 My App"), class_="container"),
                 class_="container-fluid",
             ),
         ),

@@ -1,46 +1,20 @@
+from __future__ import annotations
+
 import inspect
-from collections.abc import Awaitable, Callable, Coroutine
 from dataclasses import dataclass
-from typing import Any, Protocol, TypeAlias, TypeGuard
+from typing import TYPE_CHECKING, Protocol
 
 from fastapi import Depends
-from htmy import Component, as_component_type
+from htmy import as_component_type
 
-from holm.fastapi import FastAPIDependency
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from typing import Any, TypeGuard
 
+    from htmy import Component
 
-class SyncLayout(Protocol):
-    """
-    Sync layout protocol definition.
-    """
-
-    def __call__(self, __props: Any, /, **dependencies: Any) -> Any: ...
-
-
-class AsyncLayout(Protocol):
-    """
-    Async layout protocol definition.
-    """
-
-    async def __call__(self, __props: Any, /, **dependencies: Any) -> Any: ...
-
-
-Layout: TypeAlias = SyncLayout | AsyncLayout
-"""
-Layout type definition.
-
-A layout is a callable that expects a single positional argument the component or data returned
-by the wrapped layout or page, and returns the properties for its wrapper layout. The root layout
-must always return a `Component`.
-"""
-
-LayoutFactory: TypeAlias = Callable[[Any], Any | Coroutine[None, None, Any]]
-"""
-A layout factory is a sync or asynccallable that expects a single argument (the layout's properties)
-and returns the properties for its wrapper layout.
-
-The root layout factory must always return a `htmy` `Component`.
-"""
+    from holm.fastapi import FastAPIDependency
+    from holm.typing import Layout, LayoutFactory, TextToLayoutConverter
 
 
 class LayoutDefinition(Protocol):
@@ -48,6 +22,37 @@ class LayoutDefinition(Protocol):
 
     @property
     def layout(self) -> Layout: ...
+
+
+@dataclass(frozen=True, slots=True)
+class CustomLayoutDefinition:
+    """
+    Custom layout definition that wraps a layout callable.
+
+    This class allows creating layout definitions from any layout function,
+    including those generated dynamically (e.g., from HTML files).
+    """
+
+    layout: Layout
+    """The layout callable."""
+
+
+def make_str_to_layout_definition_transformer(
+    text_to_layout: TextToLayoutConverter,
+) -> Callable[[str], LayoutDefinition]:
+    """
+    Returns a function that converts plain string content to a `LayoutDefinition`.
+
+    This is just a utility wrapper for creating `CustomLayoutDefinition` instances.
+
+    Arguments:
+        text_to_layout: The function to use to convert the plain string content to a `Layout` function.
+    """
+
+    def make_layout(content: str) -> LayoutDefinition:
+        return CustomLayoutDefinition(text_to_layout(content))
+
+    return make_layout
 
 
 def is_layout_definition(obj: Any) -> TypeGuard[LayoutDefinition]:
@@ -100,14 +105,14 @@ def combine_layouts_to_dependency(
     ) -> LayoutFactory:
         async def layout_factory(props: Any) -> Any:
             inner_result = inner(props)
-            if isinstance(inner_result, Awaitable):
+            if inspect.isawaitable(inner_result):
                 inner_result = await inner_result
 
             if isinstance(inner_result, without_layout):
                 return inner_result.component
 
             result = outer(as_component_type(inner_result))
-            if isinstance(result, Awaitable):
+            if inspect.isawaitable(result):
                 result = await result
 
             return result

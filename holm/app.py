@@ -1,15 +1,16 @@
+from __future__ import annotations
+
 import inspect
-from collections.abc import Awaitable, Iterable
 from functools import lru_cache
+from itertools import chain
 from pathlib import Path
-from typing import Any, cast
+from typing import TYPE_CHECKING, Any, cast
 
 from fastapi import APIRouter, Depends, FastAPI, Response
 from fasthx.htmy import HTMY
 from htmy import Component, as_component_type
 
-from ._model import AppConfig, AppNode, PackageInfo
-from .fastapi import FastAPIDependency
+from ._model import AppConfig, AppNode, PackageInfo, module_names
 from .module_options._actions import get_actions, has_actions
 from .module_options._metadata import (
     MetadataMapping,
@@ -18,20 +19,31 @@ from .module_options._metadata import (
     get_metadata_dependency,
 )
 from .module_options._submit_handler import get_submit_handler
-from .modules._api import PlainAPIFactory, RenderingAPIFactory, is_api_definition
+from .modules._api import is_api_definition
 from .modules._error import load_error_handler_owner, register_error_handlers
 from .modules._layout import (
-    LayoutFactory,
     combine_layouts_to_dependency,
     empty_layout_dependency,
     is_layout_definition,
+    make_str_to_layout_definition_transformer,
     without_layout,
 )
 from .modules._page import is_page_definition
-from .typing import module_names
+from .typing import LayoutFactory, PlainAPIFactory, RenderingAPIFactory, TextToLayoutConverter
+from .utils import snippet_to_layout
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
+
+    from .fastapi import FastAPIDependency
 
 
-def App(*, app: FastAPI | None = None, htmy: HTMY | None = None) -> FastAPI:
+def App(
+    *,
+    app: FastAPI | None = None,
+    htmy: HTMY | None = None,
+    str_to_layout: TextToLayoutConverter = snippet_to_layout,
+) -> FastAPI:
     """
     Creates a FastAPI application with all the routes that are defined in the application package.
 
@@ -39,6 +51,9 @@ def App(*, app: FastAPI | None = None, htmy: HTMY | None = None) -> FastAPI:
         app: Optional FastAPI application to use. If `None`, a new instance will be created.
         htmy: Optional `fasthx.htmy.HTMY` instance to use for server-side rendering. If `None`,
             a default instance will be created.
+        str_to_layout: Function that converts a plain string to a `Layout` function. This
+            function is used to convert `layout.html` files to `Layout` functions. See the
+            default implementation for ideas on how to implement your own, custom version.
     """
     if app is None:
         app = FastAPI()
@@ -55,7 +70,7 @@ def App(*, app: FastAPI | None = None, htmy: HTMY | None = None) -> FastAPI:
         register_error_handlers(app, load_error_handler_owner(pkg), htmy=htmy)
 
     # Build the API
-    app.include_router(_build_api(root_node, htmy=htmy))
+    app.include_router(_build_api(root_node, htmy=htmy, str_to_layout=str_to_layout))
 
     return app
 
@@ -65,6 +80,7 @@ def _build_api(
     *,
     base_layout_dep: FastAPIDependency[LayoutFactory] = empty_layout_dependency,
     htmy: HTMY,
+    str_to_layout: TextToLayoutConverter,
 ) -> APIRouter:
     """
     Recursively builds an `APIRouter` based on the application defined by `node`.
@@ -73,27 +89,34 @@ def _build_api(
         node: Application definition.
         base_layout: The base layout dependency to use for the API.
         htmy: The `fasthx.htmy.HTMY` instance to use for server-side rendering.
+        str_to_layout: Function that converts a plain string to a `Layout` function.
     """
     layout_dep = base_layout_dep  # In case there is no package or it has no layout module.
     pkg = node.package
     api = _make_api_router_for_package(pkg, htmy)
     if pkg is not None:
         # -- Try to import all relevant modules.
-        layout_module = pkg.import_module("layout", is_layout_definition)
-        page_module = pkg.import_module("page", is_page_definition)
+        layout_definition = pkg.import_module("layout", is_layout_definition)
+        if layout_definition is None:
+            layout_definition = pkg.import_resource(
+                "layout.html",
+                make_str_to_layout_definition_transformer(str_to_layout),
+            )
+
+        page_definition = pkg.import_module("page", is_page_definition)
         actions_module = pkg.import_module("actions", has_actions)
 
         # -- Resolve dependencies.
         layout_dep = combine_layouts_to_dependency(
-            base_layout_dep, None if layout_module is None else layout_module.layout
+            base_layout_dep, None if layout_definition is None else layout_definition.layout
         )
         page_dep, submit_handler_dep, metadata_dep = (
             (None, None, None)
-            if page_module is None
+            if page_definition is None
             else (
-                page_module.page,
-                get_submit_handler(page_module),
-                get_metadata_dependency(page_module),
+                page_definition.page,
+                get_submit_handler(page_definition),
+                get_metadata_dependency(page_definition),
             )
         )
 
@@ -110,7 +133,7 @@ def _build_api(
                 "/",
                 response_model=None,
                 # mypy can't infer that the modules is not None.
-                name=page_module.__name__,  # type: ignore[union-attr]
+                name=page_definition.__name__,  # type: ignore[union-attr]
                 description=page_dep.__doc__,
                 tags=["Page"],
             )(htmy.page(components_with_metadata)(path_operation))
@@ -128,13 +151,13 @@ def _build_api(
                 "/",
                 response_model=None,
                 # mypy can't infer that the modules is not None.
-                name=f"{page_module.__name__}.handle_submit",  # type: ignore[union-attr]
+                name=f"{page_definition.__name__}.handle_submit",  # type: ignore[union-attr]
                 description=submit_handler_dep.__doc__,
                 tags=["Page", "Submit"],
             )(htmy.page(components_with_metadata)(path_operation))
 
         # -- Register actions from every action owner.
-        for actions in (a for a in (get_actions(page_module), get_actions(actions_module)) if a):
+        for actions in (a for a in (get_actions(page_definition), get_actions(actions_module)) if a):
             for action_key, desc in actions.items():
                 if desc.use_layout or (desc.metadata is not None):
                     # Use _make_page_path_operation() if the action requires the layout or has
@@ -154,7 +177,12 @@ def _build_api(
 
     for sub_url, child_node in node.subtree.items():
         api.include_router(
-            _build_api(child_node, base_layout_dep=layout_dep, htmy=htmy),
+            _build_api(
+                child_node,
+                base_layout_dep=layout_dep,
+                htmy=htmy,
+                str_to_layout=str_to_layout,
+            ),
             prefix=sub_url,
         )
 
@@ -195,7 +223,10 @@ def _discover_app_packages(config: AppConfig) -> set[PackageInfo]:
 
     return {
         PackageInfo.from_marker_file(f, config=config)
-        for f in config.app_dir.rglob("*.py")
+        for f in chain(
+            config.app_dir.rglob("*.py"),
+            config.app_dir.rglob("*.html"),
+        )
         if f.stem in module_names
         # Pass the relative path of the parent to make the best use of caching
         and not is_excluded(f.parent.relative_to(config.root_dir))
@@ -257,7 +288,7 @@ def _make_page_path_operation(
         result = layout(as_component_type(page))
         # We must await here if result is an Awaitable, otherwise we would pass an
         # awaitable to htmy.page() and rendering that would fail.
-        if isinstance(result, Awaitable):
+        if inspect.isawaitable(result):
             result = await result
 
         return result, metadata

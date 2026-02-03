@@ -1,20 +1,13 @@
-from collections.abc import Callable
-from typing import Any, Protocol, TypeAlias, TypeGuard
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Protocol
 
 from fastapi import APIRouter
-from fasthx.htmy import HTMY
 
-PlainAPIFactory: TypeAlias = Callable[[], APIRouter]
-RenderingAPIFactory: TypeAlias = Callable[[HTMY], APIRouter]
+if TYPE_CHECKING:
+    from typing import Any, TypeGuard
 
-APIFactory: TypeAlias = PlainAPIFactory | RenderingAPIFactory
-"""
-`APIRouter` factory definition.
-
-It is a callable that optionally accepts a `HTMY` instance as an argument to make sure
-the same renderer is used throughout the application if the API does HTML rendering.
-Otherwise the argument can be omitted.
-"""
+    from holm.typing import APIFactory
 
 
 class APIDefinition(Protocol):
@@ -30,5 +23,6 @@ class APIDefinition(Protocol):
 def is_api_definition(obj: Any) -> TypeGuard[APIDefinition]:
     """Type guard for `APIDefinition`."""
     api = getattr(obj, "api", None)
-    # Check APIRouter first, because that's also callable.
+    # APIRouter is also callable, so callable(api) would be enough,
+    # but let's be a bit more thorough in this case.
     return isinstance(api, APIRouter) or callable(api)
