@@ -84,7 +84,7 @@ Create `my_app/main.py` with a custom `str_to_layout` converter that provides th
 
 ```python hl_lines="2-3 5 8-14 18"
 from holm import App
-from holm.modules._layout import Layout
+from holm.typing import Layout
 from holm.utils import snippet_to_layout
 
 from .navbar import navbar

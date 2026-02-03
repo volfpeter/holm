@@ -1,5 +1,5 @@
 from holm import App
-from holm.modules._layout import Layout
+from holm.typing import Layout
 from holm.utils import snippet_to_layout
 
 from .navbar import navbar
