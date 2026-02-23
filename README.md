@@ -28,6 +28,10 @@ Web development framework that brings the Next.js developer experience to Python
 
 "Thanks for your work in the `holm`/`htmy`/`FastHX` stack, it's awesome." (David Brochart, Technical Director at QuantStack, Jupyter developer. [ref](https://github.com/volfpeter/holm/issues/41#issuecomment-3682810002))
 
+## Component libraries
+
+- [htmui](https://github.com/volfpeter/htmui): [BasecoatUI](https://basecoatui.com/) and [TailwindCSS](https://tailwindcss.com/) components. The included example application is built with `holm`.
+
 ## Pre-requisite knowledge
 
 To get started, all you need is a _basic_ understanding of:
