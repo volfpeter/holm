@@ -18,16 +18,16 @@ build-backend = "pdm.backend"
 [dependency-groups]
 dev = [
     "httpx>=0.28.1",
-    "mkdocstrings>=1.0.1",
-    "mkdocstrings-python>=2.0.1",
-    "mypy>=1.19.1",
-    "poethepoet>=0.40.0",
-    "pytest>=9.0.2",
+    "mkdocstrings>=1.0.4",
+    "mkdocstrings-python>=2.0.3",
+    "mypy>=1.20.1",
+    "poethepoet>=0.44.0",
+    "pytest>=9.0.3",
     "pytest-random-order>=1.2.0",
-    "ruff>=0.14.14",
-    "uvicorn>=0.40.0",
+    "ruff>=0.15.10",
+    "uvicorn>=0.44.0",
     "watchfiles>=1.1.1",
-    "zensical>=0.0.18",
+    "zensical>=0.0.33",
 ]
 
 [tool.mypy]
@@ -101,7 +101,6 @@ mypy = "mypy ."
 check.sequence = ["format", "lint", "mypy"]
 check.ignore_fail = "return_non_zero"
 
-test.cmd = "python -m pytest tests"
-test.env = { APP_ENV = "test" }
+test = "python -m pytest tests"
 
 serve-docs = "zensical serve"
