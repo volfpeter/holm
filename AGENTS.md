@@ -12,32 +12,15 @@ Unless explicitly requested:
 
 **ASK** questions if something is unclear or ambiguous
 
-Always aim for **simplicity**, **clarity**, be challenging to achieve this if needed
-
-## Commands
-
-- `uv run poe check` - Run format, lint, and mypy checks
-- `uv run poe format` - Check formatting with ruff
-- `uv run poe format-fix` - Fix formatting
-- `uv run poe lint` - Run ruff linter
-- `uv run poe lint-fix` - Fix ruff issues
-- `uv run poe mypy` - Run mypy type checking
-- `uv run poe test` - Run all tests
-- `uv run poe test tests/<test_file>` - Run specific test file
+Always aim for **simplicity**, **clarity**, be challenging to achieve this
 
 ## Code style
 
-- Line length: 108 characters
-- Use `from __future__ import annotations` at top when necessary
-- Import order: `__future__`, stdlib, third-party, local
 - Use `collections.abc` for instead of `typing` where possible
 - Dataclasses: `@dataclass(frozen=True, kw_only=True, slots=True)`
-- Private functions/attributes: leading underscore
 - No comments unless explicitly requested
-- Type hints required (`mypy` strict mode)
-- Use `TypeAlias` for type aliases
-- Tests: use `pytest.mark.parametrize`
-- FastAPI patterns for dependencies and error handling
+- Type hints required, `mypy` in strict mode, avoid using `Any`
+- Use `TypeAlias` for type aliases, and `Annotated` for FastAPI dependencies
 
 ## Coding
 
