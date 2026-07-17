@@ -2,15 +2,13 @@
 
 Unless explicitly requested:
 
-- **Do NOT** commit
+- **Do NOT** stage, commit, or push code
 - **Do NOT** write tests
 - **Do NOT** run code or applications
 
-**NEVER push code**
-
 **Never install anything**
 
-**ASK** questions if something is unclear or ambiguous
+**ASK** questions if something is unclear or ambiguous, make no assumptions
 
 Always aim for **simplicity**, **clarity**, be challenging to achieve this
 

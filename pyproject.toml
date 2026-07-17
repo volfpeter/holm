@@ -3,12 +3,14 @@ name = "holm"
 dynamic = ["version"]
 description = "Web development framework that brings the Next.js developer experience to Python, built on FastAPI, htmy, and FastHX."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 dependencies = [
-    "fastapi>=0.115.12",
-    "fasthx>=3.0.1",
-    "htmy[lxml]>=0.10.2",
-    "python-multipart>=0.0.20"
+    "fastapi>=0.135.0",
+    "fasthx>=3.2.1",
+    "htmy[jinja,lxml]>=0.13.0",
+    "jinja2>=3.1.6",
+    "markupsafe>=3.0.3",
+    "python-multipart>=0.0.20",
 ]
 
 [build-system]
@@ -20,14 +22,14 @@ dev = [
     "httpx>=0.28.1",
     "mkdocstrings>=1.0.4",
     "mkdocstrings-python>=2.0.3",
-    "mypy>=1.20.1",
+    "mypy>=2.1.0",
     "poethepoet>=0.44.0",
     "pytest>=9.0.3",
     "pytest-random-order>=1.2.0",
     "ruff>=0.15.10",
     "uvicorn>=0.44.0",
     "watchfiles>=1.1.1",
-    "zensical>=0.0.33",
+    "zensical>=0.0.47",
 ]
 
 [tool.mypy]
@@ -35,9 +37,9 @@ strict = true
 exclude = [
     "examples/actions-with-htmx",
     "examples/forms",
-    "examples/html-layout",
-    "examples/html-layout-default-slots",
-    "examples/html-multi-slot-layout",
+    "examples/jinja-layout",
+    "examples/jinja-layout-default-slots",
+    "examples/jinja-multi-slot-layout",
     "examples/minimal",
     "examples/quick-start-guide",
     "examples/rendering-apis-with-htmx",

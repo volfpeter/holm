@@ -1,7 +1,7 @@
 from collections.abc import ItemsView, Iterator, KeysView, Mapping, ValuesView
 from typing import Any, TypeAlias, overload
 
-from htmy import Component, ContextAware, as_component_sequence
+from htmy import ContextAware
 
 from holm.fastapi import FastAPIDependency
 
@@ -110,17 +110,3 @@ class Metadata(ContextAware):
     def values(self) -> ValuesView[Any]:
         """Implements `Mapping.values()`."""
         return self._metadata.values()
-
-
-def components_with_metadata(data: tuple[Component, MetadataMapping | None]) -> Component:
-    """
-    Function that converts a `Component` and optional `MetadataMapping` tuple into a `Component`
-    in which the received component is wrapped in a `MetadataContext`, making the given metadata
-    available in all wrapped components using `Metadata.from_context()`.
-    """
-    components, metadata = data
-    # Wrap the rendered components in Metadata context provider component.
-    # This allows `Metadata.from_context()` to be used in all wrapped components.
-    # The received components object is usually a ComponentSequence (doctype and html components),
-    # so converting to a component sequence seems a tiny bit more efficient.
-    return Metadata(metadata).in_context(*as_component_sequence(components))

@@ -61,14 +61,6 @@ properties) and returns the properties for its wrapper layout.
 The root layout factory must always return a `htmy` `Component`.
 """
 
-TextToLayoutConverter: TypeAlias = Callable[[str], Layout]
-"""
-Type alias for functions that convert plain string to a `Layout` function.
-
-The easiest way to create a `TextToLayoutConverter` is to create a wrapper
-around `holm.utils.snippet_to_layout`.
-"""
-
 # -- Error handler typing
 
 ErrorHandlerMapping: TypeAlias = Mapping[type[Exception] | int, FastAPIErrorHandler]
