@@ -29,7 +29,7 @@ dev = [
     "ruff>=0.15.10",
     "uvicorn>=0.44.0",
     "watchfiles>=1.1.1",
-    "zensical>=0.0.47",
+    "zensical>=0.0.51",
 ]
 
 [tool.mypy]

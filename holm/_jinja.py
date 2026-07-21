@@ -21,7 +21,7 @@ class JinjaTemplate(_JinjaTemplate):
     """
     `fasthx.htmy.JinjaTemplate` subclass with holm-specific context awareness.
 
-    In addition to the Jinja context utilities added by FasstHX, this subclass adds page
+    In addition to the Jinja context utilities added by FastHX, this subclass adds page
     `Metadata` under the `metadata` key in the Jinja context as an always-present, but
     possibly empty dictionary.
     """

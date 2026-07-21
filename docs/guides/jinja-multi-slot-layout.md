@@ -1,30 +1,28 @@
-# HTML multi-slot layout
+# Jinja multi-slot layout
 
-This guide builds on the [HTML layout guide](html-layout.md) to demonstrate how to use **multiple layout slots** for more complex page structures.
+This guide builds on the [Jinja layout guide](jinja-layout.md) to demonstrate how to use **multiple layout slots** for more complex page structures.
 
 We will cover:
 
-- How to define multiple slots in an HTML layout.
+- How to define multiple slots in a Jinja layout.
 - How to return content for multiple slots from a page.
 
-The entire source code of this application can be found in the [examples/html-multi-slot-layout](https://github.com/volfpeter/holm/tree/main/examples/html-multi-slot-layout) directory of the repository.
+The entire source code of this application can be found in the [examples/jinja-multi-slot-layout](https://github.com/volfpeter/holm/tree/main/examples/jinja-multi-slot-layout) directory of the repository.
 
 Before you continue, make sure you have installed `holm` and either `uvicorn` or `fastapi-cli`!
 
 ## File structure
 
-The application uses a Python package structure (required for HTML layouts):
-
 ```
-html-multi-slot-layout/  # Root directory
-└── my_app/              # Application package
-    ├── __init__.py      # Makes this a Python package (required for HTML layouts)
-    ├── main.py          # Application entry point
-    ├── layout.html      # Root HTML layout with multiple slots
-    ├── page.py          # Home page returning slot mapping
+jinja-multi-slot-layout/  # Root directory
+└── my_app/               # Application package
+    ├── __init__.py
+    ├── layout.jinja      # Root Jinja layout with multiple slots
+    ├── main.py           # Application entry point
+    ├── page.py           # Home page returning a slot mapping
     └── about/
         ├── __init__.py
-        └── page.py      # About page returning slot mapping
+        └── page.py       # About page returning a slot mapping
 ```
 
 ## Create the application
@@ -37,17 +35,15 @@ from holm import App
 app = App()
 ```
 
-Don't forget to add `__init__.py` in `my_app` to make it a Python package.
+## Create the Jinja layout with multiple slots
 
-## Create the HTML layout with multiple slots
+Next we create `my_app/layout.jinja` with multiple slot placeholders. This is our application's root layout:
 
-Next we create `my_app/layout.html` with multiple slot placeholders, this is our application's root layout:
-
-```html hl_lines="22-23 29-30"
+```jinja hl_lines="22-23 29-30"
 <!doctype html>
 <html>
   <head>
-    <title>{metadata[title]}</title>
+    <title>{{ metadata.title }}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
@@ -66,14 +62,14 @@ Next we create `my_app/layout.html` with multiple slot placeholders, this is our
     </header>
     <main class="container">
       <!-- Intro slot comes here: -->
-      <!-- slot[intro] -->
+      {{ slots.intro }}
       <hr />
       <p style="text-align: center">
         <small>Separator between intro and details slots.</small>
       </p>
       <hr />
       <!-- Details slot comes here: -->
-      <!-- slot[details] -->
+      {{ slots.details }}
     </main>
     <footer class="container">
       <p>© 2026 My App</p>
@@ -82,15 +78,15 @@ Next we create `my_app/layout.html` with multiple slot placeholders, this is our
 </html>
 ```
 
-The key difference from the HTML layout guide is that we are using two slot placeholders: `<!-- slot[intro] -->` for an intro content, and `<!-- slot[details] -->` for the main page content.
+The key difference from the Jinja layout guide is that we are using two slot placeholders instead of the default `{{ slots.children }}`: `{{ slots.intro }}` for an intro section, and `{{ slots.details }}` for the main page content.
 
-You can define as many slots as you need. Slot names are arbitrary strings that match the keys in the dictionary returned by the wrapped page or layout.
+You can define as many slots as you need. Slot names are arbitrary strings that match the keys in the dictionary returned by the wrapped page or layout. If the wrapped component returns a component, not a mapping, it will be available in the default `{{ slots.children }}` slot.
 
 ## Create your home page with multiple slots
 
-We can now create our home page (`my_app/page.py`). Remember, it needs to return a dictionary (sometimes called slot mapping) that maps slot names we used in the layout to their respective content:
+We can now create our home page (`my_app/page.py`). It returns a dictionary (a slot mapping) that maps slot names to their content:
 
-```python hl_lines="7 10-11 15-16"
+```python hl_lines="10-11 15-16"
 from htmy import Component, html
 
 # Static metadata for this page
@@ -118,13 +114,13 @@ def page() -> dict[str, Component]:
     }
 ```
 
-The components assigned to the `"intro"` and `"details"` keys will be rendered in the corresponding slots of our HTML layout.
+The components assigned to the `"intro"` and `"details"` keys are rendered and placed in the corresponding slots of our Jinja layout.
 
 ## Create an about page with dynamic content
 
-The about page (`my_app/about/page.py`) is also directly wrapped by our root HTML layout, so it must also return a dictionary with the keys expected by the layout:
+The about page (`my_app/about/page.py`) is also directly wrapped by our root Jinja layout, so it must also return a dictionary with the keys expected by the layout:
 
-```python hl_lines="14 18 22 29 33"
+```python hl_lines="18 22 29 33"
 from htmy import Component, html
 
 
@@ -166,8 +162,6 @@ async def page(featured: bool = False) -> dict[str, Component]:
 
 ## Run your application
 
-That's it, the application is ready. You can now run it using `uvicorn` or `fastapi-cli`:
-
 ```bash
 uvicorn my_app.main:app --reload
 ```
@@ -185,3 +179,8 @@ Visit these URLs to see the application in action:
 - `http://localhost:8000/about?featured=true`: Featured about page variant with intro and details sections
 
 You'll see a visual separator between the intro and details sections, demonstrating how each slot's content is placed independently in the layout.
+
+## Next steps
+
+- Learn how to provide default slot content that appears on every page in the [Jinja layout default slots guide](jinja-layout-default-slots.md).
+- Review the [Jinja layout guide](jinja-layout.md) for the basics of Jinja layouts, custom `htmy` setups, and nested layouts.

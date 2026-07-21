@@ -1,38 +1,55 @@
-# HTML layout with default slots
+# Jinja layout default slots
 
-This guide builds on the [HTML layout guide](html-layout.md) and the [HTML multi-slot layout guide](html-multi-slot-layout.md) to demonstrate how to use **default slots** for shared components that appear on every page.
+This guide builds on the [Jinja layout guide](jinja-layout.md) and the [Jinja multi-slot layout guide](jinja-multi-slot-layout.md) to demonstrate how to use **default slots** for shared components that appear on every page.
 
 We will cover:
 
-- How to create a custom `str_to_layout` converter that provides default slots.
-- How to build a reusable navigation component that highlights the current page.
+- How to configure default slots with `App(layout_slots=...)`.
+- How to render default slots in a Jinja layout.
 
-The entire source code of this application can be found in the [examples/html-layout-default-slots](https://github.com/volfpeter/holm/tree/main/examples/html-layout-default-slots) directory of the repository.
+The entire source code of this application can be found in the [examples/jinja-layout-default-slots](https://github.com/volfpeter/holm/tree/main/examples/jinja-layout-default-slots) directory of the repository.
 
 Before you continue, make sure you have installed `holm` and either `uvicorn` or `fastapi-cli`!
 
 ## File structure
 
-The application uses a Python package structure (required for HTML layouts):
+The application uses a Python package structure:
 
 ```
-html-layout-default-slots/  # Root directory
-└── my_app/                 # Application package
-    ├── __init__.py         # Makes this a Python package (required for HTML layouts)
-    ├── main.py             # Application entry point with custom str_to_layout
-    ├── layout.html         # Root HTML layout with navbar and children slots
-    ├── navbar.py           # Shared navigation component
-    ├── page.py             # Home page
+jinja-layout-default-slots/  # Root directory
+└── my_app/                  # Application package
+    ├── __init__.py
+    ├── layout.jinja         # Root Jinja layout with navbar and children slots
+    ├── main.py              # Application entry point
+    ├── navbar.py            # Default navbar component
+    ├── page.py              # Home page
     └── about/
         ├── __init__.py
-        └── page.py         # About page
+        └── page.py          # About page
 ```
 
-## Create the navigation component
+## Create the application with a default slot
+
+Default slots are configured when you create the `holm` application:
+
+```python hl_lines="8"
+from holm import App
+
+from .navbar import navbar
+
+# `layout_slots` makes the `navbar` slot available to every component
+# in the application, including Jinja layouts, through
+# `htmy.jinja.DefaultSlots.from_context()`.
+app = App(layout_slots={"navbar": navbar})
+```
+
+`layout_slots` takes a mapping from slot name to `htmy` component. These slots are injected into the `htmy` rendering context using `htmy.jinja.DefaultSlots` and merged with any explicit slots returned by the wrapped page or layout. When there is a slot name conflict, the explicit slot provided by the wrapped page or layout takes precedence.
+
+## Create the default navbar component
 
 First we create `my_app/navbar.py` with a navigation component that highlights the current page:
 
-```python hl_lines="1 10 28-29 33-38"
+```python hl_lines="1 18 28"
 from fasthx.htmy import CurrentRequest
 from htmy import ComponentType, Context, component, html
 
@@ -73,48 +90,20 @@ def navbar(context: Context) -> ComponentType:
     )
 ```
 
-These are the most important details you should notice:
+The most important details:
 
 - `CurrentRequest.from_context()` is used to get the current FastAPI request from the `htmy` rendering context.
 - The `nav_item` helper applies highlighting when the link matches the current path.
 
-## Create the custom layout converter
+## Create the Jinja layout with slots
 
-Create `my_app/main.py` with a custom `str_to_layout` converter that provides the navbar as a default slot:
+Create `my_app/layout.jinja` with slots for both the navbar and page content:
 
-```python hl_lines="2-3 5 8-14 18"
-from holm import App
-from holm.typing import Layout
-from holm.utils import snippet_to_layout
-
-from .navbar import navbar
-
-
-def str_to_layout_with_navbar(content: str) -> Layout:
-    """
-    Custom string to `Layout` converter function for the application.
-
-    It makes a `navbar` component available to every HTML layout in the `navbar` slot.
-    """
-    return snippet_to_layout(content, default_slot_mapping={"navbar": navbar})
-
-
-app = App(str_to_layout=str_to_layout_with_navbar)
-```
-
-The important bit here is the `str_to_layout_with_navbar()` function (which wraps `snippet_to_layout`), and how we pass it to `App()`.
-
-The `default_slot_mapping` argument specifies components that will be automatically provided for slots unless the page explicitly overrides them. In this case it means HTML layouts will always have access to our `navbar` without pages having to return it themselves.
-
-## Create the HTML layout with slots
-
-Create `my_app/layout.html` with slots for both the navbar and page content:
-
-```html hl_lines="14-15 18-19"
+```jinja hl_lines="4 14-15 18-19"
 <!doctype html>
 <html>
   <head>
-    <title>{metadata[title]}</title>
+    <title>{{ metadata.title }}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
@@ -124,12 +113,12 @@ Create `my_app/layout.html` with slots for both the navbar and page content:
   </head>
   <body class="container-fluid">
     <header class="container">
-      <!-- The navbar component added by the layout converter goes to the navbar slot: -->
-      <!-- slot[navbar] -->
+      <!-- The navbar component provided by `layout_slots` -->
+      {{ slots.navbar }}
     </header>
     <main class="container">
-      <!-- Page content goes here, to the usual children slot: -->
-      <!-- slot[children] -->
+      <!-- Page content goes here, to the usual children slot -->
+      {{ slots.children }}
     </main>
     <footer class="container">
       <p>© 2026 My App</p>
@@ -138,16 +127,16 @@ Create `my_app/layout.html` with slots for both the navbar and page content:
 </html>
 ```
 
-Our layout has two slots:
+The layout has two slots:
 
-- `<!-- slot[navbar] -->` receives the navbar component from the default slot mapping.
-- `<!-- slot[children] -->` receives the page's main content.
+- `{{ slots.navbar }}` receives the navbar component from `layout_slots`.
+- `{{ slots.children }}` receives the page's main content.
 
 ## Create your home page
 
-We can now create our home page in `my_app/page.py`, which is essentially the same as in the HTML layout guide:
+We can now create our home page in `my_app/page.py`, which is essentially the same as in the Jinja layout guide:
 
-```python hl_lines="16"
+```python
 from htmy import Component, html
 
 metadata = {"title": "Home | My App"}
@@ -227,3 +216,10 @@ You can now open the application in the browser:
 - `http://localhost:8000/about?featured=true`: Featured about page variant
 
 You'll see the navigation bar on every page with the current page highlighted.
+
+## Next steps
+
+Now that you understand default slots:
+
+- Review the [Jinja layout guide](jinja-layout.md) for the basics of Jinja layouts, custom `htmy` setups, and nested layouts.
+- Learn how to use multiple layout slots for more complex page structures in the [Jinja multi-slot layout guide](jinja-multi-slot-layout.md).

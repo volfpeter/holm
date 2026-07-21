@@ -5,7 +5,7 @@
 - Standard FastAPI as its web server layer.
 - `htmy` as its engine for building HTML components in pure Python, with full typing and async support.
 
-**File-system based routing** takes a central role in `holm`. Instead of manually defining routes, your application's package structure is automatically discovered and mapped to a corresponding API structure. This process also included full UI composition from your layouts and pages.
+**File-system based routing** takes a central role in `holm`. Instead of manually defining routes, your application's package structure is automatically discovered and mapped to a corresponding API structure. This process also includes full UI composition from your layouts and pages.
 
 ## Application initialization
 
@@ -24,7 +24,7 @@ Your application is initialized with a single call to `holm.App()` within your a
 
 A key feature of `holm` is its deep integration with FastAPI's dependency injection system. Page, layout, action, and metadata functions are just FastAPI dependencies, allowing you to use FastAPI's dependency injection mechanism as you would in any other FastAPI dependency or path operation.
 
-It means if you have already used FastAPI, then you can transfer all your experience and existing codebase to `holm` without any adaptation.
+If you have already used FastAPI, then you can transfer all your experience and existing codebase to `holm` without any adaptation.
 
 ## Pages (`page.py`)
 
@@ -113,4 +113,4 @@ A `page.py` file can define a `handle_submit()` function (also a **FastAPI depen
 
 This is where you can create a custom `APIRouter` for the package, as an `api` variable which can be an `APIRouter` instance or a function that returns an `APIRouter`.
 
-It is most often used to configure the `APIRouter` of the package, for example by settings its dependencies, tags, or other options. You can also use it for defining JSON endpoints. Additionally, it can be used for serving HTML fragments (using the FastHX library), although actions provide a more convenient way for that.
+It is most often used to configure the `APIRouter` of the package, for example by setting its dependencies, tags, or other options. You can also use it for defining JSON endpoints. Additionally, it can be used for serving HTML fragments (using the FastHX library), although actions provide a more convenient way for that.

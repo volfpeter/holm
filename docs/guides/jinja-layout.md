@@ -1,26 +1,24 @@
-# HTML layout
+# Jinja layout
 
-This guide shows how to convert the [quick-start-guide](quick-start-guide.md) application to use an HTML layout instead of a Python-based layout component.
+This guide shows how to convert the [quick-start-guide](quick-start-guide.md) application to use a Jinja layout instead of a Python-based layout component.
 
 The application is identical to the quick start guide in every way except for two key differences:
 
-1. **HTML layout**: Uses `layout.html` instead of `layout.py` for the root layout.
-2. **Package structure**: The app is wrapped in a Python package (required for HTML layouts to enable resource loading).
+1. **Jinja layout**: Uses `layout.jinja` instead of `layout.py` for the root layout.
+2. **Package structure**: The app is wrapped in a Python package. This is idiomatic for `holm` applications; Jinja layouts do not require a package to work.
 
-The entire source code of this application can be found in the [examples/html-layout](https://github.com/volfpeter/holm/tree/main/examples/html-layout) directory of the repository.
+The entire source code of this application can be found in the [examples/jinja-layout](https://github.com/volfpeter/holm/tree/main/examples/jinja-layout) directory of the repository.
 
 Before you continue, make sure you have installed `holm` and either `uvicorn` or `fastapi-cli`!
 
 ## File structure
 
-As already mentioned, the HTML layout version requires a Python package structure, because HTML layouts are loaded as package resources:
-
 ```
-html-layout/             # Root directory
+jinja-layout/            # Root directory
 └── my_app/              # Application package
-    ├── __init__.py      # Makes this a Python package (required for HTML layouts)
+    ├── __init__.py
+    ├── layout.jinja     # Root Jinja layout (instead of layout.py)
     ├── main.py          # Application entry point
-    ├── layout.html      # Root HTML layout (instead of layout.py)
     ├── page.py          # Home page
     └── about/
         ├── __init__.py
@@ -37,17 +35,17 @@ from holm import App
 app = App()
 ```
 
-Don't forget to add `__init__.py` in `my_app` to make it a Python package.
+When `holm` creates the `htmy` renderer itself and a `layout.jinja` file is discovered, it automatically registers a `Jinja2Templates` instance in the renderer's default context, so Jinja layouts and `JinjaTemplate` components work out of the box.
 
-## Create the HTML layout
+## Create the Jinja layout
 
-Next we create `my_app/layout.html` to define the application's root layout:
+Next we create `my_app/layout.jinja` to define the application's root layout:
 
-```html hl_lines="4 22"
+```jinja hl_lines="4 22"
 <!doctype html>
 <html>
   <head>
-    <title>{metadata[title]}</title>
+    <title>{{ metadata.title }}</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
@@ -65,7 +63,7 @@ Next we create `my_app/layout.html` to define the application's root layout:
       </nav>
     </header>
     <main class="container">
-      <!-- slot[children] -->
+      {{ slots.children }}
     </main>
     <footer class="container">
       <p>© 2026 My App</p>
@@ -74,14 +72,10 @@ Next we create `my_app/layout.html` to define the application's root layout:
 </html>
 ```
 
-HTML layouts are **plain Python format strings**:
+Jinja layouts are **standard Jinja2 templates** rendered automatically by `holm`:
 
-- `{metadata[title]}` interpolates the page title from each page's metadata.
-- `<!-- slot[children] -->` is an HTML comment placeholder where page content is inserted.
-
-!!! note "Slots and htmy"
-
-    Slots are standard HTML comments that follow `htmy.Snippet` and `htmy.Slot` conventions. For more information, see the [htmy documentation](https://volfpeter.github.io/htmy).
+- `{{ metadata.title }}` interpolates the page title from each page's metadata.
+- `{{ slots.children }}` is the wrapped page content, pre-rendered to safe HTML.
 
 ## Create your home page
 
@@ -151,19 +145,22 @@ This page is also identical to what we created in the quick start guide.
 
 ## Differences from Python layouts
 
-| Feature              | Python layout (`layout.py`)          | HTML layout (`layout.html`)                  |
-| -------------------- | ------------------------------------ | -------------------------------------------- |
-| **File type**        | Python module with callable `layout` | Plain HTML file                              |
-| **Package required** | No                                   | Yes (for resource loading)                   |
-| **Metadata access**  | `Metadata.from_context(context)`     | `{metadata[key]}` format string              |
-| **Children slot**    | Function argument (e.g. `children`)  | HTML comment (`<!-- slot[children] -->`)     |
-| **Dynamic logic**    | Full Python logic in component       | Static HTML with format string interpolation |
-| **Customization**    | Full Python flexibility              | Customizable via `str_to_layout` parameter   |
-| **Precedence**       | Used if present                      | Python layout used if both exist             |
+| Feature             | Python layout (`layout.py`)          | Jinja layout (`layout.jinja`)    |
+| ------------------- | ------------------------------------ | -------------------------------- |
+| **File type**       | Python module with callable `layout` | Jinja2 template                  |
+| **Metadata access** | `Metadata.from_context(context)`     | `{{ metadata.<attribute> }}`     |
+| **Children slot**   | Function argument (e.g. `children`)  | `{{ slots.children }}`           |
+| **Precedence**      | Used if present                      | Python layout used if both exist |
+
+`layout.py` remains the escape hatch for FastAPI dependency injection and arbitrary Python logic. Python layouts and Jinja layouts compose in either order through holm's layout-composition machinery.
+
+## Custom `htmy`
+
+When you pass your own `fasthx.htmy.HTMY` to `App()`, `holm` does not modify it. You must ensure a `htmy.jinja.JinjaTemplates` instance is available in the rendering context (e.g. in the renderer's default context) for Jinja layouts and templates to render.
+
+Furthermore, the templates root directory must be the same as the Python import root directory for Jinja layouts to work.
 
 ## Run your application
-
-That's it, the application is ready. You can now run it using `uvicorn` or `fastapi-cli`:
 
 ```bash
 uvicorn my_app.main:app --reload
@@ -183,7 +180,5 @@ Visit these URLs to see the application in action:
 
 ## Next steps
 
-Now that you understand the basics of HTML layouts:
-
-- Learn how to use multiple layout slots for more complex page structures in the [HTML multi-slot layout guide](guides/html-multi-slot-layout.md)
-- Learn how to provide default slot content that appears on every page in the [HTML layout default slots guide](guides/html-layout-default-slots.md)
+- Learn how to use multiple layout slots for more complex page structures in the [Jinja multi-slot layout guide](jinja-multi-slot-layout.md)
+- Learn how to provide default slot content that appears on every page in the [Jinja layout default slots guide](jinja-layout-default-slots.md)
