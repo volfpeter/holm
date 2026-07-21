@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
     <head>
-        <title>{metadata[title]}</title>
+        <title>{{ metadata.title }}</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
@@ -11,12 +11,12 @@
     </head>
     <body class="container-fluid">
         <header class="container">
-            <!-- The navbar component added by the layout converter goes to the navbar slot: -->
-            <!-- slot[navbar] -->
+            <!-- The navbar component provided by `layout_slots` -->
+            {{ slots.navbar }}
         </header>
         <main class="container">
-            <!-- Page content goes here, to the usual children slot: -->
-            <!-- slot[children] -->
+            <!-- Page content goes here, to the usual children slot -->
+            {{ slots.children }}
         </main>
         <footer class="container">
             <p>© 2026 My App</p>
