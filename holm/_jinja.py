@@ -40,8 +40,7 @@ def make_jinja_layout_definition(pkg: PackageInfo, config: AppConfig) -> CustomL
     file in the package, if such a file exists.
 
     The template name is the layout file path relative to `config.root_dir` with POSIX
-    separators, e.g. `my_app/about/layout.jinja`, so the Jinja loader (rooted at
-    `config.root_dir`) resolves nested layouts by package-relative name.
+    separators (e.g. `my_app/about/layout.jinja`), matching the root of the Jinja loader.
     """
     package_dir = _get_package_dir(pkg, config)
     layout_file = package_dir / "layout.jinja"

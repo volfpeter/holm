@@ -45,16 +45,29 @@ def App(
     The app-scope default context (default/layout slots, and metadata if any) is automatically
     injected into the `htmy` rendering context whenever `holm` is responsible for rendering.
 
+    Jinja template rendering:
+
+        If `holm` creates and owns the `htmy` renderer (the `htmy` argument is `None`) and
+        any `layout.jinja` file is discovered, a `htmy.jinja.JinjaTemplates` instance is
+        automatically injected into the default `htmy` rendering context, so `holm.JinjaTemplate`
+        components work out of the box.
+
+        The templates root is the Python import root (the directory containing the app package,
+        not the app package itself). Template names are relative to that root, so they must be
+        prefixed with the app package name (e.g. `<app_package>/some_path/my-component.jinja`).
+        Templates may also live outside the app package, for example in a sibling `templates/`
+        directory, and are referenced the same way, relative to the import root.
+
+        If you provide your own `htmy` and want to use `holm.JinjaTemplate` components in your
+        application, you must add a pre-configured `htmy.jinja.JinjaTemplates` object to its
+        default context yourself.
+
     Arguments:
         app: Optional FastAPI application to use. If `None`, a FastAPI instance is automatically created.
         htmy: Optional `fasthx.htmy.HTMY` instance to use for server-side rendering. If `None`,
-            a default instance is created. If `holm` creates and owns this object, and Jinja
-            layouts are found, a `JinjaTemplates` instance is automatically injected into the
-            the default `htmy` rendering context, so `JinjaTemplate` components will automatically
-            work, and the templates root folder will be the same as the application package.
-            If you provide your own `htmy` and want to use `JinjaTemplate` components in your
-            application, you should add a pre-configured `JinjaTemplates` object to the `htmy`
-            renderer's default context.
+            a default instance is created. See "Jinja template rendering" above for how `holm`
+            configures Jinja support on an owned renderer, and what you need to do if you pass
+            your own.
         layout_slots: Optional mapping of default named slots, made available as `DefaultSlots`
             to every `htmy` component (including Jinja layouts) that's automatically rendered
             by `holm`.
