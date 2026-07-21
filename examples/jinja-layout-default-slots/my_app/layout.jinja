@@ -1,25 +1,25 @@
 <!doctype html>
 <html>
-    <head>
-        <title>{{ metadata.title }}</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-        />
-    </head>
-    <body class="container-fluid">
-        <header class="container">
-            <!-- The navbar component provided by `layout_slots` -->
-            {{ slots.navbar }}
-        </header>
-        <main class="container">
-            <!-- Page content goes here, to the usual children slot -->
-            {{ slots.children }}
-        </main>
-        <footer class="container">
-            <p>© 2026 My App</p>
-        </footer>
-    </body>
+  <head>
+    <title>{{ metadata.title }}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+  </head>
+  <body class="container-fluid">
+    <header class="container">
+      <!-- The navbar component provided by `layout_slots` -->
+      {{ slots.navbar }}
+    </header>
+    <main class="container">
+      <!-- Page content goes here, to the usual children slot -->
+      {{ slots.children }}
+    </main>
+    <footer class="container">
+      <p>© 2026 My App</p>
+    </footer>
+  </body>
 </html>

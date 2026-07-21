@@ -18,8 +18,8 @@ def page() -> dict[str, Component]:
 
 rendered_page = (
     '<div id="dict-slots-layout">\n'
-    '    <p id="header-slot">Header slot</p>\n'
-    '    <p id="content-slot">Content slot</p>\n'
-    '    <p id="footer-slot">Footer slot</p>\n'
+    '  <p id="header-slot">Header slot</p>\n'
+    '  <p id="content-slot">Content slot</p>\n'
+    '  <p id="footer-slot">Footer slot</p>\n'
     "</div>"
 )

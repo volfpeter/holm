@@ -12,11 +12,11 @@ def page() -> Component:
 
 rendered_page = (
     "<div>\n"
-    "    <h1>HTML Layout</h1>\n"
-    f"    <h4>Page title: {metadata['title']}</h4>\n"
-    f"    <p>Description: {metadata['description']}</p>\n"
-    "    <p>Request method: GET</p>\n"
-    "    <div >\n"
+    "  <h1>HTML Layout</h1>\n"
+    f"  <h4>Page title: {metadata['title']}</h4>\n"
+    f"  <p>Description: {metadata['description']}</p>\n"
+    "  <p>Request method: GET</p>\n"
+    "  <div >\n"
     "Page content in HTML layout\n"
     "</div>\n"
     "</div>"
