@@ -7,7 +7,7 @@ requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.135.0",
     "fasthx>=3.2.1",
-    "htmy[jinja,lxml]>=0.13.0",
+    "htmy[jinja,lxml]>=0.13.1",
     "jinja2>=3.1.6",
     "markupsafe>=3.0.3",
     "python-multipart>=0.0.20",
