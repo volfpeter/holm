@@ -69,20 +69,14 @@ class AppConfig:
     mutated after the application initialization has completed.
     """
 
-    owns_renderer: bool = False
-    """Whether `holm` creates and owns its `htmy` renderer."""
-
     def add_to_default_context(self, context: Context) -> None:
         """Merges the given context into the app-scope default context."""
         self.default_context.update(context)
 
     @classmethod
-    def default(cls, owns_renderer: bool = False) -> AppConfig:
+    def default(cls) -> AppConfig:
         """
         Creates a default instance for the standard application configuration.
-
-        Arguments:
-            owns_renderer: Whether `holm` creates and owns its `htmy` renderer.
 
         Raises:
             ValueError: If the application package cannot be determined.
@@ -104,7 +98,6 @@ class AppConfig:
             # Support applications that are not wrapped in a Python package.
             # In that case caller package is an empty string.
             app_url_prefix_length=len_caller_package + 1 if len_caller_package > 0 else 0,
-            owns_renderer=owns_renderer,
         )
 
     @classmethod

@@ -35,7 +35,7 @@ from holm import App
 app = App()
 ```
 
-When `holm` creates the `htmy` renderer itself and a `layout.jinja` file is discovered, it automatically registers a `Jinja2Templates` instance in the renderer's default context, so Jinja layouts and `JinjaTemplate` components work out of the box.
+When `holm` creates the `htmy` renderer itself, it automatically registers a `Jinja2Templates` instance in the renderer's default context, so Jinja layouts and `JinjaTemplate` components work out of the box.
 
 ## Create the Jinja layout
 

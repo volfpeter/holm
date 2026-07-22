@@ -49,10 +49,9 @@ def App(
 
     Jinja template rendering:
 
-    If `holm` creates and owns the `htmy` renderer (the `htmy` argument is `None`) and
-    any `layout.jinja` file is discovered, a `htmy.jinja.JinjaTemplates` instance is
-    automatically injected into the default `htmy` rendering context, so `holm.JinjaTemplate`
-    components work out of the box.
+    When `holm` creates and owns the `htmy` renderer (the `htmy` argument is `None`), a
+    `htmy.jinja.JinjaTemplates` instance is automatically injected into the default `htmy`
+    rendering context. Its template source is created lazily, only when necessary.
 
     The templates root is the Python import root (the directory containing the app package,
     not the app package itself). Template names are relative to that root, so they must be
@@ -77,8 +76,12 @@ def App(
     if app is None:
         app = FastAPI()
 
-    config = AppConfig.default(owns_renderer=htmy is None)
+    config = AppConfig.default()
     if htmy is None:
+        config.add_to_default_context(
+            JinjaTemplates(lambda: make_jinja_templates(config.root_dir)).to_context()
+        )
+
         htmy = HTMY()
 
     if layout_slots is not None:
@@ -239,7 +242,6 @@ def _discover_app_packages(config: AppConfig) -> set[PackageInfo]:
         )
 
     packages: set[PackageInfo] = set()
-    jinja_templates_added = False
 
     for f in chain(
         config.app_dir.rglob("*.py"),
@@ -249,14 +251,6 @@ def _discover_app_packages(config: AppConfig) -> set[PackageInfo]:
     ):
         if f.stem not in module_names:
             continue
-
-        if f.suffix == ".jinja" and config.owns_renderer and not jinja_templates_added:
-            # The glob above already restricts `.jinja` to `layout.jinja`, so registering
-            # `JinjaTemplates` on the first hit is safe.
-            config.add_to_default_context(
-                JinjaTemplates(make_jinja_templates(config.root_dir)).to_context()
-            )
-            jinja_templates_added = True
 
         if not is_excluded(f.parent.relative_to(config.root_dir)):
             packages.add(PackageInfo.from_marker_file(f, config=config))
