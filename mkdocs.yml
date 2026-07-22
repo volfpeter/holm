@@ -67,3 +67,5 @@ nav:
   - API reference:
       - holm: api/holm.md
       - holm.typing: api/typing.md
+  - Upgrade guides:
+      - upgrade-guides/0.9.0-to-0.10.0.md
