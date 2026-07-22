@@ -55,15 +55,16 @@ def make_jinja_templates(root_dir: Path) -> JinjaTemplateSource:
     """
     Returns a FastAPI/Starlette `Jinja2Templates` whose loader root is `root_dir`.
 
-    Autoescape is configured the same way as in FastAPI/Starlette.
+    Autoescape is enabled for the `jinja2.select_autoescape()` default extensions
+    (`html`, `htm`, `xml`) plus `jinja`, since `holm` requires that extension for
+    Jinja layouts.
     """
     import jinja2
     from fastapi.templating import Jinja2Templates
 
     env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(str(root_dir)),
-        # Same config as the starlette default
-        autoescape=jinja2.select_autoescape(),
+        autoescape=jinja2.select_autoescape(["html", "htm", "xml", "jinja"]),
     )
     return Jinja2Templates(env=env)
 
