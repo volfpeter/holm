@@ -316,7 +316,7 @@ def _make_page_path_operation(
 
         context: MutableContext = {}
         context.update(config.default_context)
-        context.update(Metadata(metadata).to_context())  # always; empty Metadata when None
+        context.update(Metadata(metadata).to_context())
 
         if isinstance(page, without_layout):
             return page.component, context
