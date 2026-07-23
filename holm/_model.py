@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import importlib.resources
 import inspect
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -8,10 +7,11 @@ from importlib import import_module
 from pathlib import Path
 from typing import Any, Literal, TypeAlias, TypeGuard, TypeVar, get_args
 
+from htmy import Context, MutableContext
+
 from .logging import logger
 
 _TModule = TypeVar("_TModule")
-_TResource = TypeVar("_TResource")
 
 PackageModuleName: TypeAlias = Literal["actions", "api", "layout", "page"]
 """Recognized module names."""
@@ -37,7 +37,7 @@ Valid examples: "/about".
 Invalid examples: "/", "/about/us".
 """
 
-_no_app_package_roots: set[str] = {"", "."}
+no_app_package_roots: set[str] = {"", "."}
 """
 Special package names that are encountered when the application is not wrapped in a Python package.
 
@@ -61,6 +61,18 @@ class AppConfig:
     app_url_prefix_length: int
     """The length of the application URL prefix to remove."""
 
+    default_context: MutableContext = field(default_factory=dict)
+    """
+    Default context managed by `holm`.
+
+    It must be mutated only through `AppConfig.add_to_default_context()` and it must not be
+    mutated after the application initialization has completed.
+    """
+
+    def add_to_default_context(self, context: Context) -> None:
+        """Merges the given context into the app-scope default context."""
+        self.default_context.update(context)
+
     @classmethod
     def default(cls) -> AppConfig:
         """
@@ -73,21 +85,20 @@ class AppConfig:
         caller_package, caller_package_path = cls._find_app_root()
         root_dir = caller_package_path
 
-        if caller_package not in _no_app_package_roots:
+        if caller_package not in no_app_package_roots:
             # Walk up the package hierarchy until we reach the actual root directory.
             for _ in range(len(caller_package.split("."))):
                 root_dir = root_dir.parent
 
         len_caller_package = len(caller_package)
 
-        result = cls(
+        return cls(
             app_dir=caller_package_path,
             root_dir=root_dir,
             # Support applications that are not wrapped in a Python package.
             # In that case caller package is an empty string.
             app_url_prefix_length=len_caller_package + 1 if len_caller_package > 0 else 0,
         )
-        return result
 
     @classmethod
     def _find_app_root(cls) -> tuple[str, Path]:
@@ -162,7 +173,7 @@ class PackageInfo:
             ValueError: If the module is invalid.
         """
         # Support applications that are not wrapped in a Python package.
-        import_name = name if self.package_name in _no_app_package_roots else f"{self.package_name}.{name}"
+        import_name = name if self.package_name in no_app_package_roots else f"{self.package_name}.{name}"
         try:
             module = import_module(import_name)
         except ModuleNotFoundError:
@@ -181,42 +192,6 @@ class PackageInfo:
             raise ValueError(f"Invalid module: {name}")
 
         return module
-
-    def import_resource(self, filename: str, transform: Callable[[str], _TResource]) -> _TResource | None:
-        """
-        Loads a text resource from the package and applies the given transformation function.
-
-        Arguments:
-            filename: The name of the resource to load from the package.
-            transform: A function that transforms the loaded text content into the desired value.
-
-        Returns:
-            The transformed resource or `None` if the resource does not exist.
-
-        Raises:
-            ValueError: If the imported resource is not in a Python package.
-            Exception: Exceptions raised by the transformation function are not suppressed.
-        """
-        # Support applications that are not wrapped in a Python package.
-        package_name = self.package_name
-        if package_name in _no_app_package_roots:
-            raise ValueError(
-                f"The resource ({filename}) you are trying to load is not in a Python package "
-                "and can not be safely loaded as a result."
-            )
-
-        try:
-            content = importlib.resources.read_text(package_name, filename)
-        except (FileNotFoundError, ModuleNotFoundError):
-            return None
-        except Exception:
-            import traceback
-
-            logger.warning(f"Failed to load resource {filename} from package '{package_name}'.")
-            logger.warning(traceback.format_exc())
-            return None
-
-        return transform(content)
 
     @classmethod
     def from_marker_file(cls, file_path: Path, *, config: AppConfig) -> PackageInfo:

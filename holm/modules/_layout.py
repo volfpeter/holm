@@ -8,13 +8,12 @@ from fastapi import Depends
 from htmy import as_component_type
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
     from typing import Any, TypeGuard
 
     from htmy import Component
 
     from holm.fastapi import FastAPIDependency
-    from holm.typing import Layout, LayoutFactory, TextToLayoutConverter
+    from holm.typing import Layout, LayoutFactory
 
 
 class LayoutDefinition(Protocol):
@@ -35,24 +34,6 @@ class CustomLayoutDefinition:
 
     layout: Layout
     """The layout callable."""
-
-
-def make_str_to_layout_definition_transformer(
-    text_to_layout: TextToLayoutConverter,
-) -> Callable[[str], LayoutDefinition]:
-    """
-    Returns a function that converts plain string content to a `LayoutDefinition`.
-
-    This is just a utility wrapper for creating `CustomLayoutDefinition` instances.
-
-    Arguments:
-        text_to_layout: The function to use to convert the plain string content to a `Layout` function.
-    """
-
-    def make_layout(content: str) -> LayoutDefinition:
-        return CustomLayoutDefinition(text_to_layout(content))
-
-    return make_layout
 
 
 def is_layout_definition(obj: Any) -> TypeGuard[LayoutDefinition]:

@@ -5,7 +5,9 @@
 - Standard FastAPI as its web server layer.
 - `htmy` as its engine for building HTML components in pure Python, with full typing and async support.
 
-**File-system based routing** takes a central role in `holm`. Instead of manually defining routes, your application's package structure is automatically discovered and mapped to a corresponding API structure. This process also included full UI composition from your layouts and pages.
+**File-system based routing** takes a central role in `holm`. Instead of manually defining routes, your application's package structure is automatically discovered and mapped to a corresponding API structure. This process also includes full UI composition from your layouts and pages.
+
+`holm` also ships with first-class, zero-configuration Jinja integration: you can render Jinja templates as regular `htmy` components with `holm.JinjaTemplate`, or define layouts as `layout.jinja` files.
 
 ## Application initialization
 
@@ -24,7 +26,7 @@ Your application is initialized with a single call to `holm.App()` within your a
 
 A key feature of `holm` is its deep integration with FastAPI's dependency injection system. Page, layout, action, and metadata functions are just FastAPI dependencies, allowing you to use FastAPI's dependency injection mechanism as you would in any other FastAPI dependency or path operation.
 
-It means if you have already used FastAPI, then you can transfer all your experience and existing codebase to `holm` without any adaptation.
+If you have already used FastAPI, then you can transfer all your experience and existing codebase to `holm` without any adaptation.
 
 ## Pages (`page.py`)
 
@@ -109,8 +111,21 @@ Actions can be defined in `actions.py` and `page.py` modules, and they are ideal
 
 A `page.py` file can define a `handle_submit()` function (also a **FastAPI dependency**) alongside the `page()` function. Submit handlers behave exactly the same as pages, the only difference is their purpose and that they are HTTP `POST` routes, instead of `GET` routes.
 
+## Jinja integration
+
+You can use Jinja templates as regular `htmy` components with `holm.JinjaTemplate`. This is useful in pages, layouts, actions, or any other UI-related context.
+
+You can also define layouts as `layout.jinja` files, instead of `layout.py`. These are standard Jinja2 templates with access to:
+
+- `{{ slots.children }}`: the wrapped page or layout content (the default slot).
+- `{{ metadata }}`: page metadata.
+- `{{ request }}`: the current FastAPI request and the usual FastAPI/Starlette Jinja2 globals.
+- `{{ route_params }}`: a dict of resolved FastAPI route dependencies.
+
+See the [Jinja quick start guide](guides/jinja-quick-start.md) and [Jinja layout guide](guides/jinja-layout.md) for details.
+
 ## Custom APIs (`api.py`)
 
 This is where you can create a custom `APIRouter` for the package, as an `api` variable which can be an `APIRouter` instance or a function that returns an `APIRouter`.
 
-It is most often used to configure the `APIRouter` of the package, for example by settings its dependencies, tags, or other options. You can also use it for defining JSON endpoints. Additionally, it can be used for serving HTML fragments (using the FastHX library), although actions provide a more convenient way for that.
+It is most often used to configure the `APIRouter` of the package, for example by setting its dependencies, tags, or other options. You can also use it for defining JSON endpoints. Additionally, it can be used for serving HTML fragments (using the FastHX library), although actions provide a more convenient way for that.

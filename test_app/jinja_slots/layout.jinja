@@ -1,0 +1,6 @@
+<section id="jinja-slots-layout">
+  <h2>{{ metadata.title }}</h2>
+  <header>{{ slots.navbar }}</header>
+  <main>{{ slots.children }}</main>
+  <footer><a href="{{ url_for('test_app.page').path }}">Home</a></footer>
+</section>

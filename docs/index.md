@@ -8,6 +8,7 @@ Web development framework that brings the Next.js developer experience to Python
 - **Standard FastAPI** everywhere, so you can leverage the entire FastAPI ecosystem.
 - **JSX-like syntax** with async support for components, thanks to `htmy`.
 - First class **HTMX support** with `FastHX`.
+- Built-in **Jinja support** with zero configuration.
 - **Async** support everywhere, from APIs and dependencies all the way to UI components.
 - Support for both **JSON** and **HTML** (server side rendering) APIs.
 - **No JavaScript** dependencies
@@ -63,7 +64,7 @@ Consider supporting the development and maintenance of the project through [spon
 Similarly to Next.js, `holm` is built around the concept of [file-system based routing](file-system-based-routing.md). This essentially means that your code structure is automatically mapped to a matching API:
 
 - You do not need to manually define routes, every [application component](application-components.md) is automatically discovered and registered in the application.
-- You do not need to manually wrap pages in their layouts, it is automatically done based on your application's code structure.
+- You do not need to manually wrap pages in their layouts; this is automatically done based on your application's code structure.
 
 You can find all the necessary details on the [Application components](application-components.md) page, and the [Quick start guide](guides/quick-start-guide.md) can walk you through the process of creating your first application. The two are complementary documents, reading both is strongly recommended.
 
@@ -106,7 +107,9 @@ When building web applications, performance should be compared to an application
 
 ### Templating language support
 
-While certain features in `holm` rely heavily on the capabilities of `htmy` (for example its context and async support), you can still use other DSLs or templating languages (for example Jinja) in your application if you would like to. All you need to do is write a simple wrapper `htmy` component that internally offloads rendering to your framework of choice. You can find out more about this in the [htmy documentation](https://volfpeter.github.io/htmy/#compatibility-and-performance).
+`holm` ships with built-in **Jinja** support: `layout.jinja` files work out of the box as layouts, and `holm.JinjaTemplate` components render with zero configuration when `holm` owns the `htmy` renderer. See the [Jinja layout guide](guides/jinja-layout.md) for details.
+
+Since `htmy` is the rendering engine, you can also use other DSLs or templating languages by writing a simple wrapper `htmy` component that offloads rendering to your framework of choice. You can find out more about this in the [htmy documentation](https://volfpeter.github.io/htmy/#compatibility-and-performance).
 
 ## Development
 
@@ -144,7 +147,7 @@ The most prominent frameworks in this category are Reflex and NiceGUI. They both
 
 This category includes frameworks like FastHTML or Ludic, and this is where `holm` belongs as well, but it has some key differentiators.
 
-First, `holm` brings the Next.js developer experience to Python with file-system based routing, automatic layout composition, and dynamic page metadata creation, and more. Thanks to `htmy`, it supports async code throughout the stack, even in components, and it also solves the prop drilling problem. While being built with `htmy`, it is easy to integrate with other templating libraries, like `Jinja` or `htpy`. And it provides all these features using standard, simple FastAPI patterns.
+First, `holm` brings the Next.js developer experience to Python with file-system based routing, automatic layout composition, and dynamic page metadata creation, and more. Thanks to `htmy`, it supports async code throughout the stack, even in components, and it also solves the prop drilling problem. While being built with `htmy`, it ships with built-in **`Jinja`** support and remains easy to integrate with other templating libraries, like `htpy`. And it provides all these features using standard, simple FastAPI patterns.
 
 ## License
 

@@ -8,16 +8,13 @@ from typing import TYPE_CHECKING, Any, cast
 
 from fastapi import APIRouter, Depends, FastAPI, Response
 from fasthx.htmy import HTMY
-from htmy import Component, as_component_type
+from htmy import Component, Context, MutableContext, WithContext, as_component_sequence, as_component_type
+from htmy.jinja import DefaultSlots, JinjaTemplates
 
+from ._jinja import make_jinja_layout_definition, make_jinja_templates
 from ._model import AppConfig, AppNode, PackageInfo, module_names
 from .module_options._actions import get_actions, has_actions
-from .module_options._metadata import (
-    MetadataMapping,
-    components_with_metadata,
-    empty_metadata_dep,
-    get_metadata_dependency,
-)
+from .module_options._metadata import Metadata, MetadataMapping, empty_metadata_dep, get_metadata_dependency
 from .module_options._submit_handler import get_submit_handler
 from .modules._api import is_api_definition
 from .modules._error import load_error_handler_owner, register_error_handlers
@@ -25,15 +22,13 @@ from .modules._layout import (
     combine_layouts_to_dependency,
     empty_layout_dependency,
     is_layout_definition,
-    make_str_to_layout_definition_transformer,
     without_layout,
 )
 from .modules._page import is_page_definition
-from .typing import LayoutFactory, PlainAPIFactory, RenderingAPIFactory, TextToLayoutConverter
-from .utils import snippet_to_layout
+from .typing import LayoutFactory, PlainAPIFactory, RenderingAPIFactory
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Mapping
 
     from .fastapi import FastAPIDependency
 
@@ -42,26 +37,56 @@ def App(
     *,
     app: FastAPI | None = None,
     htmy: HTMY | None = None,
-    str_to_layout: TextToLayoutConverter = snippet_to_layout,
+    layout_slots: Mapping[str, Component] | None = None,
 ) -> FastAPI:
     """
     Creates a FastAPI application with all the routes that are defined in the application package.
 
+    The app-scope default context (default/layout slots, and metadata if any) is automatically
+    injected into the `htmy` rendering context whenever `holm` is responsible for rendering.
+
+    -----
+
+    Jinja template rendering:
+
+    When `holm` creates and owns the `htmy` renderer (the `htmy` argument is `None`), a
+    `htmy.jinja.JinjaTemplates` instance is automatically injected into the default `htmy`
+    rendering context. Its template source is created lazily, only when necessary.
+
+    The templates root is the Python import root (the directory containing the app package,
+    not the app package itself). Template names are relative to that root, so they must be
+    prefixed with the app package name (e.g. `<app_package>/some_path/my-component.jinja`).
+    Templates may also live outside the app package, for example in a sibling `templates/`
+    directory, and are referenced the same way, relative to the import root.
+
+    If you provide your own `htmy` and want to use `holm.JinjaTemplate` components in your
+    application, you must add a pre-configured `htmy.jinja.JinjaTemplates` object to its
+    default context yourself.
+
     Arguments:
-        app: Optional FastAPI application to use. If `None`, a new instance will be created.
+        app: Optional FastAPI application to use. If `None`, a FastAPI instance is automatically created.
         htmy: Optional `fasthx.htmy.HTMY` instance to use for server-side rendering. If `None`,
-            a default instance will be created.
-        str_to_layout: Function that converts a plain string to a `Layout` function. This
-            function is used to convert `layout.html` files to `Layout` functions. See the
-            default implementation for ideas on how to implement your own, custom version.
+            a default instance is created. See "Jinja template rendering" above for how `holm`
+            configures Jinja support on an owned renderer, and what you need to do if you pass
+            your own.
+        layout_slots: Optional mapping of default named slots, made available as `DefaultSlots`
+            to every `htmy` component (including Jinja layouts) that's automatically rendered
+            by `holm`.
     """
     if app is None:
         app = FastAPI()
 
+    config = AppConfig.default()
     if htmy is None:
+        config.add_to_default_context(
+            JinjaTemplates(lambda: make_jinja_templates(config.root_dir)).to_context()
+        )
+
         htmy = HTMY()
 
-    config = AppConfig.default()
+    if layout_slots is not None:
+        config.add_to_default_context(DefaultSlots(layout_slots).to_context())
+
     packages = _discover_app_packages(config)
     root_node = _build_app_tree(packages)
 
@@ -70,7 +95,7 @@ def App(
         register_error_handlers(app, load_error_handler_owner(pkg), htmy=htmy)
 
     # Build the API
-    app.include_router(_build_api(root_node, htmy=htmy, str_to_layout=str_to_layout))
+    app.include_router(_build_api(root_node, htmy=htmy, config=config))
 
     return app
 
@@ -79,17 +104,17 @@ def _build_api(
     node: AppNode,
     *,
     base_layout_dep: FastAPIDependency[LayoutFactory] = empty_layout_dependency,
+    config: AppConfig,
     htmy: HTMY,
-    str_to_layout: TextToLayoutConverter,
 ) -> APIRouter:
     """
     Recursively builds an `APIRouter` based on the application defined by `node`.
 
     Arguments:
         node: Application definition.
-        base_layout: The base layout dependency to use for the API.
+        base_layout_dep: The base layout dependency to use for the API.
+        config: The application configuration.
         htmy: The `fasthx.htmy.HTMY` instance to use for server-side rendering.
-        str_to_layout: Function that converts a plain string to a `Layout` function.
     """
     layout_dep = base_layout_dep  # In case there is no package or it has no layout module.
     pkg = node.package
@@ -98,10 +123,7 @@ def _build_api(
         # -- Try to import all relevant modules.
         layout_definition = pkg.import_module("layout", is_layout_definition)
         if layout_definition is None:
-            layout_definition = pkg.import_resource(
-                "layout.html",
-                make_str_to_layout_definition_transformer(str_to_layout),
-            )
+            layout_definition = make_jinja_layout_definition(pkg, config)
 
         page_definition = pkg.import_module("page", is_page_definition)
         actions_module = pkg.import_module("actions", has_actions)
@@ -126,6 +148,7 @@ def _build_api(
                 layout_dep=layout_dep,
                 metadata_dep=empty_metadata_dep if metadata_dep is None else metadata_dep,
                 page_dep=page_dep,
+                config=config,
             )
 
             # Register the route with rendering.
@@ -136,7 +159,7 @@ def _build_api(
                 name=page_definition.__name__,  # type: ignore[union-attr]
                 description=page_dep.__doc__,
                 tags=["Page"],
-            )(htmy.page(components_with_metadata)(path_operation))
+            )(htmy.page(_components_with_context)(path_operation))
 
         # -- Register the submit handler.
         if submit_handler_dep is not None:
@@ -144,6 +167,7 @@ def _build_api(
                 layout_dep=layout_dep,
                 metadata_dep=empty_metadata_dep if metadata_dep is None else metadata_dep,
                 page_dep=submit_handler_dep,
+                config=config,
             )
 
             # Register the route with rendering.
@@ -154,24 +178,20 @@ def _build_api(
                 name=f"{page_definition.__name__}.handle_submit",  # type: ignore[union-attr]
                 description=submit_handler_dep.__doc__,
                 tags=["Page", "Submit"],
-            )(htmy.page(components_with_metadata)(path_operation))
+            )(htmy.page(_components_with_context)(path_operation))
 
         # -- Register actions from every action owner.
         for actions in (a for a in (get_actions(page_definition), get_actions(actions_module)) if a):
             for action_key, desc in actions.items():
-                if desc.use_layout or (desc.metadata is not None):
-                    # Use _make_page_path_operation() if the action requires the layout or has
-                    # metadata. If one is missing, the overhead is minimal, but the code is
-                    # much simpler.
-                    path_operation = _make_page_path_operation(
-                        layout_dep=layout_dep if desc.use_layout else empty_layout_dependency,
-                        metadata_dep=get_metadata_dependency(desc),
-                        page_dep=desc.action,
-                    )
-                    route = htmy.page(components_with_metadata)(path_operation)
-                else:
-                    # No layout or metadata. Use the most efficient route registration.
-                    route = htmy.page()(desc.action)
+                # Always route through `_make_page_path_operation()` so every action render
+                # receives the app-scope default context via the component tree.
+                path_operation = _make_page_path_operation(
+                    layout_dep=layout_dep if desc.use_layout else empty_layout_dependency,
+                    metadata_dep=get_metadata_dependency(desc),
+                    page_dep=desc.action,
+                    config=config,
+                )
+                route = htmy.page(_components_with_context)(path_operation)
 
                 api.api_route(action_key[0], **desc.route_args)(route)
 
@@ -180,8 +200,8 @@ def _build_api(
             _build_api(
                 child_node,
                 base_layout_dep=layout_dep,
+                config=config,
                 htmy=htmy,
-                str_to_layout=str_to_layout,
             ),
             prefix=sub_url,
         )
@@ -221,16 +241,21 @@ def _discover_app_packages(config: AppConfig) -> set[PackageInfo]:
             for p in path.parts
         )
 
-    return {
-        PackageInfo.from_marker_file(f, config=config)
-        for f in chain(
-            config.app_dir.rglob("*.py"),
-            config.app_dir.rglob("*.html"),
-        )
-        if f.stem in module_names
-        # Pass the relative path of the parent to make the best use of caching
-        and not is_excluded(f.parent.relative_to(config.root_dir))
-    }
+    packages: set[PackageInfo] = set()
+
+    for f in chain(
+        config.app_dir.rglob("*.py"),
+        # Only `layout.jinja` is recognized as a Jinja layout module. Other `.jinja`
+        # files are not valid holm modules and must not produce package markers.
+        config.app_dir.rglob("layout.jinja"),
+    ):
+        if f.stem not in module_names:
+            continue
+
+        if not is_excluded(f.parent.relative_to(config.root_dir)):
+            packages.add(PackageInfo.from_marker_file(f, config=config))
+
+    return packages
 
 
 def _make_api_router_for_package(pkg: PackageInfo | None, htmy: HTMY) -> APIRouter:
@@ -266,8 +291,15 @@ def _make_page_path_operation(
     layout_dep: FastAPIDependency[LayoutFactory],
     metadata_dep: FastAPIDependency[MetadataMapping | None],
     page_dep: FastAPIDependency[Any],
-) -> FastAPIDependency[tuple[Component, MetadataMapping | None] | Response]:
-    """Creates the path operation for a page-like route."""
+    config: AppConfig,
+) -> FastAPIDependency[tuple[Component, Context] | Response]:
+    """
+    Creates the path operation for a page-like route.
+
+    Returns a `(component, context)` tuple where `context` starts from the app-scope default
+    context and is extended with the page metadata. A FastAPI `Response` short-circuits before
+    the component selector runs.
+    """
 
     async def path_operation(
         # Start by evaluating the page dependency, it is the most likely to raise an error
@@ -278,12 +310,16 @@ def _make_page_path_operation(
         # Evaluate the layout dependency last. It's often a sequence of nested dependencies
         # and it is also unlikely to fail.
         layout: LayoutFactory = Depends(layout_dep),  # noqa: B008
-    ) -> tuple[Component, MetadataMapping | None] | Response:
+    ) -> tuple[Component, Context] | Response:
         if isinstance(page, Response):
             return page
 
+        context: MutableContext = {}
+        context.update(config.default_context)
+        context.update(Metadata(metadata).to_context())
+
         if isinstance(page, without_layout):
-            return page.component, metadata
+            return page.component, context
 
         result = layout(as_component_type(page))
         # We must await here if result is an Awaitable, otherwise we would pass an
@@ -291,6 +327,15 @@ def _make_page_path_operation(
         if inspect.isawaitable(result):
             result = await result
 
-        return result, metadata
+        return result, context
 
     return path_operation
+
+
+def _components_with_context(data: tuple[Component, Context]) -> Component:
+    """
+    Stateless component selector that applies the per-request `htmy` context (metadata and
+    app-scope default slots) to the layout-wrapped component tree via `WithContext`.
+    """
+    components, context = data
+    return WithContext(*as_component_sequence(components), context=context)

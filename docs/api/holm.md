@@ -27,3 +27,7 @@
         show_root_heading: true
         filters:
             - "!component"
+
+::: holm.JinjaTemplate
+    options:
+        show_root_heading: true
