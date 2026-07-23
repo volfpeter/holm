@@ -165,7 +165,7 @@ Let's now create the Jinja template in `about/page.jinja`:
 
 The `{% if %}` / `{% else %}` blocks branch on the `metadata.featured` flag, producing the same two variants of the page as in the quick start guide.
 
-The template name passed to `JinjaTemplate` is resolved relative to the templates root directory. In `holm` this defaults to the application's Python import root directory. If you don't want to mix your Jinja templates with your Python code, you can create a separate folder for your templates in the application's root directory, e.g. `templates/`, and use templates like this: `JinjaTemplate("templates/about-page.jinja")`.
+The template name passed to `JinjaTemplate` is resolved relative to the templates root directory. In `holm` this defaults to the application's Python import root directory. If you don't want to mix your Jinja templates with your Python code, you can create a separate folder for your templates in the Python import root directory, e.g. `templates/`, and use templates like this: `JinjaTemplate("templates/about-page.jinja")`.
 
 ## Custom `htmy`
 
