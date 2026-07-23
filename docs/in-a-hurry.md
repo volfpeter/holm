@@ -120,7 +120,7 @@ You can also define layouts as `layout.jinja` files, instead of `layout.py`. The
 - `{{ slots.children }}`: the wrapped page or layout content (the default slot).
 - `{{ metadata }}`: page metadata.
 - `{{ request }}`: the current FastAPI request and the usual FastAPI/Starlette Jinja2 globals.
-- `{{ route_params }}`: resolved FastAPI route dependencies.
+- `{{ route_params }}`: a dict of resolved FastAPI route dependencies.
 
 See the [Jinja quick start guide](guides/jinja-quick-start.md) and [Jinja layout guide](guides/jinja-layout.md) for details.
 
