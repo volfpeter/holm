@@ -93,6 +93,8 @@ If you are starting a new project, you can additionally point the agent at one o
 
 Because of the similarity with Next.js and React, and the standard use of FastAPI and other dependencies, you can expect good results, both for vibe coding or inline completion.
 
+The repository also ships agent skills in the [skills folder](https://github.com/volfpeter/holm/tree/main/skills) that help agents follow `holm` conventions and UI patterns. Copy the skills into your agent's config's `skills/` directory to use them.
+
 ## Technical notes
 
 ### Performance
