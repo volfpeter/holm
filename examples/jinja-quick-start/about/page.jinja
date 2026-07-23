@@ -1,0 +1,15 @@
+{% if metadata.featured %}
+<div>
+  <h1>About Us ⭐</h1>
+  <p>This is our featured about page!</p>
+  <p>You're viewing the special featured version.</p>
+  <a href="/about">Regular version</a>
+</div>
+{% else %}
+<div>
+  <h1>About Us</h1>
+  <p>We're building amazing web applications with holm.</p>
+  <p>Our framework combines the power of FastAPI with server-side rendering.</p>
+  <a href="/about?featured=true">Featured version</a>
+</div>
+{% endif %}
