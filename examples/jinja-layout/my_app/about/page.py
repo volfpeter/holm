@@ -5,7 +5,7 @@ async def metadata(featured: bool = False) -> dict[str, str]:
     """
     Dynamic metadata based on query parameters.
 
-    This function could be both sync or async. It's just a standard FastAPI dependency.
+    This function could be either sync or async. It's just a standard FastAPI dependency.
     """
     title = "Featured About" if featured else "About"
     return {"title": f"{title} | My App"}
