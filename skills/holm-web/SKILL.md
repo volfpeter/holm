@@ -55,6 +55,7 @@ Apply REST principles whenever possible
 ```python
 from fastapi import Request
 
+
 def some_page(request: Request) -> ComponentType:
     url = request.url_for("my_app.users.page")
     return html.a("Users", href=str(url))

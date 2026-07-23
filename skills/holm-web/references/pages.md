@@ -7,6 +7,7 @@ from htmy import ComponentType, html
 
 metadata = {"title": "Home"}
 
+
 def page() -> ComponentType:
     return html.h1("Hello")
 ```

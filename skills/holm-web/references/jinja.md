@@ -50,6 +50,7 @@ app = App(layout_slots={"navbar": navbar})
 from holm import JinjaTemplate
 from htmy import Component
 
+
 def page() -> Component:
     return JinjaTemplate(
         "my_app/components/card.jinja",

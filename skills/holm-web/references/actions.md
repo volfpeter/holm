@@ -6,6 +6,7 @@
 from holm import action
 from htmy import ComponentType, html
 
+
 @action.get()
 def user_list() -> ComponentType:
     return html.ul(html.li("Alice"), html.li("Bob"))

@@ -21,19 +21,23 @@ Lists/tuples of components are valid; nested lists are not (use `Fragment` or un
 ```python
 from htmy import ComponentType, Context, component, html
 
+
 def heading(text: str) -> ComponentType:
     # Component factory, no access to context
     return html.h1(text)
+
 
 @component.context_only
 def navbar(context: Context) -> ComponentType:
     # Context-only function component, no props
     return html.nav("Hello", context.get("user"))
 
+
 @component
 def user_card(user: User, context: Context) -> ComponentType:
     # Component with props (User) and context
     return html.div(user.name)
+
 
 class User:
     # Regular component, object with `htmy` method

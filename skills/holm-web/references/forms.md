@@ -7,8 +7,10 @@ from typing import Annotated
 from fastapi import Form
 from htmy import ComponentType, html
 
+
 def page() -> ComponentType:
     return html.form(html.input_(name="q"), method="POST")
+
 
 def handle_submit(q: Annotated[str, Form()]) -> ComponentType:
     return html.p(f"You submitted: {q}")
@@ -24,6 +26,7 @@ def handle_submit(q: Annotated[str, Form()]) -> ComponentType:
 ```python
 from holm import without_layout
 
+
 def page() -> ComponentType:
     return html.form(
         html.input_(name="title"),
@@ -32,6 +35,7 @@ def page() -> ComponentType:
         hx_target="#todo-list",
         hx_swap="beforeend",
     )
+
 
 def handle_submit(request: Request, title: Annotated[str, Form()]) -> ComponentType:
     todo = add_todo(title)

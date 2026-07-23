@@ -9,6 +9,7 @@ from fastapi import APIRouter
 
 api = APIRouter()
 
+
 @api.get("/count")
 def get_count() -> int:
     return 42
@@ -19,11 +20,14 @@ def get_count() -> int:
 ```python
 from fastapi import APIRouter
 
+
 def api() -> APIRouter:
     router = APIRouter()
+
     @router.get("/count")
     def get_count() -> int:
         return 42
+
     return router
 ```
 

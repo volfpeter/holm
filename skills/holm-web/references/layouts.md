@@ -7,6 +7,7 @@ from fastapi import Request
 from htmy import ComponentSequence, Context, component, html
 from holm import Metadata
 
+
 async def layout(children: ComponentType, request: Request) -> ComponentSequence:
     # Layout route/dependency
     return _layout_component(children=children)
