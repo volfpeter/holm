@@ -40,6 +40,7 @@ exclude = [
     "examples/jinja-layout",
     "examples/jinja-layout-default-slots",
     "examples/jinja-multi-slot-layout",
+    "examples/jinja-quick-start",
     "examples/minimal",
     "examples/quick-start-guide",
     "examples/rendering-apis-with-htmx",

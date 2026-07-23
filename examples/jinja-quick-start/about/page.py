@@ -1,7 +1,7 @@
 from holm import JinjaTemplate
 
 
-async def metadata(featured: bool = False) -> dict[str, object]:
+async def metadata(featured: bool = False) -> dict[str, str | bool]:
     """
     Dynamic metadata based on query parameters.
 
