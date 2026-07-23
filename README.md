@@ -156,7 +156,7 @@ The most prominent frameworks in this category are Reflex and NiceGUI. They both
 
 This category includes frameworks like FastHTML or Ludic, and this is where `holm` belongs as well, but it has some key differentiators.
 
-First, `holm` brings the Next.js developer experience to Python with file-system based routing, automatic layout composition, and dynamic page metadata creation, and more. Thanks to `htmy`, it supports async code throughout the stack, even in components, and it also solves the prop drilling problem. While being built with `htmy`, it is easy to integrate with other templating libraries, like `Jinja` or `htpy`. And it provides all these features using standard, simple FastAPI patterns.
+First, `holm` brings the Next.js developer experience to Python with file-system based routing, automatic layout composition, and dynamic page metadata creation, and more. Thanks to `htmy`, it supports async code throughout the stack, even in components, and it also solves the prop drilling problem. While being built with `htmy`, it ships with built-in **`Jinja`** support and remains easy to integrate with other templating libraries, like `htpy`. And it provides all these features using standard, simple FastAPI patterns.
 
 ## License
 
