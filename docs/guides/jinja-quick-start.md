@@ -2,7 +2,7 @@
 
 This guide builds on top of the [quick start guide](quick-start-guide.md) application to show how to use `holm`'s `JinjaTemplate` component and how to access `holm`-provided context inside Jinja templates.
 
-The application is identical to the quick start guide in every way except for one key difference: the about page uses the `JinjaTemplate` component instead of components like `html.div`. The home page and the root layout are kept as-is.
+The application is identical to the quick start guide in every way except one key difference: the about page uses the `JinjaTemplate` component instead of components like `html.div`. The home page and the root layout are kept as-is.
 
 `JinjaTemplate` is itself a regular `htmy` component, so it composes naturally with other `htmy` components and you can use it anywhere similarly to other `htmy` components.
 
@@ -33,7 +33,7 @@ from holm import App
 app = App()
 ```
 
-When `holm` creates the `htmy` renderer itself, it automatically registers an `htmy.jinja.JinjaTemplates` instance in the renderer's default context, so `JinjaTemplate` components work out of the box, so you don't need to configure anything.
+When `holm` creates the `htmy` renderer itself, it automatically registers an `htmy.jinja.JinjaTemplates` instance in the renderer's default context, so `JinjaTemplate` components work out of the box, you don't need to configure anything.
 
 ## Create the root layout
 
@@ -139,7 +139,7 @@ Note that you don't need to pass `featured`, page metadata, or anything else bes
 
 - Page metadata is available in Jinja templates through the `metadata` key.
 - The current FastAPI request is available as `request`, along with the usual FastAPI/Starlette Jinja context utilities like `url_for()`.
-- The FastAPI route's resolved dependencies can be accessed via `route_params`.
+- The FastAPI route's resolved dependencies can be accessed as `route_params`.
 
 The `JinjaTemplate` component of course provides lots of customization options, including `slots` handling, custom context variables, and so on. See the [htmy](https://volfpeter.github.io/htmy/api/jinja/) documentation for more information.
 

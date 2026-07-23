@@ -57,14 +57,14 @@ nav:
       - guides/quick-start-guide.md
       - guides/path-parameters.md
       - guides/actions-with-htmx.md
-      - guides/forms.md
-      - guides/rendering-apis-with-htmx.md
       - guides/custom-applications.md
-      - guides/error-handling.md
       - guides/jinja-quick-start.md
       - guides/jinja-layout.md
       - guides/jinja-multi-slot-layout.md
       - guides/jinja-layout-default-slots.md
+      - guides/forms.md
+      - guides/error-handling.md
+      - guides/rendering-apis-with-htmx.md
   - API reference:
       - holm: api/holm.md
       - holm.typing: api/typing.md
