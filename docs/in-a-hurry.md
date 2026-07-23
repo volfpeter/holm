@@ -7,6 +7,8 @@
 
 **File-system based routing** takes a central role in `holm`. Instead of manually defining routes, your application's package structure is automatically discovered and mapped to a corresponding API structure. This process also includes full UI composition from your layouts and pages.
 
+`holm` also ships with first-class, zero-configuration Jinja integration: you can render Jinja templates as regular `htmy` components with `holm.JinjaTemplate`, or define layouts as `layout.jinja` files.
+
 ## Application initialization
 
 Your application is initialized with a single call to `holm.App()` within your application's root package. This call triggers the discovery process where `holm` walks your project structure, finds all the application components described below, and registers the corresponding routes in the underlying FastAPI instance.
@@ -108,6 +110,19 @@ Actions can be defined in `actions.py` and `page.py` modules, and they are ideal
 ## Form submissions (`page.py`)
 
 A `page.py` file can define a `handle_submit()` function (also a **FastAPI dependency**) alongside the `page()` function. Submit handlers behave exactly the same as pages, the only difference is their purpose and that they are HTTP `POST` routes, instead of `GET` routes.
+
+## Jinja integration
+
+You can use Jinja templates as regular `htmy` components with `holm.JinjaTemplate`. This is useful in pages, layouts, actions, or any other UI-related context.
+
+You can also define layouts as `layout.jinja` files, instead of `layout.py`. These are standard Jinja2 templates with access to:
+
+- `{{ slots.children }}`: the wrapped page or layout content (the default slot).
+- `{{ metadata }}`: page metadata.
+- `{{ request }}`: the current FastAPI request and the usual FastAPI/Starlette Jinja2 globals.
+- `{{ route_params }}`: resolved FastAPI route dependencies.
+
+See the [Jinja quick start guide](guides/jinja-quick-start.md) and [Jinja layout guide](guides/jinja-layout.md) for details.
 
 ## Custom APIs (`api.py`)
 
