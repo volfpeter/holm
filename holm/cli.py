@@ -32,6 +32,17 @@ app = typer.Typer(
     name="holm", no_args_is_help=True, context_settings={"help_option_names": ["-h", "--help"]}
 )
 
+skill_app = typer.Typer(no_args_is_help=True, context_settings={"help_option_names": ["-h", "--help"]})
+app.add_typer(skill_app, name="skill", help="Manage agent skills.")
+
+
+@skill_app.command("add")
+def skill_add(
+    force: Annotated[bool, typer.Option("--force", help="Overwrite existing skill.")] = False,
+) -> None:
+    """Add the holm-web agent skill to the current project."""
+    _add_skill(Path.cwd(), force=force)
+
 
 @app.command()
 def version() -> None:
@@ -105,6 +116,7 @@ def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
     target = _resolve_target(project_name)
     js_runner = _JS_RUNNER[js_manager]
     _copy_templates(target, project_name=project_name, js_runner=js_runner)
+    _add_skill(target, force=False)
 
     _run(["git", "init"], cwd=target)
     _run(
@@ -147,12 +159,12 @@ def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
     )
 
 
-def _template_dir() -> Path:
-    return cast("Path", importlib.resources.files("holm") / "templates")
+def _resource_dir() -> Path:
+    return cast("Path", importlib.resources.files("holm") / "resources")
 
 
 def _copy_templates(target: Path, *, project_name: str, js_runner: str) -> None:
-    source = _template_dir()
+    source = _resource_dir() / "app_template"
     target.mkdir(parents=True, exist_ok=True)
     for path in sorted(source.rglob("*")):
         if not path.is_file():
@@ -164,6 +176,16 @@ def _copy_templates(target: Path, *, project_name: str, js_runner: str) -> None:
         dest.write_text(
             Tokens.render(path.read_text(encoding="utf-8"), project_name=project_name, js_runner=js_runner)
         )
+
+
+def _add_skill(target: Path, *, force: bool) -> None:
+    source = _resource_dir() / "skills" / "holm-web"
+    dest = target / ".agents" / "skills" / "holm-web"
+    if dest.exists():
+        if not force:
+            _fail(f"{dest} already exists, use --force to overwrite.")
+        shutil.rmtree(dest)
+    shutil.copytree(source, dest)
 
 
 def _build_css(target: Path, js_runner: str, output: str, *, minify: bool) -> None:

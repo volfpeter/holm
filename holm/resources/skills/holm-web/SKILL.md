@@ -1,9 +1,9 @@
 ---
 name: holm-web
 description: >
-  Use when building or modifying web applications with the holm framework.
-  Covers file-system routing, layouts, pages, actions, page metadata, form handling,
-  error handling, partial HTML and HTMX considerations.
+  Use when working on web apps built with the holm lib, or to answer questions about the holm lib.
+  Covers file-system routing, layouts, pages, actions, page metadata, form handling, error handling,
+  partial HTML and HTMX considerations.
 ---
 
 # Building holm web applications
