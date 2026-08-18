@@ -10,7 +10,11 @@ dependencies = [
     "htmy[jinja,lxml]>=0.13.1",
     "markupsafe>=3.0.3",
     "python-multipart>=0.0.20",
+    "typer>=0.27.1",
 ]
+
+[project.scripts]
+holm = "holm.cli:app"
 
 [build-system]
 requires = ["pdm-backend"]
@@ -23,6 +27,7 @@ dev = [
     "mkdocstrings-python>=2.0.3",
     "mypy>=2.1.0",
     "poethepoet>=0.44.0",
+    "pydantic-settings>=2.15.0",
     "pytest>=9.0.3",
     "pytest-random-order>=1.2.0",
     "ruff>=0.15.10",
@@ -46,6 +51,10 @@ exclude = [
 ]
 explicit_package_bases = true
 show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["components", "components.*"]
+ignore_missing_imports = true
 
 [tool.pdm.build]
 # TODO: find a way to exclude test_app/ from the wheel build.

@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@import "basecoat-css";
+
+@layer components {
+  .description {
+    @apply text-muted-foreground mt-1 text-sm;
+  }
+
+  .link {
+    @apply font-medium underline-offset-4 hover:underline;
+  }
+
+  .panel {
+    @apply rounded-lg border p-4;
+  }
+
+  .row {
+    @apply flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:justify-between;
+  }
+
+  .row > span {
+    @apply text-muted-foreground text-sm sm:ml-6 sm:text-right;
+  }
+}

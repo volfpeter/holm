@@ -58,6 +58,15 @@ The package is available on PyPI and can be installed with:
 pip install holm
 ```
 
+To start a new application, use the `holm new` scaffolder:
+
+```bash
+uvx holm new my-app
+uv run poe start
+```
+
+The command creates a ready-to-run application (served at http://localhost:5100) with the [htmui](https://github.com/volfpeter/htmui) component catalog, Tailwind CSS, and the ruff / mypy / poethepoet toolchain set up.
+
 Supported operating systems:
 
 - Linux
