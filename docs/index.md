@@ -56,7 +56,7 @@ uvx holm new my-app
 uv run poe start
 ```
 
-The command creates a ready-to-run application (served at http://localhost:5100) with the [htmui](https://github.com/volfpeter/htmui) component catalog, Tailwind CSS, and the ruff / mypy / poethepoet toolchain set up.
+The command creates a ready-to-run application (served at http://localhost:5000) with the [htmui](https://github.com/volfpeter/htmui) component catalog, Tailwind CSS, and the ruff / mypy / poethepoet toolchain set up.
 
 Supported operating systems:
 

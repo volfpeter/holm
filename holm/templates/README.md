@@ -4,7 +4,7 @@ A [holm](https://volfpeter.github.io/holm) application: file-system based routin
 
 ## Run
 
-    uv run poe start          # http://localhost:5100
+    uv run poe start          # http://localhost:5000
 
 `poe start` runs three processes (see `Procfile`): the app (`fastapi dev`, auto-reload), the Tailwind watcher that rebuilds `static/app-dev.css`, and the esbuild watcher that rebuilds `static/app-dev.js`.
 

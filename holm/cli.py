@@ -143,7 +143,7 @@ def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
         f"""Created {project_name}.
 
   cd {project_name}
-  uv run poe start          # http://localhost:5100"""
+  uv run poe start          # http://localhost:5000"""
     )
 
 
