@@ -6,7 +6,7 @@ A [holm](https://volfpeter.github.io/holm) application: file-system based routin
 
     uv run poe start          # http://localhost:5000
 
-`poe start` runs three processes (see `Procfile`): the app (`fastapi dev`, auto-reload), the Tailwind watcher that rebuilds `static/app-dev.css`, and the esbuild watcher that rebuilds `static/app-dev.js`.
+`poe start` runs three processes (see `Procfile`): the app (`fastapi dev`, auto-reload), the Tailwind watcher that rebuilds `static/app-dev.css`, and the JS watcher that rebuilds `static/app-dev.js`.
 
 To run only the app: `uv run poe dev` serves it with the dev stylesheet and JS bundle, `uv run poe preview` with the minified ones — what will actually be deployed.
 

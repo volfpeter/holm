@@ -18,14 +18,25 @@ _JS_MANAGERS: tuple[_JsManager, ...] = ("bun", "pnpm", "npm")
 
 _JS_RUNNER: dict[_JsManager, str] = {"npm": "npx", "pnpm": "pnpm dlx", "bun": "bunx"}
 
+_JS_BUNDLER: dict[_JsManager, str] = {
+    "npm": "npx esbuild --bundle",
+    "pnpm": "pnpm dlx esbuild --bundle",
+    "bun": "bun build",
+}
+
 
 class Tokens:
     project_name = "__holm_name__"
     js_runner = "__holm_js_runner__"
+    js_bundler = "__holm_js_bundler__"
 
     @classmethod
-    def render(cls, text: str, *, project_name: str, js_runner: str) -> str:
-        return text.replace(cls.project_name, project_name).replace(cls.js_runner, js_runner)
+    def render(cls, text: str, *, project_name: str, js_runner: str, js_bundler: str) -> str:
+        return (
+            text.replace(cls.project_name, project_name)
+            .replace(cls.js_runner, js_runner)
+            .replace(cls.js_bundler, js_bundler)
+        )
 
 
 app = typer.Typer(
@@ -115,7 +126,8 @@ def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
     _require_tools(js_manager)
     target = _resolve_target(project_name)
     js_runner = _JS_RUNNER[js_manager]
-    _copy_templates(target, project_name=project_name, js_runner=js_runner)
+    js_bundler = _JS_BUNDLER[js_manager]
+    _copy_templates(target, project_name=project_name, js_runner=js_runner, js_bundler=js_bundler)
     _add_skill(target, force=False)
 
     _run(["git", "init"], cwd=target)
@@ -138,15 +150,15 @@ def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
             "-D",
             "tailwindcss",
             "@tailwindcss/cli",
-            "esbuild",
             "basecoat-css",
             "htmx.org@4.0.0-beta6",
+            *([] if js_manager == "bun" else ["esbuild"]),
         ],
         cwd=target,
     )
     _run(["uvx", "htmui", "init", "--force"], cwd=target)
     _build_css(target, js_runner, "static/app.css", minify=True)
-    _build_js(target, js_runner, "static/app.js", minify=True)
+    _build_js(target, js_bundler, "static/app.js", minify=True)
     _run(["uv", "run", "poe", "format-fix"], cwd=target)
     _run(["uv", "run", "poe", "lint-fix"], cwd=target)
     _run(["uv", "run", "poe", "check"], cwd=target)
@@ -163,7 +175,7 @@ def _resource_dir() -> Path:
     return cast("Path", importlib.resources.files("holm") / "resources")
 
 
-def _copy_templates(target: Path, *, project_name: str, js_runner: str) -> None:
+def _copy_templates(target: Path, *, project_name: str, js_runner: str, js_bundler: str) -> None:
     source = _resource_dir() / "app_template"
     target.mkdir(parents=True, exist_ok=True)
     for path in sorted(source.rglob("*")):
@@ -174,7 +186,12 @@ def _copy_templates(target: Path, *, project_name: str, js_runner: str) -> None:
         dest = target / path.relative_to(source)
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_text(
-            Tokens.render(path.read_text(encoding="utf-8"), project_name=project_name, js_runner=js_runner)
+            Tokens.render(
+                path.read_text(encoding="utf-8"),
+                project_name=project_name,
+                js_runner=js_runner,
+                js_bundler=js_bundler,
+            )
         )
 
 
@@ -195,8 +212,8 @@ def _build_css(target: Path, js_runner: str, output: str, *, minify: bool) -> No
     _run(args, cwd=target)
 
 
-def _build_js(target: Path, js_runner: str, output: str, *, minify: bool) -> None:
-    args = [*js_runner.split(), "esbuild", "assets/app.js", "--bundle", f"--outfile={output}"]
+def _build_js(target: Path, js_bundler: str, output: str, *, minify: bool) -> None:
+    args = [*js_bundler.split(), "assets/app.js", f"--outfile={output}"]
     if minify:
         args.append("--minify")
     _run(args, cwd=target)
