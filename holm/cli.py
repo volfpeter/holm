@@ -189,14 +189,14 @@ def _add_skill(target: Path, *, force: bool) -> None:
 
 
 def _build_css(target: Path, js_runner: str, output: str, *, minify: bool) -> None:
-    args = [*js_runner.split(), "@tailwindcss/cli", "-i", "css/app.css", "-o", output]
+    args = [*js_runner.split(), "@tailwindcss/cli", "-i", "assets/app.css", "-o", output]
     if minify:
         args.append("--minify")
     _run(args, cwd=target)
 
 
 def _build_js(target: Path, js_runner: str, output: str, *, minify: bool) -> None:
-    args = [*js_runner.split(), "esbuild", "js/app.js", "--bundle", f"--outfile={output}"]
+    args = [*js_runner.split(), "esbuild", "assets/app.js", "--bundle", f"--outfile={output}"]
     if minify:
         args.append("--minify")
     _run(args, cwd=target)

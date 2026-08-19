@@ -39,8 +39,8 @@ Which stylesheet and JS bundle are served is controlled by the `CSS_FILE` and `J
 
 Styles are [TailwindCSS](https://tailwindcss.com) v4 with [BasecoatUI](https://basecoatui.com) on top. JavaScript is [HTMX](https://htmx.org) plus Basecoat's runtime — no JavaScript framework. Both are built from source:
 
-- `css/app.css` — the Tailwind input: the Tailwind and BasecoatUI imports plus a few example component classes. This is where your own CSS goes.
-- `js/app.js` — the JS entry: HTMX and Basecoat imports. This is where your own scripts go.
+- `assets/app.css` — the Tailwind input: the Tailwind and BasecoatUI imports plus a few example component classes. This is where your own CSS goes.
+- `assets/app.js` — the JS entry: HTMX and Basecoat imports. This is where your own scripts go.
 - `static/app-dev.css` / `static/app-dev.js` — unminified builds, served by `poe dev`.
 - `static/app.css` / `static/app.js` — minified builds, served by `poe preview` and in deployment.
 

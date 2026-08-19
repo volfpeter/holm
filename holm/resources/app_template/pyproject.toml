@@ -29,10 +29,10 @@ select = ["B", "C", "E", "F", "I", "S", "W"]
 [tool.poe.tasks]
 start = "honcho start"
 
-build-dev-css  = "__holm_js_runner__ @tailwindcss/cli -i css/app.css -o static/app-dev.css"
-build-prod-css = "__holm_js_runner__ @tailwindcss/cli -i css/app.css -o static/app.css --minify"
-build-dev-js   = "__holm_js_runner__ esbuild js/app.js --bundle --outfile=static/app-dev.js"
-build-prod-js  = "__holm_js_runner__ esbuild js/app.js --bundle --minify --outfile=static/app.js"
+build-dev-css  = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o static/app-dev.css"
+build-prod-css = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o static/app.css --minify"
+build-dev-js   = "__holm_js_runner__ esbuild assets/app.js --bundle --outfile=static/app-dev.js"
+build-prod-js  = "__holm_js_runner__ esbuild assets/app.js --bundle --minify --outfile=static/app.js"
 
 format     = "ruff format . --check"
 format-fix = "ruff format ."
