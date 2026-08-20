@@ -17,7 +17,7 @@ Python dependencies are managed by [uv](https://docs.astral.sh/uv/) in `pyprojec
 The application is the `app/` package. holm walks it and turns modules into routes:
 
 - `page.py` — a page. `app/page.py` serves `GET /`; `app/user/page.py` would serve `GET /user`. Every `page.py` anywhere under `app/` becomes a URL.
-- `layout.py` — the layout that wraps the pages of its package and everything nested below it.
+- `layout.py` and `layout.jinja` — the layout that wraps the pages of its package and everything nested below it. The markup is in the Jinja template; `layout.py` renders it with `holm.JinjaTemplate` and is optional — delete it and holm picks up and renders `layout.jinja` on its own. The `head` and `theme_switcher` slots it uses are default slots, configured in `app/main.py`.
 - `actions.py` — actions, endpoints that return HTML fragments for HTMX.
 
 Start with `app/page.py` (the landing page) and `app/actions.py` (the action behind the tip that rotates every 4 seconds). Rendering uses htmy: components are plain Python functions and expressions, no template language to learn.

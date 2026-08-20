@@ -1,28 +1,19 @@
-from components import theme_switcher
-from htmy import ComponentSequence, ComponentType, html
+from collections.abc import Mapping
+from typing import Any
 
-from .head import head
+from holm import JinjaTemplate
+from htmy import Component, is_component_type
 
 
-def layout(children: ComponentType) -> ComponentSequence:
-    """Root layout wrapping all pages."""
-    return (
-        html.DOCTYPE.html,
-        html.html(
-            head(),
-            html.body(
-                html.main(
-                    html.div(
-                        html.header(
-                            html.span("__holm_name__", class_="text-lg font-semibold"),
-                            theme_switcher.theme_switcher(),
-                            class_="flex items-center justify-between py-2",
-                        ),
-                        children,
-                        class_="mx-auto w-full max-w-screen-md p-6",
-                    ),
-                    class_="min-h-screen",
-                ),
-            ),
-        ),
-    )
+def layout(props: Any) -> JinjaTemplate:
+    """Root layout wrapping all pages, rendered by `layout.jinja`."""
+    # holm automates all of this, you can remove this file and the
+    # application will keep working identically to before. The reason
+    # we have this file is to explain what holm does under the hood
+    # when it encounters Jinja layouts without a Python counterpart.
+    slots: Mapping[str, Component]
+    if isinstance(props, Mapping) and not is_component_type(props):
+        slots = props
+    else:
+        slots = {"children": props}
+    return JinjaTemplate("app/layout.jinja", slots=slots, use_default_slots=True)

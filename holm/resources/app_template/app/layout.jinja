@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+  {{ slots.head }}
+  <body>
+    <main class="min-h-screen">
+      <div class="mx-auto w-full max-w-screen-md p-6">
+        <header class="flex items-center justify-between py-2">
+          <span class="text-lg font-semibold">__holm_name__</span>
+          {{ slots.theme_switcher }}
+        </header>
+        {{ slots.children }}
+      </div>
+    </main>
+  </body>
+</html>
