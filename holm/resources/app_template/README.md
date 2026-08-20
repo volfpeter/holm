@@ -20,7 +20,7 @@ The application is the `app/` package. holm walks it and turns modules into rout
 - `layout.py` and `layout.jinja` — the layout that wraps the pages of its package and everything nested below it. The markup is in the Jinja template; `layout.py` renders it with `holm.JinjaTemplate` and is optional — delete it and holm picks up and renders `layout.jinja` on its own. The `head` and `theme_switcher` slots it uses are default slots, configured in `app/main.py`.
 - `actions.py` — actions, endpoints that return HTML fragments for HTMX.
 
-Start with `app/page.py` (the landing page) and `app/actions.py` (the action behind the tip that rotates every 4 seconds). Rendering uses htmy: components are plain Python functions and expressions, no template language to learn.
+Start with `app/page.py` (the landing page) and `app/actions.py` (the action behind the tip that rotates every 2 seconds). Rendering uses htmy: components are plain Python functions and expressions, no template language to learn.
 
 UI components are **not** inside `app/`. They live in `components/` at the project root, next to `app/`, so holm's route discovery never touches them. Import them as `from components import dialog`.
 
