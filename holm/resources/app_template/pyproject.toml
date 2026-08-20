@@ -34,6 +34,9 @@ build-prod-css = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o stati
 build-dev-js   = "__holm_js_bundler__ assets/app.js --outfile=static/app-dev.js"
 build-prod-js  = "__holm_js_bundler__ assets/app.js --minify --outfile=static/app.js"
 
+build.sequence = ["build-prod-css", "build-prod-js"]
+build.ignore_fail = "return_non_zero"
+
 format     = "ruff format . --check"
 format-fix = "ruff format ."
 lint       = "ruff check ."

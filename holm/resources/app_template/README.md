@@ -2,6 +2,8 @@
 
 A [holm](https://volfpeter.github.io/holm) application: file-system based routing, server-side rendering with [htmy](https://volfpeter.github.io/htmy), dynamic page updates with [HTMX](https://htmx.org), and [BasecoatUI](https://basecoatui.com) components vendored with [htmui](https://github.com/volfpeter/htmui).
 
+`DESIGN.md` describes the stack, the project architecture, and the developer tooling.
+
 ## Run
 
     uv run poe start          # http://localhost:5000
@@ -28,6 +30,7 @@ Tooling is [ruff](https://docs.astral.sh/ruff/) for formatting and linting, [myp
 
 - `poe start` — app, CSS watcher, and JS watcher, via [honcho](https://github.com/nickstenning/honcho)
 - `poe dev` / `poe preview` — app only, with the dev / minified stylesheet and JS bundle
+- `poe build` — both production builds in one go
 - `poe build-dev-css` / `poe build-prod-css` — one-off stylesheet builds
 - `poe build-dev-js` / `poe build-prod-js` — one-off JS bundle builds
 - `poe format` / `poe lint` / `poe types` — checks; `format-fix` and `lint-fix` apply fixes
@@ -56,8 +59,7 @@ The built stylesheet and script are wired up in `app/head.py`.
 
 Deployments serve `static/app.css` and `static/app.js`, so build them first:
 
-    uv run poe build-prod-css
-    uv run poe build-prod-js
+    uv run poe build
 
 - **Vercel**: import the repository — no configuration needed, `[tool.fastapi]` in `pyproject.toml` is the entrypoint.
 - **FastAPI Cloud**: `uv run fastapi deploy`.
