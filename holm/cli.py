@@ -1,6 +1,7 @@
 """holm command-line interface."""
 
 import importlib.resources
+import re
 import shutil
 import subprocess
 import sys
@@ -13,6 +14,10 @@ from rich.prompt import Prompt
 from . import __version__
 
 _JsManager: TypeAlias = Literal["npm", "pnpm", "bun"]
+
+_NAME_PATTERN = re.compile(r"[a-zA-Z0-9_-]+")
+
+_NAME_RULES = "may only contain letters, digits, '-', and '_'"
 
 _JS_MANAGERS: tuple[_JsManager, ...] = ("bun", "pnpm", "npm")
 
@@ -83,9 +88,16 @@ def _resolve_name(name: str | None, *, is_tty: bool, yes: bool) -> str:
         if yes:
             _fail("--yes requires NAME; there is no default name.")
         name = typer.prompt("Project name")
-    if not name or "/" in name or name in (".", ".."):
-        _fail("NAME must be a single path segment: non-empty, no '/', not '.' or '..'.")
+        while not _is_valid_name(name):
+            typer.echo(f"Error: project name {_NAME_RULES}.", err=True)
+            name = typer.prompt("Project name")
+    if not _is_valid_name(name):
+        _fail(f"NAME {_NAME_RULES}.")
     return name
+
+
+def _is_valid_name(name: str) -> bool:
+    return _NAME_PATTERN.fullmatch(name) is not None
 
 
 def _resolve_js(js: _JsManager | None, *, is_tty: bool, yes: bool) -> _JsManager:
@@ -127,31 +139,44 @@ def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
     target = _resolve_target(project_name)
     js_runner = _JS_RUNNER[js_manager]
     js_bundler = _JS_BUNDLER[js_manager]
+    try:
+        _scaffold(
+            target,
+            project_name=project_name,
+            js_manager=js_manager,
+            js_runner=js_runner,
+            js_bundler=js_bundler,
+        )
+    except typer.Exit:
+        typer.echo(f"\nThe incomplete project was left in {target}.", err=True)
+        raise
+
+    typer.echo(
+        f"""Created {project_name}.
+
+  cd {project_name}
+  uv run poe start          # http://localhost:5000"""
+    )
+
+
+def _scaffold(
+    target: Path, *, project_name: str, js_manager: _JsManager, js_runner: str, js_bundler: str
+) -> None:
     _copy_templates(target, project_name=project_name, js_runner=js_runner, js_bundler=js_bundler)
     _add_skill(target, force=False)
 
     _run(["git", "init"], cwd=target)
-    _run(
-        [
-            "uv",
-            "add",
-            "fastapi[standard]",
-            "holm",
-            "htmy[all]",
-            "pydantic-settings",
-        ],
-        cwd=target,
-    )
+    _run(["uv", "add", "fastapi[standard]", "holm", "htmy[all]", "pydantic-settings"], cwd=target)
     _run(["uv", "add", "--dev", "mypy", "poethepoet", "ruff", "watchfiles", "honcho"], cwd=target)
     _run(
         [
             js_manager,
             "add",
             "-D",
-            "tailwindcss",
-            "@tailwindcss/cli",
-            "basecoat-css",
-            "htmx.org@4.0.0-beta6",
+            "tailwindcss@^4",
+            "@tailwindcss/cli@^4",
+            "basecoat-css@^1",
+            "htmx.org@^4",
             *([] if js_manager == "bun" else ["esbuild"]),
         ],
         cwd=target,
@@ -162,13 +187,6 @@ def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
     _run(["uv", "run", "poe", "format-fix"], cwd=target)
     _run(["uv", "run", "poe", "lint-fix"], cwd=target)
     _run(["uv", "run", "poe", "check"], cwd=target)
-
-    typer.echo(
-        f"""Created {project_name}.
-
-  cd {project_name}
-  uv run poe start          # http://localhost:5000"""
-    )
 
 
 def _resource_dir() -> Path:

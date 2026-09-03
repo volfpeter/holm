@@ -2,7 +2,7 @@
 
 A [holm](https://volfpeter.github.io/holm) application: file-system based routing, server-side rendering with [htmy](https://volfpeter.github.io/htmy), dynamic page updates with [HTMX](https://htmx.org), and [BasecoatUI](https://basecoatui.com) components vendored with [htmui](https://github.com/volfpeter/htmui).
 
-`DESIGN.md` describes the stack, the project architecture, and the developer tooling.
+[DESIGN.md](DESIGN.md) explains how the application is put together — architecture, tooling, deployment internals. This file covers day-to-day use.
 
 ## Run
 
@@ -10,21 +10,20 @@ A [holm](https://volfpeter.github.io/holm) application: file-system based routin
 
 `poe start` runs three processes (see `Procfile`): the app (`fastapi dev`, auto-reload), the Tailwind watcher that rebuilds `static/app-dev.css`, and the JS watcher that rebuilds `static/app-dev.js`.
 
-To run only the app: `uv run poe dev` serves it with the dev stylesheet and JS bundle, `uv run poe preview` with the minified ones — what will actually be deployed.
+To run only the app: `uv run poe dev` serves it with the dev stylesheet and JS bundle, `uv run poe preview` with the minified ones — what will actually be deployed. Run the app on its own and it comes up on FastAPI's default port, 8000.
 
-## Backend (Python)
+Edit `assets/`, `app/`, or `components/`, save, refresh — auto-reload and the watchers handle the rest.
 
-Python dependencies are managed by [uv](https://docs.astral.sh/uv/) in `pyproject.toml` (locked in `uv.lock`, installed into `.venv/`).
+## Where things live
 
-The application is the `app/` package. holm walks it and turns modules into routes:
+- `app/` — the application. holm walks this package: every `page.py` becomes a route (`app/page.py` serves `GET /`, `app/design/page.py` serves `GET /design`), every `layout.py` or `layout.jinja` wraps its package's pages, every `actions.py` defines HTMX endpoints returning HTML fragments. Start with `app/page.py` (the landing page), `app/actions.py` (the action behind its rotating greeting), `app/design/` (the design page at `/design`, based on `DESIGN.md`), and `app/showcase/page.py` (the component showcase).
+- `components/` — the full BasecoatUI catalog vendored by `htmui`, nothing to install. Plain Python: import and call them, e.g. `button.button("Save")`. Lives outside `app/` because holm's discovery walks `app/` only; edit the copies freely.
+- `assets/` — the sources you edit: `app.css` (Tailwind input, your CSS goes here) and `app.js` (HTMX and Basecoat imports, your scripts go here).
+- `static/` — build outputs served at `/static`. Never edit by hand. The minified builds are part of the working tree so a fresh checkout can run and deploy as-is.
 
-- `page.py` — a page. `app/page.py` serves `GET /`; `app/user/page.py` would serve `GET /user`. Every `page.py` anywhere under `app/` becomes a URL.
-- `layout.py` and `layout.jinja` — the layout that wraps the pages of its package and everything nested below it. The markup is in the Jinja template; `layout.py` renders it with `holm.JinjaTemplate` and is optional — delete it and holm picks up and renders `layout.jinja` on its own. The `head` and `theme_switcher` slots it uses are default slots, configured in `app/main.py`.
-- `actions.py` — actions, endpoints that return HTML fragments for HTMX.
+Rendering uses [htmy](https://volfpeter.github.io/htmy): components are plain Python functions and expressions, no template language to learn. Jinja layouts are supported out of the box — see `app/layout.py` for a worked example.
 
-Start with `app/page.py` (the landing page) and `app/actions.py` (the action behind the tip that rotates every 2 seconds). Rendering uses htmy: components are plain Python functions and expressions, no template language to learn.
-
-UI components are **not** inside `app/`. They live in `components/` at the project root, next to `app/`, so holm's route discovery never touches them. Import them as `from components import dialog`.
+## Tasks
 
 Tooling is [ruff](https://docs.astral.sh/ruff/) for formatting and linting, [mypy](https://mypy-lang.org/) in strict mode for type checking, and [poethepoet](https://github.com/nat-n/poethepoet) for tasks:
 
@@ -38,22 +37,7 @@ Tooling is [ruff](https://docs.astral.sh/ruff/) for formatting and linting, [myp
 
 Which stylesheet and JS bundle are served is controlled by the `CSS_FILE` and `JS_FILE` environment variables (see `app/settings.py`).
 
-## Frontend (CSS and JS)
-
-Styles are [TailwindCSS](https://tailwindcss.com) v4 with [BasecoatUI](https://basecoatui.com) on top. JavaScript is [HTMX](https://htmx.org) plus Basecoat's runtime — no JavaScript framework. Both are built from source:
-
-- `assets/app.css` — the Tailwind input: the Tailwind and BasecoatUI imports plus a few example component classes. This is where your own CSS goes.
-- `assets/app.js` — the JS entry: HTMX and Basecoat imports. This is where your own scripts go.
-- `static/app-dev.css` / `static/app-dev.js` — unminified builds, served by `poe dev`.
-- `static/app.css` / `static/app.js` — minified builds, served by `poe preview` and in deployment.
-
-The minified builds are part of the working tree. The unminified ones are produced by the watchers when you `poe start`.
-
-`components/` holds the BasecoatUI component catalog, vendored by `htmui`. Components are plain Python — import and call them, e.g. `button.button("Save")`. Pull in more with:
-
-    uvx htmui init -c dialog
-
-The built stylesheet and script are wired up in `app/head.py`.
+The project ships the `holm-web` agent skill in `.agents/skills/` — agents should load it before working on the application.
 
 ## Deploy
 
@@ -63,3 +47,5 @@ Deployments serve `static/app.css` and `static/app.js`, so build them first:
 
 - **Vercel**: import the repository — no configuration needed, `[tool.fastapi]` in `pyproject.toml` is the entrypoint.
 - **FastAPI Cloud**: `uv run fastapi deploy`.
+
+Beyond these, a `holm` application is a plain FastAPI application — deploy it however you like.

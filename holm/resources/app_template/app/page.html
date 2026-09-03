@@ -1,213 +1,142 @@
 <div>
-  <header class="pt-20 pb-12 text-center">
+  <header class="pt-20 pb-10 text-center">
     <h1 class="text-4xl font-bold tracking-tight text-balance sm:text-5xl">
       __holm_name__, <span hx-get="/welcome?lang=es" hx-trigger="every 2s" hx-swap="outerHTML">Welcome</span>
     </h1>
     <p class="text-muted-foreground mx-auto mt-4 max-w-xl text-lg text-pretty">
-      A fresh holm application: file-system based routing, server-rendered Python components,
-      and no app build step. The sections below tour the scaffold — what's in it, what it's built
-      on, and how to ship it.
+      A fresh holm application: file-system routing, server-rendered Python components,
+      dynamic updates over HTMX.
     </p>
   </header>
 
   <section class="py-12">
-    <h2 class="text-xl font-semibold tracking-tight">What you get</h2>
+    <h2 class="text-xl font-semibold tracking-tight">The stack</h2>
     <p class="description">
-      Everything below is in the box, wired up and working — including this page.
+      Every piece is a well-documented tool — click through for the details.
     </p>
+    <div class="mt-6 grid gap-3 sm:grid-cols-3">
+      <a class="card-link" href="https://volfpeter.github.io/holm">
+        <strong class="font-medium">holm</strong>
+        <p class="description">File-system routing and layout composition.</p>
+      </a>
+      <a class="card-link" href="https://fastapi.tiangolo.com">
+        <strong class="font-medium">FastAPI</strong>
+        <p class="description">The web framework underneath.</p>
+      </a>
+      <a class="card-link" href="https://volfpeter.github.io/htmy">
+        <strong class="font-medium">htmy</strong>
+        <p class="description">Server-side rendering in typed Python.</p>
+      </a>
+      <a class="card-link" href="https://htmx.org">
+        <strong class="font-medium">HTMX</strong>
+        <p class="description">Dynamic updates, no client-side framework.</p>
+      </a>
+      <a class="card-link" href="https://tailwindcss.com">
+        <strong class="font-medium">TailwindCSS</strong>
+        <p class="description">Utility-first styling.</p>
+      </a>
+      <a class="card-link" href="https://basecoatui.com">
+        <strong class="font-medium">BasecoatUI</strong>
+        <p class="description">Accessible components, vendored by htmui.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="py-12">
+    <h2 class="text-xl font-semibold tracking-tight">Where things live</h2>
+    <p class="description">
+      The short version — the <a href="/design" class="link">design page</a> and
+      <code>DESIGN.md</code> have the full tour.
+    </p>
+    <ul class="mt-4 divide-y">
+      <li class="row">
+        <code>app/</code>
+        <span>
+          The application package. Drop in a <code>page.py</code>, <code>layout.py</code>,
+          or <code>actions.py</code> and it becomes a route, a layout, or an HTMX
+          endpoint — the rotating greeting in the title is <code>app/actions.py</code>
+          at work.
+        </span>
+      </li>
+      <li class="row">
+        <code>components/</code>
+        <span>
+          The full BasecoatUI catalog, vendored as plain Python you own. It lives
+          outside <code>app/</code> so route discovery never touches it — see the
+          <a href="/showcase" class="link">showcase</a>.
+        </span>
+      </li>
+      <li class="row">
+        <code>assets/</code>
+        <span>
+          The sources you edit: <code>app.css</code> and <code>app.js</code> — the only
+          two things that ever get built.
+        </span>
+      </li>
+      <li class="row">
+        <code>static/</code>
+        <span>
+          Build outputs served at <code>/static</code>. Never edit by hand; the minified
+          builds are committed so a fresh checkout runs and deploys as-is.
+        </span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="py-12">
+    <h2 class="text-xl font-semibold tracking-tight">Develop</h2>
+    <p class="description">
+      One command starts everything: the app with auto-reload, plus watchers rebuilding
+      the dev stylesheet and JS bundle on every save. Edit, save, refresh.
+    </p>
+    <pre class="bg-muted mt-4 overflow-x-auto rounded-md p-3 text-sm"><code>uv run poe start          # http://localhost:5000
+
+uv run poe dev            # app only, dev assets
+uv run poe preview        # app only, minified assets — what gets deployed</code></pre>
+    <p class="description mt-4">
+      Checks run with ruff and mypy (strict); <code>uv run poe check</code> runs them
+      all. Deploying serves the minified builds — run <code>uv run poe build</code>
+      first, then any FastAPI host works; Vercel and FastAPI Cloud need no
+      configuration. The details are on the
+      <a href="/design" class="link">design page</a>.
+    </p>
+  </section>
+
+  <section class="py-12">
+    <h2 class="text-xl font-semibold tracking-tight">Explore</h2>
+    <p class="description">Two more pages come with the application.</p>
     <ul class="mt-6 grid gap-4 sm:grid-cols-2">
       <li class="panel">
-        <h3 class="font-medium">File-system based routing</h3>
+        <h3 class="font-medium"><a href="/design" class="link">Design</a></h3>
         <p class="description">
-          Drop <code>page.py</code>, <code>layout.py</code>, or <code>actions.py</code> into a
-          folder under <code>app/</code> and it becomes a route, a layout, or an HTMX endpoint.
-          No routes to register, no layouts to wire up.
+          How the application is put together: directory layout, holm's conventions,
+          stylesheets and scripts, the development workflow, and deployment.
         </p>
       </li>
       <li class="panel">
-        <h3 class="font-medium">Standard FastAPI</h3>
+        <h3 class="font-medium"><a href="/showcase" class="link">Showcase</a></h3>
         <p class="description">
-          Dependencies, validation, background tasks — the whole ecosystem. The same
-          application can serve JSON APIs and server-rendered HTML.
-        </p>
-      </li>
-      <li class="panel">
-        <h3 class="font-medium">Components in typed, async Python</h3>
-        <p class="description">
-          Rendering is <code>htmy</code>: JSX-like syntax, no template language. This page is a
-          static template plus one Python action; the rotating greeting above is the dynamic
-          part.
-        </p>
-      </li>
-      <li class="panel">
-        <h3 class="font-medium">First-class HTMX</h3>
-        <p class="description">
-          Actions return HTML fragments that HTMX swaps in — dynamic updates without client
-          JavaScript. The greeting in the title cycles through languages every 2 seconds.
-        </p>
-      </li>
-      <li class="panel">
-        <h3 class="font-medium">No app build step</h3>
-        <p class="description">
-          Server-side rendering only — no bundler for your Python components. Stylesheets and
-          scripts recompile on save in development and are built once, ahead of deployment.
-        </p>
-      </li>
-      <li class="panel">
-        <h3 class="font-medium">Unopinionated styling</h3>
-        <p class="description">
-          This scaffold ships TailwindCSS and BasecoatUI, but any CSS framework works, and
-          Jinja layouts are supported out of the box.
+          The full vendored component catalog in action — buttons, badges, alerts,
+          forms, dialogs, all typed Python function calls from <code>components/</code>.
         </p>
       </li>
     </ul>
-  </section>
-
-  <section class="py-12">
-    <h2 class="text-xl font-semibold tracking-tight">Backend</h2>
-    <p class="description">
-      All server-side Python. holm walks <code>app/</code> and registers everything below as
-      standard FastAPI routes.
-    </p>
-    <ul class="mt-4 divide-y">
-      <li class="row">
-        <a href="https://volfpeter.github.io/holm" class="link">holm</a>
-        <span>
-          Application discovery: turns the modules in <code>app/</code> into routes, layouts,
-          and actions, and composes pages with their layouts automatically.
-        </span>
-      </li>
-      <li class="row">
-        <a href="https://fastapi.tiangolo.com" class="link">FastAPI</a>
-        <span>
-          The ASGI framework serving it all — dependencies, validation, and docs included.
-        </span>
-      </li>
-      <li class="row">
-        <a href="https://volfpeter.github.io/fasthx" class="link">fasthx</a>
-        <span>
-          Rendering glue between FastAPI and <code>htmy</code>: the same route can return JSON
-          or rendered HTML depending on the request.
-        </span>
-      </li>
-      <li class="row">
-        <a href="https://volfpeter.github.io/htmy" class="link">htmy</a>
-        <span>
-          Server-side rendering with pure, fully typed, async Python components — no template
-          language to learn.
-        </span>
-      </li>
-      <li class="row">
-        <a href="https://github.com/volfpeter/htmui" class="link">htmui</a>
-        <span>
-          Vendors the BasecoatUI catalog into <code>components/</code> — the theme switcher in
-          the header is one of them.
-        </span>
-      </li>
-    </ul>
-  </section>
-
-  <section class="py-12">
-    <h2 class="text-xl font-semibold tracking-tight">Frontend</h2>
-    <p class="description">
-      What reaches the browser — and it's just HTML, CSS, and one small HTMX script.
-    </p>
-    <ul class="mt-4 divide-y">
-      <li class="row">
-        <a href="https://basecoatui.com" class="link">BasecoatUI</a>
-        <span>
-          Accessible, themeable components in the shadcn spirit, called like any Python
-          function from <code>components/</code>.
-        </span>
-      </li>
-      <li class="row">
-        <a href="https://tailwindcss.com" class="link">TailwindCSS</a>
-        <span>
-          Utility classes everywhere on this page; <code>poe start</code> recompiles the
-          stylesheet while you edit.
-        </span>
-      </li>
-      <li class="row">
-        <a href="https://htmx.org" class="link">HTMX</a>
-        <span>
-          Swaps in fragments the backend renders — the multilingual greeting is a single
-          endpoint polling every 2 seconds.
-        </span>
-      </li>
-    </ul>
-  </section>
-
-  <section class="py-12">
-    <h2 class="text-xl font-semibold tracking-tight">Deployment</h2>
-    <p class="description">
-      Deployments serve <code>static/app.css</code> and <code>static/app.js</code>, so build
-      them first — then pick a target.
-    </p>
-    <ol class="mt-6 space-y-6">
-      <li class="flex gap-4">
-        <span
-          class="bg-primary text-primary-foreground mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
-        >
-          1
-        </span>
-        <div>
-          <h3 class="font-medium">Build the production stylesheet and JS bundle</h3>
-          <pre class="bg-muted mt-2 overflow-x-auto rounded-md p-3 text-sm"><code>uv run poe build-prod-css
-uv run poe build-prod-js</code></pre>
-        </div>
-      </li>
-      <li class="flex gap-4">
-        <span
-          class="bg-primary text-primary-foreground mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
-        >
-          2
-        </span>
-        <div>
-          <h3 class="font-medium">Deploy to Vercel</h3>
-          <p class="description">
-            Import the repository — no configuration needed. <code>[tool.fastapi]</code> in
-            <code>pyproject.toml</code> is the entrypoint.
-          </p>
-        </div>
-      </li>
-      <li class="flex gap-4">
-        <span
-          class="bg-primary text-primary-foreground mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
-        >
-          3
-        </span>
-        <div>
-          <h3 class="font-medium">…or FastAPI Cloud</h3>
-          <pre class="bg-muted mt-2 overflow-x-auto rounded-md p-3 text-sm"><code>uv run fastapi deploy</code></pre>
-        </div>
-      </li>
-    </ol>
   </section>
 
   <footer class="border-t py-12">
     <h2 class="text-xl font-semibold tracking-tight">Where to go next</h2>
     <ul class="mt-4 divide-y">
       <li class="py-3">
-        <a href="https://volfpeter.github.io/holm/in-a-hurry" class="link">
-          holm in a hurry
-        </a>
-        <p class="description">
-          The essentials in under five minutes — all the intuition you need to start.
-        </p>
+        <a href="https://volfpeter.github.io/holm/in-a-hurry" class="link">holm in a hurry</a>
+        <p class="description">The essentials in under five minutes.</p>
       </li>
       <li class="py-3">
-        <a href="https://volfpeter.github.io/holm/guides/quick-start-guide" class="link">
-          Quick start guide
-        </a>
-        <p class="description">
-          Build your first application step by step, from routing to rendering.
-        </p>
+        <a href="https://volfpeter.github.io/holm/guides/quick-start-guide" class="link">Quick start guide</a>
+        <p class="description">Build your first application step by step, from routing to rendering.</p>
       </li>
       <li class="py-3">
         <a href="https://volfpeter.github.io/holm" class="link">Documentation &amp; examples</a>
-        <p class="description">
-          Guides for every major feature, plus example applications in the repository.
-        </p>
+        <p class="description">Guides for every major feature, plus example applications in the repository.</p>
       </li>
     </ul>
   </footer>

@@ -1,17 +1,27 @@
 @import "tailwindcss";
 @import "basecoat-css";
 
+/*
+ * The classes below style the scaffold's own pages: the navigation bar, the
+ * landing page, the design page, and the showcase. Remove the classes together
+ * with those pages — nothing else depends on them. The two imports above are
+ * all the application itself needs.
+ */
 @layer components {
   .description {
     @apply text-muted-foreground mt-1 text-sm;
   }
 
   .link {
-    @apply font-medium underline-offset-4 hover:underline;
+    @apply font-medium underline underline-offset-4;
   }
 
   .panel {
     @apply rounded-lg border p-4;
+  }
+
+  .card-link {
+    @apply block rounded-lg border p-4 transition-colors hover:bg-muted;
   }
 
   .row {
@@ -20,5 +30,69 @@
 
   .row > span {
     @apply text-muted-foreground text-sm sm:ml-6 sm:text-right;
+  }
+
+  .nav-link {
+    @apply text-muted-foreground hover:text-foreground text-sm transition-colors;
+  }
+
+  .nav-link[aria-current="page"] {
+    @apply text-foreground font-medium;
+  }
+
+  :not(pre) > code {
+    @apply bg-muted rounded px-1.5 py-0.5 text-[0.85em];
+  }
+
+  .doc {
+    @apply py-1 text-base leading-relaxed;
+  }
+
+  .doc h1 {
+    @apply pt-12 pb-2 text-3xl font-bold tracking-tight;
+  }
+
+  .doc h2 {
+    @apply mt-10 border-t pt-6 pb-1 text-lg font-semibold tracking-tight;
+  }
+
+  .doc h3 {
+    @apply pt-4 pb-1 font-medium;
+  }
+
+  .doc p {
+    @apply py-1.5;
+  }
+
+  .doc header p {
+    @apply text-muted-foreground;
+  }
+
+  .doc ul {
+    @apply list-disc space-y-1 py-1.5 pl-5;
+  }
+
+  .doc li::marker {
+    @apply text-muted-foreground;
+  }
+
+  .doc a {
+    @apply font-medium underline underline-offset-4;
+  }
+
+  .doc pre {
+    @apply bg-muted mt-2 overflow-x-auto rounded-md p-3 text-sm;
+  }
+
+  .doc table {
+    @apply mt-2 w-full text-sm;
+  }
+
+  .doc th {
+    @apply text-muted-foreground pb-2 pr-4 text-left font-medium;
+  }
+
+  .doc td {
+    @apply border-t py-2 pr-4 align-top;
   }
 }

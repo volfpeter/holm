@@ -39,6 +39,7 @@ dev = [
 [tool.mypy]
 strict = true
 exclude = [
+    "dev",
     "examples/actions-with-htmx",
     "examples/forms",
     "examples/jinja-layout",
@@ -55,6 +56,10 @@ show_error_codes = true
 [[tool.mypy.overrides]]
 module = ["components", "components.*"]
 ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "holm.resources.app_template.app.showcase.page"
+disable_error_code = ["no-any-return"]
 
 [tool.pdm.build]
 # TODO: find a way to exclude test_app/ from the wheel build.

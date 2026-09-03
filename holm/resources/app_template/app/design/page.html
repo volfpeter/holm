@@ -1,0 +1,266 @@
+<div class="doc">
+  <header>
+    <h1>Design</h1>
+    <p>
+      How this application is put together: why the files, tasks, and configuration exist,
+      and how the pieces work together during development and deployment. The same content
+      is in <code>DESIGN.md</code> in the repository root.
+    </p>
+  </header>
+
+  <h2>The stack</h2>
+  <p>
+    The application is a standard
+    <a href="https://fastapi.tiangolo.com">FastAPI</a> app, assembled with
+    <a href="https://volfpeter.github.io/holm">holm</a>. Everything is server-rendered
+    Python — the browser receives that HTML plus two built static assets: the stylesheet
+    and the JS bundle.
+  </p>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2">
+    <div class="panel">
+      <p class="font-medium"><a href="https://volfpeter.github.io/holm">holm</a></p>
+      <p class="description">
+        Routing and layout composition: walks the <code>app/</code> package and turns
+        modules into routes, layouts, and actions. No routes to register manually.
+      </p>
+    </div>
+    <div class="panel">
+      <p class="font-medium"><a href="https://fastapi.tiangolo.com">FastAPI</a></p>
+      <p class="description">
+        The standard web framework underneath — every page, layout, and action is an
+        ordinary FastAPI route.
+      </p>
+    </div>
+    <div class="panel">
+      <p class="font-medium"><a href="https://volfpeter.github.io/htmy">htmy</a></p>
+      <p class="description">
+        Rendering: typed, async Python components with JSX-like syntax, plus optional
+        Jinja layouts.
+      </p>
+    </div>
+    <div class="panel">
+      <p class="font-medium"><a href="https://htmx.org">HTMX</a></p>
+      <p class="description">
+        Dynamic updates: endpoints return HTML fragments that the browser swaps in. No
+        client-side JavaScript framework.
+      </p>
+    </div>
+    <div class="panel">
+      <p class="font-medium"><a href="https://tailwindcss.com">TailwindCSS</a></p>
+      <p class="description">
+        Styling: utility classes. The stylesheet is built from
+        <code>assets/app.css</code>.
+      </p>
+    </div>
+    <div class="panel">
+      <p class="font-medium"><a href="https://basecoatui.com">BasecoatUI</a></p>
+      <p class="description">
+        Accessible components, vendored into <code>components/</code> by
+        <a href="https://github.com/volfpeter/htmui">htmui</a> — see the
+        <a href="/showcase">showcase</a>.
+      </p>
+    </div>
+  </div>
+  <p>
+    New to holm? The <a href="https://volfpeter.github.io/holm/in-a-hurry">holm in a hurry</a>
+    guide covers the essentials in under five minutes.
+  </p>
+
+  <h2>Directory layout</h2>
+  <pre><code>.
+├── app/                 # The application package — holm walks this for routes
+│   ├── main.py          # FastAPI app + holm App wiring, static files, layout slots
+│   ├── settings.py      # pydantic-settings; which CSS/JS files to serve
+│   ├── head.py          # The &lt;head&gt; component, with page metadata support
+│   ├── nav.py           # Root navigation bar, highlights the current page
+│   ├── layout.py        # Root layout: renders layout.jinja (optional, see below)
+│   ├── layout.jinja     # Root layout markup
+│   ├── page.py          # Landing page
+│   ├── page.html        # Static markup for the landing page
+│   ├── actions.py       # HTMX endpoints returning HTML fragments
+│   ├── design/          # This page
+│   │   ├── page.py
+│   │   └── page.html
+│   ├── showcase/        # The vendored component catalog in action, at /showcase
+│   │   └── page.py
+│   └── __init__.py
+├── assets/              # Source files for the stylesheet and JS bundle
+│   ├── app.css          # Tailwind input — your CSS goes here
+│   └── app.js           # JS entry point — your scripts go here
+├── components/          # htmui BasecoatUI catalog — plain Python, you own it
+├── static/              # Build outputs, served at /static
+├── .agents/skills/      # The holm-web agent skill
+├── Procfile             # Process definitions for honcho (poe start)
+├── package.json         # JS tooling only (Tailwind, HTMX, esbuild) — no app code
+└── pyproject.toml       # Python dependencies, tool config, poe tasks</code></pre>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2">
+    <div class="panel">
+      <p class="font-medium">Components live outside <code>app/</code></p>
+      <p class="description">
+        Route discovery walks <code>app/</code>, so every <code>page.py</code>,
+        <code>layout.py</code>, and <code>actions.py</code> under it becomes a route.
+        UI components live in <code>components/</code> at the project root, where
+        discovery never touches them. Import them as
+        <code>from components import button</code>.
+      </p>
+    </div>
+    <div class="panel">
+      <p class="font-medium"><code>assets/</code> vs <code>static/</code></p>
+      <p class="description">
+        <code>assets/</code> holds the sources you edit; <code>static/</code> holds the
+        build outputs the app serves. Nothing in <code>static/</code> should be edited
+        by hand.
+      </p>
+    </div>
+  </div>
+
+  <h2>Agent support</h2>
+  <p>
+    The project ships the <code>holm-web</code> agent skill in
+    <code>.agents/skills/</code>. Agents should load it before working on the
+    application: it documents holm's routing, layout, page, action, and form
+    conventions, and can answer questions about the library itself. The skill is
+    maintained upstream and installed automatically; see the <code>holm skill</code>
+    command for managing it in other projects.
+  </p>
+
+  <h2>The application package</h2>
+  <h3>The composition root</h3>
+  <p>
+    <code>app/main.py</code> creates the FastAPI app, mounts <code>static/</code> at
+    <code>/static</code>, adds gzip compression, and hands everything to
+    <code>holm.App()</code>. Custom FastAPI middleware, exception handlers, or
+    additional mounts belong there.
+  </p>
+  <h3>Layout slots</h3>
+  <p>
+    Slots are configured in the same call. The root layout renders three named slots
+    besides <code>children</code>: <code>head</code> (the <code>&lt;head&gt;</code>
+    component from <code>app/head.py</code>), <code>nav</code> (the current-page-aware
+    navigation bar from <code>app/nav.py</code>), and <code>theme_switcher</code>.
+    Nested layouts can define further slots.
+  </p>
+  <h3>Conventions</h3>
+  <p>
+    Within <code>app/</code>, holm's conventions apply: <code>page.py</code> serves GET
+    requests for its package's path, <code>layout.py</code> (or
+    <code>layout.jinja</code>) wraps the pages of its package and everything below it,
+    and <code>actions.py</code> defines endpoints for HTMX partials.
+    <code>app/layout.py</code> is optional — holm renders <code>layout.jinja</code> on
+    its own when no Python counterpart exists; the file exists to make the mechanism
+    explicit and to serve as a starting point for programmatic layouts.
+  </p>
+  <h3>Settings and metadata</h3>
+  <p>
+    <code>app/head.py</code> renders the <code>&lt;head&gt;</code> and reads page
+    metadata (such as this page's title) from the htmy context.
+    <code>app/settings.py</code> holds runtime settings via pydantic-settings, reading
+    <code>.env</code> when present — including which stylesheet and JS bundle to serve,
+    the <code>CSS_FILE</code> and <code>JS_FILE</code> environment variables behind
+    <code>poe dev</code> and <code>poe preview</code>.
+  </p>
+
+  <h2>Stylesheets and scripts</h2>
+  <p>
+    There is no bundler for application code. Python components are served as-is, and
+    only two artifacts are built — the Tailwind stylesheet and the JS bundle. Sources
+    live in <code>assets/</code> (<code>app.css</code> for your CSS, <code>app.js</code>
+    for your scripts) and are compiled into <code>static/</code> in two flavors:
+  </p>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Dev build</th><th>Production build</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>assets/app.css</code></td>
+        <td><code>static/app-dev.css</code> — unminified, rebuilt on every save</td>
+        <td><code>static/app.css</code> — minified, committed</td>
+      </tr>
+      <tr>
+        <td><code>assets/app.js</code></td>
+        <td><code>static/app-dev.js</code> — unminified, rebuilt on every save</td>
+        <td><code>static/app.js</code> — minified, committed</td>
+      </tr>
+    </tbody>
+  </table>
+  <p>
+    The minified files are part of the working tree on purpose: a fresh checkout
+    contains everything needed to run and deploy the application. The dev files are
+    build artifacts that can be deleted and regenerated at any time. Which pair is
+    served is decided by <code>CSS_FILE</code> and <code>JS_FILE</code> from
+    <code>app/settings.py</code>, rendered into <code>&lt;head&gt;</code> by
+    <code>app/head.py</code>.
+  </p>
+  <h3>Build tasks</h3>
+  <p>
+    All build commands are poe tasks (<code>build-dev-css</code>,
+    <code>build-prod-css</code>, <code>build-dev-js</code>, <code>build-prod-js</code>;
+    <code>poe build</code> runs the production builds) delegating to the Tailwind CLI
+    and the JS bundler. The <code>package.json</code> exists only for these tools, and
+    there is no application JavaScript beyond what <code>assets/app.js</code> imports.
+  </p>
+  <h3>The component catalog</h3>
+  <p>
+    The <code>components/</code> directory holds the full htmui BasecoatUI catalog,
+    vendored: a copy in the project, not a dependency. Everything is already set up and
+    ready to use — explore it, and edit the copies freely when you want to customize them.
+  </p>
+
+  <h2>Development workflow</h2>
+  <pre><code>uv run poe start          # http://localhost:5000</code></pre>
+  <p>
+    That runs three processes together via honcho, as defined in the
+    <code>Procfile</code>:
+  </p>
+  <ul>
+    <li><strong>app</strong> — <code>fastapi dev</code>, with auto-reload</li>
+    <li><strong>css</strong> — the Tailwind watcher rebuilding <code>static/app-dev.css</code></li>
+    <li><strong>js</strong> — the JS watcher rebuilding <code>static/app-dev.js</code></li>
+  </ul>
+  <p>
+    The app is the first process in the <code>Procfile</code>, and honcho assigns ports
+    to processes in that order, so the app gets port 5000. Run the application
+    standalone (for example <code>uv run poe dev</code> or <code>fastapi dev</code>)
+    and it comes up on the FastAPI default port instead, which is 8000.
+  </p>
+  <p>
+    The two standalone tasks differ in what they serve: <code>poe dev</code> serves the
+    dev stylesheet and JS bundle, which the watchers keep current, while
+    <code>poe preview</code> serves the minified files — what will be deployed, so use
+    it to verify production assets. Edit <code>assets/</code>, <code>app/</code>, or
+    <code>components/</code>, save, refresh; auto-reload and the watchers handle the
+    rest.
+  </p>
+
+  <h2>Tooling and quality</h2>
+  <ul>
+    <li><strong><a href="https://docs.astral.sh/uv/">uv</a></strong> — dependency management, locked in <code>uv.lock</code></li>
+    <li><strong><a href="https://docs.astral.sh/ruff/">ruff</a></strong> — formatting and linting</li>
+    <li><strong><a href="https://mypy-lang.org/">mypy</a></strong> — type checking, in strict mode</li>
+    <li><strong>poe</strong> — recurring commands as tasks; <code>poe check</code> runs all checks in one go</li>
+  </ul>
+
+  <h2>Deployment</h2>
+  <p>Deployments serve the minified builds, so build them first:</p>
+  <pre><code>uv run poe build</code></pre>
+  <p>
+    Two providers work out of the box, no configuration needed — the
+    <code>[tool.fastapi]</code> entrypoint in <code>pyproject.toml</code> points them at
+    <code>app.main:app</code>:
+  </p>
+  <div class="mt-4 grid gap-3 sm:grid-cols-2">
+    <div class="panel">
+      <p class="font-medium">Vercel</p>
+      <p class="description">Import the repository — no configuration needed.</p>
+    </div>
+    <div class="panel">
+      <p class="font-medium">FastAPI Cloud</p>
+      <p class="description"><code>uv run fastapi deploy</code></p>
+    </div>
+  </div>
+  <p>
+    Beyond that, a holm application is a plain FastAPI application — deploy it however
+    you like.
+  </p>
+</div>

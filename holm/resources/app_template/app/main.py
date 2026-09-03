@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from holm import App
 
 from .head import head
+from .nav import nav
 
 app = FastAPI()
 app.add_middleware(GZipMiddleware)
@@ -12,5 +13,5 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 App(
     app=app,
-    layout_slots={"head": head, "theme_switcher": theme_switcher.theme_switcher()},
+    layout_slots={"head": head, "nav": nav, "theme_switcher": theme_switcher.theme_switcher()},
 )
