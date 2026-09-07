@@ -41,9 +41,10 @@ def get_metadata_dependency(obj: Any) -> MetadataDependency:
 
 
 def empty_metadata_dep() -> None:
-    """
-    Metadata dependency that returns `None`.
-    """
+    """Metadata dependency that returns `None`.
+
+    Returns:
+        The metadata dependency that always returns `None`."""
     return None
 
 
@@ -74,7 +75,14 @@ class Metadata(ContextAware):
     def get(self, key: Any, default: Any) -> Any: ...
 
     def get(self, key: Any, default: Any | None = None) -> Any | None:
-        """Implements `Mapping.get()`."""
+        """Implements `Mapping.get()`.
+
+        Args:
+            key: Key to look up in the metadata.
+            default: Value to return if the key is not present.
+
+        Returns:
+            The value for `key` if present, `default` otherwise."""
         return self._metadata.get(key, default)
 
     def __contains__(self, key: Any) -> bool:
@@ -100,13 +108,22 @@ class Metadata(ContextAware):
         return not self.__eq__(other)
 
     def items(self) -> ItemsView[Any, Any]:
-        """Implements `Mapping.items()`."""
+        """Implements `Mapping.items()`.
+
+        Returns:
+            View of the metadata items."""
         return self._metadata.items()
 
     def keys(self) -> KeysView[Any]:
-        """Implements `Mapping.keys()`."""
+        """Implements `Mapping.keys()`.
+
+        Returns:
+            View of the metadata keys."""
         return self._metadata.keys()
 
     def values(self) -> ValuesView[Any]:
-        """Implements `Mapping.values()`."""
+        """Implements `Mapping.values()`.
+
+        Returns:
+            View of the metadata values."""
         return self._metadata.values()

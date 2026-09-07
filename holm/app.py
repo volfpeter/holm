@@ -231,7 +231,13 @@ def _discover_app_packages(config: AppConfig) -> set[PackageInfo]:
 
     @lru_cache()
     def is_excluded(path: Path) -> bool:
-        """Returns whether the given file or package path should be excluded from the application."""
+        """Returns whether the given file or package path should be excluded from the application.
+
+    Args:
+        path: The file or package path to check.
+
+    Returns:
+        `True` if the path should be excluded, `False` otherwise."""
         return any(
             # Exclude if a path segment starts with an underscore but does not end with one.
             # Path segments that both start and end with an underscore represent path parameters!

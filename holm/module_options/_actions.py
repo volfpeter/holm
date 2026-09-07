@@ -69,9 +69,13 @@ def get_actions(obj: Any) -> ActionDescriptors | None:
 
 
 def has_actions(obj: Any) -> TypeGuard[Any]:
-    """
-    "Type guard" that returns `True` if the given object contains actions.
-    """
+    """"Type guard" that returns `True` if the given object contains actions.
+
+    Args:
+        obj: The object to check for actions.
+
+    Returns:
+        `True` if the object contains actions, `False` otherwise."""
     return bool(get_actions(obj))
 
 

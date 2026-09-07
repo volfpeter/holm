@@ -30,7 +30,13 @@ class ErrorHandlerOwner(Protocol):
 
 
 def is_error_handler_owner(obj: Any) -> TypeGuard[ErrorHandlerOwner]:
-    """Type guard for `ErrorHandlerOwner`."""
+    """Type guard for `ErrorHandlerOwner`.
+
+    Args:
+        obj: The object to check.
+
+    Returns:
+        `True` if the object owns error handlers, `False` otherwise."""
     handlers = getattr(obj, "handlers", None)
     return handlers is not None and (isinstance(handlers, Mapping) or callable(handlers))
 
@@ -73,9 +79,14 @@ def register_error_handlers(app: FastAPI, owner: ErrorHandlerOwner | None, *, ht
 
 
 def wrap_error_handler(error_handler: FastAPIErrorHandler, htmy: HTMY) -> FastAPIErrorHandler:
-    """
-    Wraps the given error handler in a function that automatically renders `htmy` `Component` return values.
-    """
+    """Wraps the given error handler in a function that automatically renders `htmy` `Component` return values.
+
+    Args:
+        error_handler: The error handler to wrap.
+        htmy: The `HTMY` renderer instance.
+
+    Returns:
+        A wrapped error handler that renders `htmy` components."""
 
     async def rendering_error_handler_wrapper(request: Request, error: Exception) -> Response:
         result = await error_handler(request, error)

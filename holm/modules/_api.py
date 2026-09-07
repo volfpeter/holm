@@ -21,7 +21,13 @@ class APIDefinition(Protocol):
 
 
 def is_api_definition(obj: Any) -> TypeGuard[APIDefinition]:
-    """Type guard for `APIDefinition`."""
+    """Type guard for `APIDefinition`.
+
+    Args:
+        obj: The object to check.
+
+    Returns:
+        `True` if the object defines an API, `False` otherwise."""
     api = getattr(obj, "api", None)
     # APIRouter is also callable, so callable(api) would be enough,
     # but let's be a bit more thorough in this case.

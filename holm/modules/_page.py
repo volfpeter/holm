@@ -26,6 +26,12 @@ class PageDefinition(Protocol):
 
 
 def is_page_definition(obj: Any) -> TypeGuard[PageDefinition]:
-    """Type guard for `PageDefinition`."""
+    """Type guard for `PageDefinition`.
+
+    Args:
+        obj: The object to check.
+
+    Returns:
+        `True` if the object defines a page, `False` otherwise."""
     page = getattr(obj, "page", None)
     return callable(page)

@@ -70,7 +70,10 @@ class AppConfig:
     """
 
     def add_to_default_context(self, context: Context) -> None:
-        """Merges the given context into the app-scope default context."""
+        """Merges the given context into the app-scope default context.
+
+        Args:
+            context: The context to merge into the default context."""
         self.default_context.update(context)
 
     @classmethod
@@ -195,9 +198,14 @@ class PackageInfo:
 
     @classmethod
     def from_marker_file(cls, file_path: Path, *, config: AppConfig) -> PackageInfo:
-        """
-        Creates a `PackageInfo` instance from a so called "marker" that is located in the package.
-        """
+        """Creates a `PackageInfo` instance from a so called "marker" that is located in the package.
+
+        Args:
+            file_path: Path of the marker file.
+            config: Application configuration used to resolve the root directory.
+
+        Returns:
+            The `PackageInfo` instance created from the marker file."""
         package_dir = file_path.relative_to(config.root_dir).parent
         package_dir_str = "/".join(package_dir.parts)
         package_name = package_dir_str.replace("/", ".")

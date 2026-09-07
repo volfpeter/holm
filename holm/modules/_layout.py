@@ -37,7 +37,13 @@ class CustomLayoutDefinition:
 
 
 def is_layout_definition(obj: Any) -> TypeGuard[LayoutDefinition]:
-    """Type guard for `LayoutDefinition`."""
+    """Type guard for `LayoutDefinition`.
+
+    Args:
+        obj: The object to check.
+
+    Returns:
+        `True` if the object defines a layout, `False` otherwise."""
     layout = getattr(obj, "layout", None)
     return callable(layout)
 
@@ -104,21 +110,32 @@ def combine_layouts_to_dependency(
 
 
 def empty_layout(props: Any) -> Any:
-    """`LayoutFactory` that simply returns the received props."""
+    """`LayoutFactory` that simply returns the received props.
+
+    Args:
+        props: The props to return.
+
+    Returns:
+        The received props unchanged."""
     return props
 
 
 def empty_layout_dependency() -> FastAPIDependency[LayoutFactory]:
-    """
-    FastAPI dependency that returns `empty_layout`.
-    """
+    """FastAPI dependency that returns `empty_layout`.
+
+    Returns:
+        The `empty_layout` layout factory."""
     return empty_layout
 
 
 def layout_to_dependency(layout: Layout) -> FastAPIDependency[LayoutFactory]:
-    """
-    Converts a layout to a FastAPI dependency that returns a layout factory.
-    """
+    """Converts a layout to a FastAPI dependency that returns a layout factory.
+
+    Args:
+        layout: The layout to convert.
+
+    Returns:
+        A FastAPI dependency returning a layout factory."""
     # eval_str=True is necessary in case future __annotations__ is used
     # where the layout is function is defined.
     params = tuple(inspect.signature(layout, eval_str=True).parameters.values())
