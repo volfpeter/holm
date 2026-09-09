@@ -75,8 +75,11 @@
 │   ├── settings.py      # pydantic-settings; which CSS/JS files to serve
 │   ├── head.py          # &lt;head&gt; component, with page metadata support
 │   ├── nav.py           # Root navigation; highlights the current page
+│   ├── error.py         # Error handlers; 404 redirects to /not-found
 │   ├── layout.py        # Root layout; renders layout.jinja (optional)
 │   ├── layout.jinja     # Root layout markup
+│   ├── not_found/       # Not-found page package (served at /not-found)
+│   │   └── page.py
 │   └── page.py          # Home page
 ├── assets/              # Stylesheet and JS bundle sources
 │   ├── app.css          # Tailwind input; your CSS goes here
@@ -144,7 +147,8 @@
     <code>page.py</code> serves GET requests for its package's path,
     <code>layout.py</code> (or <code>layout.jinja</code>) wraps the pages of its
     package and everything below it, and <code>actions.py</code> defines endpoints
-    that return HTML fragments, a natural fit for HTMX. <code>app/layout.py</code> is
+    that return HTML fragments, a natural fit for HTMX. <code>error.py</code> maps error
+    codes to handlers; the 404 handler redirects to <code>/not-found</code>. <code>app/layout.py</code> is
     optional. <code>holm</code> renders <code>layout.jinja</code> on its own when no
     Python counterpart exists; the file exists to make the mechanism explicit and to
     serve as a starting point for programmatic layouts.

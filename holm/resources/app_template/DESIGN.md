@@ -23,8 +23,11 @@ Pages render on the server. The browser receives that HTML plus the stylesheet a
 │   ├── main.py          # FastAPI app, holm wiring, static files, layout slots
 │   ├── settings.py      # pydantic-settings; which CSS/JS files to serve
 │   ├── head.py          # <head> component, with page metadata support
+│   ├── error.py         # Error handlers; 404 redirects to /not-found
 │   ├── layout.py        # Root layout; renders layout.jinja (optional)
 │   ├── layout.jinja     # Root layout markup
+│   ├── not_found/       # Not-found page package (served at /not-found)
+│   │   └── page.py
 │   └── page.py          # Home page
 ├── assets/              # Stylesheet and JS bundle sources
 │   ├── app.css          # Tailwind input; your CSS goes here
@@ -36,7 +39,7 @@ Pages render on the server. The browser receives that HTML plus the stylesheet a
 └── pyproject.toml       # Python dependencies, tool config, poe tasks
 ```
 
-`holm` walks `app/`: `page.py` becomes a route, `layout.py` or `layout.jinja` wraps pages, `actions.py` defines endpoints that return HTML fragments. UI components live in `components/` at the project root, outside `app/`, where discovery never touches them. Import them as `from components.button import button`. The full template additionally ships `app/nav.py`, `app/actions.py`, `app/design/`, `app/showcase/`, and `assets/demo.css`; delete what you don't need.
+`holm` walks `app/`: `page.py` becomes a route, `layout.py` or `layout.jinja` wraps pages, `actions.py` defines endpoints that return HTML fragments, and `error.py` maps error codes to handlers (the 404 handler redirects to `/not-found`). UI components live in `components/` at the project root, outside `app/`, where discovery never touches them. Import them as `from components.button import button`. The full template additionally ships `app/nav.py`, `app/actions.py`, `app/design/`, `app/showcase/`, and `assets/demo.css`; delete what you don't need.
 
 `assets/` holds the source files for the stylesheet and the JS bundle; you edit those. `static/` holds the compiled files the app serves. Don't edit anything in `static/` by hand.
 

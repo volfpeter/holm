@@ -2,8 +2,8 @@
 <html lang="en">
   {{ slots.head }}
   <body>
-    <main class="min-h-screen">
-      <div class="mx-auto w-full max-w-screen-md p-6">
+    <main class="flex min-h-screen flex-col">
+      <div class="mx-auto flex w-full max-w-screen-md flex-1 flex-col p-6">
         <header class="flex items-center justify-between py-2">
           {{ slots.nav }}
           {{ slots.theme_switcher }}
