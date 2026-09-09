@@ -18,6 +18,7 @@ Pages render on the server. The browser receives that HTML plus the stylesheet a
 
 ```text
 .
+├── .agents/skills/      # holm-web agent skill
 ├── app/                 # Application package; holm walks this
 │   ├── main.py          # FastAPI app, holm wiring, static files, layout slots
 │   ├── settings.py      # pydantic-settings; which CSS/JS files to serve
@@ -25,15 +26,12 @@ Pages render on the server. The browser receives that HTML plus the stylesheet a
 │   ├── nav.py           # Root navigation; highlights the current page
 │   ├── layout.py        # Root layout; renders layout.jinja (optional)
 │   ├── layout.jinja     # Root layout markup
-│   ├── page.py          # Home page
-│   ├── actions.py       # Endpoints that return HTML fragments
-│   └── __init__.py
+│   └── page.py          # Home page
 ├── assets/              # Stylesheet and JS bundle sources
 │   ├── app.css          # Tailwind input; your CSS goes here
 │   └── app.js           # JS entry point; your scripts go here
 ├── components/          # BasecoatUI as Python; yours to edit
 ├── static/              # Build outputs, served at /static
-├── .agents/skills/      # holm-web agent skill
 ├── Procfile             # honcho process definitions (poe start)
 ├── package.json         # Tailwind, HTMX, and the JS bundler
 └── pyproject.toml       # Python dependencies, tool config, poe tasks
