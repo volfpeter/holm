@@ -1,4 +1,4 @@
-# **holm_name**
+# __holm_name__
 
 A [holm](https://volfpeter.github.io/holm) application: file-system based routing, server-side rendering with [`htmy`](https://volfpeter.github.io/htmy), dynamic page updates with [HTMX](https://htmx.org), and [BasecoatUI](https://basecoatui.com) components from [`htmui`](https://github.com/volfpeter/htmui).
 
