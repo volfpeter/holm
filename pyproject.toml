@@ -112,9 +112,9 @@ format-fix = "ruff format ."
 lint = "ruff check ."
 lint-fix = "ruff check . --fix"
 
-mypy = "mypy ."
+type = "mypy ."
 
-check.sequence = ["format", "lint", "mypy"]
+check.sequence = ["format", "lint", "type"]
 check.ignore_fail = "return_non_zero"
 
 test = "python -m pytest tests"

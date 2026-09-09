@@ -132,8 +132,8 @@ def _dialog_card() -> ComponentType:
         show_dialog_button("Open dialog", dialog_id="demo-dialog"),
         dialog.dialog(
             html.p(
-                "Everything in this modal — header, body, footer — comes from the vendored "
-                "component catalog.",
+                "Everything in this modal (header, body, footer) comes from "
+                "components/ in your project. Open those files and change them.",
                 class_="text-sm",
             ),
             id="demo-dialog",
@@ -150,12 +150,12 @@ def page() -> ComponentType:
         html.header(
             html.h1("Showcase", class_="pt-12 text-3xl font-bold tracking-tight"),
             html.p(
-                "The BasecoatUI catalog that ships with this application, in action. Every "
-                "element below is a typed Python function call — this page is ",
+                "A few of the BasecoatUI components that ship with this application. Each "
+                "one is a typed Python function call. This page is ",
                 html.code("app/showcase/page.py"),
-                ", the components live in ",
+                ". The components live in ",
                 html.code("components/"),
-                ".",
+                ", and you can edit them.",
                 class_="description mt-2 max-w-xl",
             ),
             class_="pb-8",
@@ -168,10 +168,10 @@ def page() -> ComponentType:
             _forms_card(),
             _dialog_card(),
             html.p(
-                "The rest of the catalog — accordion, dropdown menu, table, tabs, toast, "
-                "and more — is already vendored in ",
+                "The rest of the catalog (accordion, dropdown menu, table, tabs, toast, "
+                "and more) is already in ",
                 html.code("components/"),
-                ". Nothing to install: explore it, it is plain Python you own.",
+                ". Open those files and change them; they are ordinary Python in your project.",
                 class_="description text-center sm:col-span-2",
             ),
             class_="grid gap-4 sm:grid-cols-2",

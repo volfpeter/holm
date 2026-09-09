@@ -12,75 +12,97 @@
   <section class="py-12">
     <h2 class="text-xl font-semibold tracking-tight">The stack</h2>
     <p class="description">
-      Every piece is a well-documented tool — click through for the details.
+      Every piece is a well-documented tool. Click through for the details.
     </p>
-    <div class="mt-6 grid gap-3 sm:grid-cols-3">
-      <a class="card-link" href="https://volfpeter.github.io/holm">
+    <div class="mt-6 grid gap-3 sm:grid-cols-2">
+      <a class="card-link" href="https://volfpeter.github.io/holm" target="_blank" rel="noopener noreferrer">
         <strong class="font-medium">holm</strong>
-        <p class="description">File-system routing and layout composition.</p>
+        <p class="description">
+          A Next.js-like metaframework: standard FastAPI, <code>htmy</code>, and
+          HTMX composed through file-system conventions. Files in
+          <code>app/</code> become pages and actions.
+        </p>
       </a>
-      <a class="card-link" href="https://fastapi.tiangolo.com">
+      <a class="card-link" href="https://fastapi.tiangolo.com" target="_blank" rel="noopener noreferrer">
         <strong class="font-medium">FastAPI</strong>
-        <p class="description">The web framework underneath.</p>
+        <p class="description">
+          The standard web framework underneath. Pages and actions are plain
+          FastAPI routes, so the ecosystem works unchanged.
+        </p>
       </a>
-      <a class="card-link" href="https://volfpeter.github.io/htmy">
+      <a class="card-link" href="https://volfpeter.github.io/htmy" target="_blank" rel="noopener noreferrer">
         <strong class="font-medium">htmy</strong>
-        <p class="description">Server-side rendering in typed Python.</p>
+        <p class="description">
+          Server-side rendering in typed, async Python with JSX-like components.
+          No template language required.
+        </p>
       </a>
-      <a class="card-link" href="https://htmx.org">
+      <a class="card-link" href="https://htmx.org" target="_blank" rel="noopener noreferrer">
         <strong class="font-medium">HTMX</strong>
-        <p class="description">Dynamic updates, no client-side framework.</p>
+        <p class="description">
+          Dynamic updates without a client framework. Endpoints return HTML
+          fragments, rendered via FastHX.
+        </p>
       </a>
-      <a class="card-link" href="https://tailwindcss.com">
+      <a class="card-link" href="https://tailwindcss.com" target="_blank" rel="noopener noreferrer">
         <strong class="font-medium">TailwindCSS</strong>
-        <p class="description">Utility-first styling.</p>
+        <p class="description">
+          Utility-first styling for the application and its components.
+        </p>
       </a>
-      <a class="card-link" href="https://basecoatui.com">
-        <strong class="font-medium">BasecoatUI</strong>
-        <p class="description">Accessible components, vendored by htmui.</p>
-      </a>
+      <div class="card-link">
+        <strong class="font-medium"><a href="https://basecoatui.com" target="_blank" rel="noopener noreferrer">BasecoatUI</a></strong>
+        <p class="description">
+          Accessible components as editable Python <code>htmy</code> code,
+          vendored into your repo from
+          <a href="https://github.com/volfpeter/htmui" class="link" target="_blank" rel="noopener noreferrer">htmui</a>.
+          You own the files.
+        </p>
+      </div>
     </div>
   </section>
 
   <section class="py-12">
     <h2 class="text-xl font-semibold tracking-tight">Where things live</h2>
     <p class="description">
-      The short version — the <a href="/design" class="link">design page</a> and
-      <code>DESIGN.md</code> have the full tour.
+      See the <a href="/design" class="link">design page</a> or
+      <code>DESIGN.md</code> for more details.
     </p>
-    <ul class="mt-4 divide-y">
-      <li class="row">
-        <code>app/</code>
-        <span>
-          The application package. Drop in a <code>page.py</code>, <code>layout.py</code>,
-          or <code>actions.py</code> and it becomes a route, a layout, or an HTMX
-          endpoint — the rotating greeting in the title is <code>app/actions.py</code>
-          at work.
-        </span>
-      </li>
-      <li class="row">
-        <code>components/</code>
-        <span>
-          The full BasecoatUI catalog, vendored as plain Python you own. It lives
-          outside <code>app/</code> so route discovery never touches it — see the
-          <a href="/showcase" class="link">showcase</a>.
-        </span>
-      </li>
-      <li class="row">
-        <code>assets/</code>
-        <span>
-          The sources you edit: <code>app.css</code> and <code>app.js</code> — the only
-          two things that ever get built.
-        </span>
-      </li>
-      <li class="row">
-        <code>static/</code>
-        <span>
-          Build outputs served at <code>/static</code>. Never edit by hand; the minified
-          builds are committed so a fresh checkout runs and deploys as-is.
-        </span>
-      </li>
-    </ul>
+    <div class="mt-6 grid items-baseline gap-x-6 gap-y-6 sm:grid-cols-[max-content_1fr]">
+      <p class="font-medium"><code>app/</code></p>
+      <p class="description">
+        The application package, the one <code>holm</code> walks. A <code>page.py</code> becomes
+        a route, a <code>layout.py</code> wraps pages, and <code>actions.py</code>
+        defines endpoints that return HTML fragments. The rotating greeting in the
+        title comes from <code>app/actions.py</code>.
+      </p>
+
+      <p class="font-medium"><code>components/</code></p>
+      <p class="description">
+        BasecoatUI as pure Python <code>htmy</code> components, copied into the
+        project by
+        <a href="https://github.com/volfpeter/htmui" class="link" target="_blank" rel="noopener noreferrer">htmui</a>.
+        They live in your repo, so you can open and change them. They sit outside
+        <code>app/</code> so <code>holm</code> never treats them as routes.
+        See the <a href="/showcase" class="link">showcase</a>.
+      </p>
+
+      <p class="font-medium"><code>assets/</code></p>
+      <p class="description">
+        The source files for the stylesheet and the JS bundle. Edit
+        <code>app.css</code> for Tailwind and your own CSS, and <code>app.js</code>
+        for HTMX, Basecoat, and your own scripts. Watchers and build tasks compile
+        these into <code>static/</code>.
+      </p>
+
+      <p class="font-medium"><code>static/</code></p>
+      <p class="description">
+        The compiled stylesheet and JS bundle, served at <code>/static</code>.
+        Don't edit these files; change <code>assets/</code> and rebuild. The minified
+        <code>app.css</code> and <code>app.js</code> belong in the repo so a fresh
+        checkout can run and deploy without a production build.
+      </p>
+    </div>
   </section>
 
   <section class="py-12">
@@ -92,12 +114,12 @@
     <pre class="bg-muted mt-4 overflow-x-auto rounded-md p-3 text-sm"><code>uv run poe start          # http://localhost:5000
 
 uv run poe dev            # app only, dev assets
-uv run poe preview        # app only, minified assets — what gets deployed</code></pre>
+uv run poe preview        # app only, minified assets (what gets deployed)</code></pre>
     <p class="description mt-4">
-      Checks run with ruff and mypy (strict); <code>uv run poe check</code> runs them
-      all. Deploying serves the minified builds — run <code>uv run poe build</code>
-      first, then any FastAPI host works; Vercel and FastAPI Cloud need no
-      configuration. The details are on the
+      Checks run with <code>ruff</code> and <code>mypy</code> (strict);
+      <code>uv run poe check</code> runs them all. Deployments serve the minified
+      builds, so run <code>uv run poe build</code> first, then any FastAPI host works.
+      Vercel and FastAPI Cloud need no configuration. The details are on the
       <a href="/design" class="link">design page</a>.
     </p>
   </section>
@@ -109,15 +131,16 @@ uv run poe preview        # app only, minified assets — what gets deployed</co
       <li class="panel">
         <h3 class="font-medium"><a href="/design" class="link">Design</a></h3>
         <p class="description">
-          How the application is put together: directory layout, holm's conventions,
-          stylesheets and scripts, the development workflow, and deployment.
+          How this application is wired: the directory layout, the CSS and JS pipeline,
+          and how you run and deploy it. Based on <code>DESIGN.md</code>.
         </p>
       </li>
       <li class="panel">
         <h3 class="font-medium"><a href="/showcase" class="link">Showcase</a></h3>
         <p class="description">
-          The full vendored component catalog in action — buttons, badges, alerts,
-          forms, dialogs, all typed Python function calls from <code>components/</code>.
+          A handful of the components on a page, so you can see what using them looks
+          like. The rest of the catalog is in <code>components/</code>, and you can
+          edit it.
         </p>
       </li>
     </ul>
@@ -127,15 +150,15 @@ uv run poe preview        # app only, minified assets — what gets deployed</co
     <h2 class="text-xl font-semibold tracking-tight">Where to go next</h2>
     <ul class="mt-4 divide-y">
       <li class="py-3">
-        <a href="https://volfpeter.github.io/holm/in-a-hurry" class="link">holm in a hurry</a>
+        <a href="https://volfpeter.github.io/holm/in-a-hurry" class="link" target="_blank" rel="noopener noreferrer">holm in a hurry</a>
         <p class="description">The essentials in under five minutes.</p>
       </li>
       <li class="py-3">
-        <a href="https://volfpeter.github.io/holm/guides/quick-start-guide" class="link">Quick start guide</a>
+        <a href="https://volfpeter.github.io/holm/guides/quick-start-guide" class="link" target="_blank" rel="noopener noreferrer">Quick start guide</a>
         <p class="description">Build your first application step by step, from routing to rendering.</p>
       </li>
       <li class="py-3">
-        <a href="https://volfpeter.github.io/holm" class="link">Documentation &amp; examples</a>
+        <a href="https://volfpeter.github.io/holm" class="link" target="_blank" rel="noopener noreferrer">Documentation &amp; examples</a>
         <p class="description">Guides for every major feature, plus example applications in the repository.</p>
       </li>
     </ul>

@@ -29,21 +29,24 @@ select = ["B", "C", "E", "F", "I", "S", "W"]
 [tool.poe.tasks]
 start = "honcho start"
 
-build-dev-css  = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o static/app-dev.css"
+build-dev-css = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o static/app-dev.css"
+build-dev-js = "__holm_js_bundler__ assets/app.js --outfile=static/app-dev.js"
+
 build-prod-css = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o static/app.css --minify"
-build-dev-js   = "__holm_js_bundler__ assets/app.js --outfile=static/app-dev.js"
-build-prod-js  = "__holm_js_bundler__ assets/app.js --minify --outfile=static/app.js"
+build-prod-js = "__holm_js_bundler__ assets/app.js --minify --outfile=static/app.js"
 
 build.sequence = ["build-prod-css", "build-prod-js"]
 build.ignore_fail = "return_non_zero"
 
-format     = "ruff format . --check"
+format = "ruff format . --check"
 format-fix = "ruff format ."
-lint       = "ruff check ."
-lint-fix   = "ruff check . --fix"
-types       = "mypy ."
 
-check.sequence = ["format", "lint", "types"]
+lint = "ruff check ."
+lint-fix = "ruff check . --fix"
+
+type = "mypy ."
+
+check.sequence = ["format", "lint", "type"]
 check.ignore_fail = "return_non_zero"
 
 [tool.poe.tasks.dev]

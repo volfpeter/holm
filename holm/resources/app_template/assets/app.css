@@ -4,7 +4,7 @@
 /*
  * The classes below style the scaffold's own pages: the navigation bar, the
  * landing page, the design page, and the showcase. Remove the classes together
- * with those pages — nothing else depends on them. The two imports above are
+ * with those pages; nothing else depends on them. The two imports above are
  * all the application itself needs.
  */
 @layer components {
@@ -22,14 +22,6 @@
 
   .card-link {
     @apply block rounded-lg border p-4 transition-colors hover:bg-muted;
-  }
-
-  .row {
-    @apply flex flex-col gap-1 py-3 sm:flex-row sm:items-baseline sm:justify-between;
-  }
-
-  .row > span {
-    @apply text-muted-foreground text-sm sm:ml-6 sm:text-right;
   }
 
   .nav-link {

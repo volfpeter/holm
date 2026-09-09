@@ -9,7 +9,7 @@
 
 # holm
 
-Web development framework that brings the Next.js developer experience to Python, built on FastAPI, `htmy`, and FastHX.
+`holm` is a Next.js-like metaframework for Python: standard FastAPI, `htmy`, and HTMX composed through file-system conventions.
 
 ## Key features
 
