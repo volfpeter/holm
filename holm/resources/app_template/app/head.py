@@ -1,4 +1,4 @@
-from components import theme_switcher
+from components.theme_switcher import js as theme_switcher_js
 from holm import Metadata
 from htmy import ComponentType, Context, component, html
 
@@ -18,5 +18,5 @@ def head(ctx: Context) -> ComponentType:
         html.meta(name="viewport", content="width=device-width, initial-scale=1"),
         html.link(rel="stylesheet", href=f"/static/{settings.css_file}"),
         html.script(src=f"/static/{settings.js_file}"),
-        theme_switcher.js,
+        theme_switcher_js,
     )

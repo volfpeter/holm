@@ -23,7 +23,7 @@ Use `uv run poe dev` to run only the app. It serves the app with the dev stylesh
 ## Where things live
 
 - `app/`: the application package, the one `holm` walks. A `page.py` becomes a route, a `layout.py` or `layout.jinja` wraps pages, and `actions.py` defines endpoints that return HTML fragments (a natural fit for HTMX).
-- `components/`: BasecoatUI as pure Python `htmy` components, copied into the project by [`htmui`](https://github.com/volfpeter/htmui). They live in your repo, so you can open and change them. These are outside `app/`, so the `holm` discovery process never treats them as routes. Example: `from components import button` then `button.button("Save")`.
+- `components/`: BasecoatUI as pure Python `htmy` components, copied into the project by [`htmui`](https://github.com/volfpeter/htmui). They live in your repo, so you can open and change them. These are outside `app/`, so the `holm` discovery process never treats them as routes. Example: `from components.button import button` then `button("Save")`.
 - `assets/`: source files for the stylesheet and the JS bundle. Edit `app.css` for Tailwind and your own CSS, and `app.js` for HTMX, Basecoat, and your own scripts. Watchers and build tasks compile these into `static/`.
 - `static/`: the compiled stylesheet and JS bundle, served at `/static` by FastAPI. Do not edit these files; change `assets/` and rebuild. The minified `app.css` and `app.js` belong in the repo so a checkout can run and deploy without a production build.
 

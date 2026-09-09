@@ -37,7 +37,7 @@ Pages render on the server. The browser receives that HTML plus the stylesheet a
 └── pyproject.toml       # Python dependencies, tool config, poe tasks
 ```
 
-`holm` walks `app/`: `page.py` becomes a route, `layout.py` or `layout.jinja` wraps pages, `actions.py` defines endpoints that return HTML fragments. UI components live in `components/` at the project root, outside `app/`, where discovery never touches them. Import them as `from components import button`.
+`holm` walks `app/`: `page.py` becomes a route, `layout.py` or `layout.jinja` wraps pages, `actions.py` defines endpoints that return HTML fragments. UI components live in `components/` at the project root, outside `app/`, where discovery never touches them. Import them as `from components.button import button`.
 
 `assets/` holds the source files for the stylesheet and the JS bundle; you edit those. `static/` holds the compiled files the app serves. Don't edit anything in `static/` by hand.
 
@@ -75,7 +75,7 @@ Which pair is served is decided by `CSS_FILE` and `JS_FILE` from `app/settings.p
 
 All build commands are defined as `poe` tasks in `pyproject.toml` (`build-dev-css`, `build-prod-css`, `build-dev-js`, `build-prod-js`) and delegate to the Tailwind CLI and the JS bundler. `poe build` runs the production builds in one go. The `package.json` exists for these tools. There is no application JavaScript beyond what `assets/app.js` imports.
 
-The `components/` directory is a copy of the [`htmui`](https://github.com/volfpeter/htmui) BasecoatUI catalog: pure Python `htmy` components in your project, not a locked dependency. Open a file and change it. Import them as `from components import button`.
+The `components/` directory is a copy of the [`htmui`](https://github.com/volfpeter/htmui) BasecoatUI catalog: pure Python `htmy` components in your project, not a locked dependency. Open a file and change it. Import them as `from components.button import button`.
 
 ## Development workflow
 
