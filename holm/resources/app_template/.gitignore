@@ -5,3 +5,5 @@ __pycache__/
 .mypy_cache/
 node_modules/
 .env
+static/app-dev.css
+static/app-dev.js

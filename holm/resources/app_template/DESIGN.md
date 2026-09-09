@@ -59,7 +59,7 @@ Within `app/`, `holm`'s conventions apply: `page.py` serves GET requests for its
 
 ## Stylesheets and scripts
 
-Python is not bundled; only the stylesheet and the JS bundle are built.
+Only the stylesheet and the JS bundle are built from `assets/`.
 
 Sources live in `assets/`:
 

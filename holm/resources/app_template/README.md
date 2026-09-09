@@ -38,10 +38,10 @@ Tooling is [`ruff`](https://docs.astral.sh/ruff/) for formatting and linting, [`
 - `poe build`: both production builds in one go
 - `poe build-dev-css` / `poe build-prod-css`: one-off stylesheet builds
 - `poe build-dev-js` / `poe build-prod-js`: one-off JS bundle builds
-- `poe format` / `poe lint` / `poe types`: checks; `format-fix` and `lint-fix` apply fixes
+- `poe format` / `poe lint` / `poe type`: checks; `format-fix` and `lint-fix` apply fixes
 - `poe check`: all checks in one go
 
-The served stylesheet and JS bundle is controlled by the `CSS_FILE` and `JS_FILE` environment variables (see `app/settings.py`).
+The served stylesheet and JS bundle are controlled by the `CSS_FILE` and `JS_FILE` environment variables (see `app/settings.py`).
 
 The project ships the `holm-web` agent skill in `.agents/skills/`. Agents should load it automatically when working on the application.
 

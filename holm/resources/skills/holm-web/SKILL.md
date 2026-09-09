@@ -1,7 +1,7 @@
 ---
 name: holm-web
 description: >
-  Use when working on web apps built with the holm lib, or to answer questions about the holm lib.
+  Use when working on web apps built with holm, or to answer questions about holm.
   Covers file-system routing, layouts, pages, actions, page metadata, form handling, error handling,
   partial HTML and HTMX considerations.
 ---
@@ -36,7 +36,7 @@ Optional:
 |------|---------|-------------|
 | `page.py` | Page callable | GET `/` |
 | `page.py` + `handle_submit` | Submit handler | POST `/` |
-| `layout.py` | Layout callable,  wraps pages/layouts in subpackages | — |
+| `layout.py` | Layout callable, wraps pages/layouts in subpackages | — |
 | `layout.jinja` | Jinja2-based layout (alternative to `layout.py`) | — |
 | `actions.py` | Action functions decorated with `@action.*` | custom paths/methods |
 | `api.py` | `APIRouter` (JSON or rendering APIs) | custom paths/methods |
@@ -89,8 +89,8 @@ def some_page(request: Request) -> ComponentType:
 1. Forms without `method="POST"` submit as GET and hit `page()`, not `handle_submit()`
 2. `page.py` and `actions.py` and `api.py` in the same package have their routes merged into a single `APIRouter`
 3. Returning `Response` objects from pages, actions, or handlers bypasses rendering
-4. `holm` auto-wraps `page()` and `layout()` list/tuple returns in `Fragment` for safety, do not return list/tuple if it's not a component sequence
-5. `htmy` does NOT flatten nested component sequences! `[comp1, comp2]` is valid, but `[[comp1, comp2]]` is not. Use list unpacking or `Fragment` when mapping/generating components
-6. Strongly prefer `ComponentType` and `ComponentSequence` return type annotations over `Component` to component nesting problems!
-7. `holm` uses `htmy.page()` for both pages and actions automatically. Actions always return HTML, `api.py` if you need standard FastAPI behavior
+4. `holm` auto-wraps `page()` and `layout()` list/tuple returns in `Fragment`. Do not return a list/tuple unless it is a component sequence
+5. `htmy` does not flatten nested component sequences: `[comp1, comp2]` is valid, but `[[comp1, comp2]]` is not. Use list unpacking or `Fragment` when mapping/generating components
+6. Strongly prefer `ComponentType` and `ComponentSequence` return type annotations over `Component` to avoid component nesting problems!
+7. `holm` uses `htmy.page()` for both pages and actions automatically. Actions always return HTML; use `api.py` if you need standard FastAPI behavior
 8. Path parameters from `_id_` or `{id}` packages are available as standard FastAPI dependencies in pages, layouts, actions, metadata, and APIs

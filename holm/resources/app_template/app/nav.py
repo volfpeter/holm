@@ -1,7 +1,7 @@
 from fasthx.htmy import CurrentRequest
 from htmy import ComponentType, Context, component, html
 
-_LINKS: tuple[tuple[str, str], ...] = (("Home", "/"), ("Design", "/design"), ("Showcase", "/showcase"))
+_LINKS: tuple[tuple[str, str], ...] = (("Design", "/design"), ("Showcase", "/showcase"))
 
 
 @component.context_only

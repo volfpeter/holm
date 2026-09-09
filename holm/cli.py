@@ -15,9 +15,11 @@ from . import __version__
 
 _JsManager: TypeAlias = Literal["npm", "pnpm", "bun"]
 
-_NAME_PATTERN = re.compile(r"[a-zA-Z0-9_-]+")
+_NAME_PATTERN = re.compile(r"[a-z][a-z0-9_-]*")
 
-_NAME_RULES = "may only contain letters, digits, '-', and '_'"
+_NAME_RULES = (
+    "must start with a lowercase letter, and may only contain lowercase letters, digits, '-', and '_'"
+)
 
 _JS_MANAGERS: tuple[_JsManager, ...] = ("bun", "pnpm", "npm")
 
@@ -69,8 +71,13 @@ def version() -> None:
 @app.command()
 def new(
     name: Annotated[str | None, typer.Argument(help="Project name; directory to create under cwd.")] = None,
-    js: Annotated[_JsManager | None, typer.Option("--js", help="JavaScript package manager.")] = None,
-    yes: Annotated[bool, typer.Option("--yes", "-y", help="Accept defaults without prompting.")] = False,
+    js: Annotated[
+        _JsManager | None,
+        typer.Option("--js", help="JavaScript package manager: bun, pnpm, or npm (default: bun)."),
+    ] = None,
+    yes: Annotated[
+        bool, typer.Option("--yes", "-y", help="Accept defaults without prompting; NAME is required.")
+    ] = False,
 ) -> None:
     """Scaffold a new holm application."""
     _new(name=name, js=js, yes=yes)
@@ -182,8 +189,8 @@ def _scaffold(
         cwd=target,
     )
     _run(["uvx", "htmui", "init", "--force"], cwd=target)
-    _build_css(target, js_runner, "static/app.css", minify=True)
-    _build_js(target, js_bundler, "static/app.js", minify=True)
+    _build_css(target, js_runner, "static/app.css")
+    _build_js(target, js_bundler, "static/app.js")
     _run(["uv", "run", "poe", "format-fix"], cwd=target)
     _run(["uv", "run", "poe", "lint-fix"], cwd=target)
     _run(["uv", "run", "poe", "check"], cwd=target)
@@ -223,18 +230,15 @@ def _add_skill(target: Path, *, force: bool) -> None:
     shutil.copytree(source, dest)
 
 
-def _build_css(target: Path, js_runner: str, output: str, *, minify: bool) -> None:
-    args = [*js_runner.split(), "@tailwindcss/cli", "-i", "assets/app.css", "-o", output]
-    if minify:
-        args.append("--minify")
-    _run(args, cwd=target)
+def _build_css(target: Path, js_runner: str, output: str) -> None:
+    _run(
+        [*js_runner.split(), "@tailwindcss/cli", "-i", "assets/app.css", "-o", output, "--minify"],
+        cwd=target,
+    )
 
 
-def _build_js(target: Path, js_bundler: str, output: str, *, minify: bool) -> None:
-    args = [*js_bundler.split(), "assets/app.js", f"--outfile={output}"]
-    if minify:
-        args.append("--minify")
-    _run(args, cwd=target)
+def _build_js(target: Path, js_bundler: str, output: str) -> None:
+    _run([*js_bundler.split(), "assets/app.js", f"--outfile={output}", "--minify"], cwd=target)
 
 
 def _run(args: list[str], cwd: Path) -> None:

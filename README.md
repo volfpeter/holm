@@ -9,7 +9,7 @@
 
 # holm
 
-`holm` is a Next.js-like metaframework for Python: standard FastAPI, `htmy`, and HTMX composed through file-system conventions.
+`holm` is a Next.js-like metaframework for Python: standard FastAPI, `htmy`, and HTMX with file-system based routing.
 
 ## Key features
 
@@ -41,10 +41,11 @@ To start a new application, use the `holm new` scaffolder:
 
 ```bash
 uvx holm new my-app
+cd my-app
 uv run poe start
 ```
 
-The command creates a ready-to-run application (served at http://localhost:5000) with the [htmui](https://github.com/volfpeter/htmui) component catalog, Tailwind CSS, and the ruff / mypy / poethepoet toolchain set up.
+The command creates a ready-to-run application (served at http://localhost:5000) with the [htmui](https://github.com/volfpeter/htmui) component catalog, Tailwind CSS, and the `ruff`, `mypy`, and `poethepoet` toolchain set up.
 
 Supported operating systems:
 
@@ -56,7 +57,7 @@ Supported operating systems:
 
 `holm` ships an agent skill that helps agents follow `holm` conventions and UI patterns, and answer questions about the library. Add it to an existing project with `holm skill add`. Applications created with `holm new` include it by default.
 
-Because of the similarity with Next.js and React, and the standard use of FastAPI, you can expect good results even without extra agent support, both for agentic engineering and inline completions.
+Because of the similarity to Next.js and React, and the standard use of FastAPI, you can expect good results even without extra agent support, both for agentic engineering and inline completions.
 
 The library and its dependencies are also registered at [Context7](https://context7.com/volfpeter) if you prefer MCP-based documentation retrieval.
 
