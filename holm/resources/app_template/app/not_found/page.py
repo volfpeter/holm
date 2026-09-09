@@ -12,9 +12,7 @@ def page() -> ComponentType:
             class_="text-muted-foreground mx-auto mt-4 max-w-xl text-lg",
         ),
         html.p(
-            html.a(
-                "Back to the homepage", href="/", class_="font-medium underline underline-offset-4"
-            ),
+            html.a("Back to the homepage", href="/", class_="font-medium underline underline-offset-4"),
             class_="mt-6",
         ),
         class_="flex flex-1 flex-col items-center justify-center text-center",
