@@ -9,7 +9,6 @@ from pathlib import Path
 from typing import Annotated, Literal, TypeAlias, cast
 
 import typer
-from rich.prompt import Prompt
 
 from . import __version__
 
@@ -111,19 +110,17 @@ def _resolve_js(js: _JsManager | None, *, is_tty: bool, yes: bool) -> _JsManager
     if js is not None:
         return js
     if is_tty and not yes:
-        choice: str = Prompt.ask(
-            "JavaScript package manager",
-            choices=list(_JS_MANAGERS),
-            default="bun",
-            case_sensitive=False,
-        )
-        return cast("_JsManager", choice)
+        choice = typer.prompt("JavaScript package manager", default="bun")
+        while choice.lower() not in _JS_MANAGERS:
+            typer.echo(f"Error: must be one of: {', '.join(_JS_MANAGERS)}.", err=True)
+            choice = typer.prompt("JavaScript package manager", default="bun")
+        return cast("_JsManager", choice.lower())
     typer.echo("JavaScript package manager: bun (default)")
     return "bun"
 
 
 def _require_tools(js: _JsManager) -> None:
-    missing = [tool for tool in ("uv", "git", js) if shutil.which(tool) is None]
+    missing = [tool for tool in ("uv", "uvx", "git", js) if shutil.which(tool) is None]
     if missing:
         _fail(f"required tool(s) not found on PATH: {', '.join(missing)}")
 
@@ -188,9 +185,12 @@ def _scaffold(
         ],
         cwd=target,
     )
+    target.joinpath("static").mkdir(parents=True, exist_ok=True)
     _run(["uvx", "htmui", "init", "--force"], cwd=target)
-    _build_css(target, js_runner, "static/app.css")
-    _build_js(target, js_bundler, "static/app.js")
+    _build_css(target, js_runner, "static/app-dev.css", minify=False)
+    _build_css(target, js_runner, "static/app.css", minify=True)
+    _build_js(target, js_bundler, "static/app-dev.js", minify=False)
+    _build_js(target, js_bundler, "static/app.js", minify=True)
     _run(["uv", "run", "poe", "format-fix"], cwd=target)
     _run(["uv", "run", "poe", "lint-fix"], cwd=target)
     _run(["uv", "run", "poe", "check"], cwd=target)
@@ -230,15 +230,31 @@ def _add_skill(target: Path, *, force: bool) -> None:
     shutil.copytree(source, dest)
 
 
-def _build_css(target: Path, js_runner: str, output: str) -> None:
+def _build_css(target: Path, js_runner: str, output: str, *, minify: bool) -> None:
     _run(
-        [*js_runner.split(), "@tailwindcss/cli", "-i", "assets/app.css", "-o", output, "--minify"],
+        [
+            *js_runner.split(),
+            "@tailwindcss/cli",
+            "-i",
+            "assets/app.css",
+            "-o",
+            output,
+            *(["--minify"] if minify else []),
+        ],
         cwd=target,
     )
 
 
-def _build_js(target: Path, js_bundler: str, output: str) -> None:
-    _run([*js_bundler.split(), "assets/app.js", f"--outfile={output}", "--minify"], cwd=target)
+def _build_js(target: Path, js_bundler: str, output: str, *, minify: bool) -> None:
+    _run(
+        [
+            *js_bundler.split(),
+            "assets/app.js",
+            *(["--minify"] if minify else []),
+            f"--outfile={output}",
+        ],
+        cwd=target,
+    )
 
 
 def _run(args: list[str], cwd: Path) -> None:

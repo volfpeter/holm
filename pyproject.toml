@@ -65,7 +65,15 @@ disable_error_code = ["no-any-return"]
 # TODO: find a way to exclude test_app/ from the wheel build.
 # This config can be removed then, and tests/ and tests_app/ can be added back
 # to the source build as expected, but excluded from the wheel build.
-excludes = ["tests/", "test_app/"]
+excludes = [
+    "tests/",
+    "test_app/",
+    ".pdm-build/",
+    "**/.ruff_cache/",
+    "**/__pycache__/",
+    "**/*.pyc",
+    "**/.mypy_cache/",
+]
 
 [tool.pdm.version]
 source = "file"
