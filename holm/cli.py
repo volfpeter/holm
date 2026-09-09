@@ -30,6 +30,10 @@ _JS_BUNDLER: dict[_JsManager, str] = {
     "bun": "bun build",
 }
 
+_SLIM_SKIP: frozenset[str] = frozenset(
+    {"app/nav.py", "app/actions.py", "app/design", "app/showcase", "assets/demo.css"}
+)
+
 
 class Tokens:
     project_name = "__holm_name__"
@@ -77,9 +81,13 @@ def new(
     yes: Annotated[
         bool, typer.Option("--yes", "-y", help="Accept defaults without prompting; NAME is required.")
     ] = False,
+    slim: Annotated[
+        bool,
+        typer.Option("--slim", help="Scaffold the minimal variant: full tooling with barebones homepage."),
+    ] = False,
 ) -> None:
     """Scaffold a new holm application."""
-    _new(name=name, js=js, yes=yes)
+    _new(name=name, js=js, yes=yes, slim=slim)
 
 
 def _fail(message: str) -> None:
@@ -135,7 +143,7 @@ def _resolve_target(name: str) -> Path:
     return target
 
 
-def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
+def _new(name: str | None, js: _JsManager | None, yes: bool, slim: bool) -> None:
     is_tty = sys.stdin.isatty()
     project_name = _resolve_name(name, is_tty=is_tty, yes=yes)
     js_manager = _resolve_js(js, is_tty=is_tty, yes=yes)
@@ -150,6 +158,7 @@ def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
             js_manager=js_manager,
             js_runner=js_runner,
             js_bundler=js_bundler,
+            slim=slim,
         )
     except typer.Exit:
         typer.echo(f"\nThe incomplete project was left in {target}.", err=True)
@@ -164,9 +173,17 @@ def _new(name: str | None, js: _JsManager | None, yes: bool) -> None:
 
 
 def _scaffold(
-    target: Path, *, project_name: str, js_manager: _JsManager, js_runner: str, js_bundler: str
+    target: Path,
+    *,
+    project_name: str,
+    js_manager: _JsManager,
+    js_runner: str,
+    js_bundler: str,
+    slim: bool,
 ) -> None:
-    _copy_templates(target, project_name=project_name, js_runner=js_runner, js_bundler=js_bundler)
+    _copy_templates(
+        target, project_name=project_name, js_runner=js_runner, js_bundler=js_bundler, slim=slim
+    )
     _add_skill(target, force=False)
 
     _run(["git", "init"], cwd=target)
@@ -200,13 +217,42 @@ def _resource_dir() -> Path:
     return cast("Path", importlib.resources.files("holm") / "resources")
 
 
-def _copy_templates(target: Path, *, project_name: str, js_runner: str, js_bundler: str) -> None:
+def _copy_templates(
+    target: Path, *, project_name: str, js_runner: str, js_bundler: str, slim: bool
+) -> None:
     source = _resource_dir() / "app_template"
     target.mkdir(parents=True, exist_ok=True)
     for path in sorted(source.rglob("*")):
         if not path.is_file():
             continue
-        if ".ruff_cache" in path.relative_to(source).parts:
+        rel = path.relative_to(source)
+        if ".ruff_cache" in rel.parts:
+            continue
+        if slim and _is_slim_skipped(rel):
+            continue
+        dest = target / rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(
+            Tokens.render(
+                path.read_text(encoding="utf-8"),
+                project_name=project_name,
+                js_runner=js_runner,
+                js_bundler=js_bundler,
+            )
+        )
+    if slim:
+        _copy_slim_overrides(target, project_name=project_name, js_runner=js_runner, js_bundler=js_bundler)
+
+
+def _is_slim_skipped(rel: Path) -> bool:
+    posix = rel.as_posix()
+    return any(posix == skipped or posix.startswith(skipped + "/") for skipped in _SLIM_SKIP)
+
+
+def _copy_slim_overrides(target: Path, *, project_name: str, js_runner: str, js_bundler: str) -> None:
+    source = _resource_dir() / "app_template_slim"
+    for path in sorted(source.rglob("*")):
+        if not path.is_file():
             continue
         dest = target / path.relative_to(source)
         dest.parent.mkdir(parents=True, exist_ok=True)
