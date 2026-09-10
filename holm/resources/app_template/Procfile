@@ -1,0 +1,3 @@
+app: uv run poe dev
+css: uv run poe build-dev-css --watch
+js: uv run poe build-dev-js --watch

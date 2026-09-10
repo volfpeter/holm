@@ -1,0 +1,58 @@
+[project]
+name = "__holm_name__"
+version = "0.1.0"
+description = "A holm app."
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = []
+
+[tool.uv]
+package = false
+
+[tool.fastapi]
+entrypoint = "app.main:app"
+
+[tool.mypy]
+strict = true
+explicit_package_bases = true
+show_error_codes = true
+
+[tool.ruff]
+line-length = 108
+exclude = [".git", ".mypy_cache", ".ruff_cache", ".venv", "dist", "node_modules"]
+
+[tool.ruff.lint]
+select = ["B", "C", "E", "F", "I", "S", "W"]
+
+[tool.poe.tasks]
+start = "honcho start"
+
+build-dev-css = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o static/app-dev.css"
+build-dev-js = "__holm_js_bundler__ assets/app.js --outfile=static/app-dev.js"
+
+build-prod-css = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o static/app.css --minify"
+build-prod-js = "__holm_js_bundler__ assets/app.js --minify --outfile=static/app.js"
+
+build.sequence = ["build-prod-css", "build-prod-js"]
+build.ignore_fail = "return_non_zero"
+
+format = "ruff format . --check"
+format-fix = "ruff format ."
+
+lint = "ruff check ."
+lint-fix = "ruff check . --fix"
+
+type = "mypy ."
+
+check.sequence = ["format", "lint", "type"]
+check.ignore_fail = "return_non_zero"
+
+[tool.poe.tasks.dev]
+cmd = "fastapi dev"
+env = { CSS_FILE = "app-dev.css", JS_FILE = "app-dev.js" }
+
+[tool.poe.tasks.preview]
+cmd = "fastapi dev"
+env = { CSS_FILE = "app.css", JS_FILE = "app.js" }

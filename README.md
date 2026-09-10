@@ -9,7 +9,7 @@
 
 # holm
 
-Web development framework that brings the Next.js developer experience to Python, built on FastAPI, `htmy`, and FastHX.
+`holm` is a Next.js-like metaframework for Python: standard FastAPI, `htmy`, and HTMX with file-system based routing.
 
 ## Key features
 
@@ -29,27 +29,6 @@ Web development framework that brings the Next.js developer experience to Python
 
 "Thanks for your work in the `holm`/`htmy`/`FastHX` stack, it's awesome." (David Brochart, Technical Director at QuantStack, Jupyter developer. [ref](https://github.com/volfpeter/holm/issues/41#issuecomment-3682810002))
 
-## Component libraries
-
-- [htmui](https://github.com/volfpeter/htmui): [BasecoatUI](https://basecoatui.com/) and [TailwindCSS](https://tailwindcss.com/) components. The included example application is built with `holm`.
-
-## Pre-requisite knowledge
-
-To get started, all you need is a _basic_ understanding of:
-
-- [FastAPI](https://fastapi.tiangolo.com/tutorial/): the underlying web framework.
-- HTML and CSS fundamentals.
-
-The [`holm` in a hurry](https://volfpeter.github.io/holm/in-a-hurry) guide walks you through all the essentials in **under five minutes**, and helps you build up all the intuition you need to start using `holm` effectively.
-
-For a deeper understanding of `holm`, it is recommended to also read the [Application components](https://volfpeter.github.io/holm/application-components) document and the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide).
-
-Checking out the [htmy](https://volfpeter.github.io/htmy/) documentation can help you understand how components and HTML rendering works in `holm`.
-
-It is recommended to use [HTMX](https://htmx.org/), if for nothing else, then to avoid hard page loads on navigation. [hx-boost](https://htmx.org/attributes/hx-boost/) (or navigation with `hx-get`) offers the same benefits as the `Link` component in Next.js.
-
-Familiarity with [FastHX](https://volfpeter.github.io/fasthx/) (the rendering layer between `htmy` and `FastAPI`), and its `htmy` integration can occasionally be useful, but not necessary at all.
-
 ## Installation
 
 The package is available on PyPI and can be installed with:
@@ -58,15 +37,29 @@ The package is available on PyPI and can be installed with:
 pip install holm
 ```
 
+To start a new application, use the `holm new` scaffolder:
+
+```bash
+uvx holm new my-app
+cd my-app
+uv run poe start
+```
+
+The command creates a ready-to-run application (served at http://localhost:5000) with the [htmui](https://github.com/volfpeter/htmui) component catalog, Tailwind CSS, and the `ruff`, `mypy`, and `poethepoet` toolchain set up.
+
 Supported operating systems:
 
 - Linux
 - macOS
 - Windows
 
-## Support
+## AI assistance
 
-Consider supporting the development and maintenance of the project through [sponsoring](https://buymeacoffee.com/volfpeter), or reach out for [consulting](https://www.volfp.com/contact?subject=Consulting%20-%20holm) so you can get the most out of the library.
+`holm` ships an agent skill that helps agents follow `holm` conventions and UI patterns, and answer questions about the library. Add it to an existing project with `holm skill add`. Applications created with `holm new` include it by default.
+
+Because of the similarity to Next.js and React, and the standard use of FastAPI, you can expect good results even without extra agent support, both for agentic engineering and inline completions.
+
+The library and its dependencies are also registered at [Context7](https://context7.com/volfpeter) if you prefer MCP-based documentation retrieval.
 
 ## Application structure
 
@@ -92,17 +85,30 @@ You can discover even more nuances by exploring the [test application](https://g
 
 If you are looking for the simplest possible application you can create, then you can find it in the [examples/minimal](https://github.com/volfpeter/holm/tree/main/examples/minimal) directory of the repository.
 
-## AI assistance
+## Component libraries
 
-The library and all its dependencies are registered at [Context7](https://context7.com/volfpeter).
+- [htmui](https://github.com/volfpeter/htmui): [BasecoatUI](https://basecoatui.com/) and [TailwindCSS](https://tailwindcss.com/) components. The included example application is built with `holm`.
 
-To get good AI assistance, all you need to do is register the Context7 MCP server in your coding tool and tell the agent to use it.
+## Support
 
-If you are starting a new project, you can additionally point the agent at one of the example applications in the [repository](https://github.com/volfpeter/holm). With all this context and detailed instructions of the project you want to build, it will get you started quickly.
+Consider supporting the development and maintenance of the project through [sponsoring](https://buymeacoffee.com/volfpeter), or reach out for [consulting](https://www.volfp.com/contact?subject=Consulting%20-%20holm) so you can get the most out of the library.
 
-Because of the similarity with Next.js and React, and the standard use of FastAPI and other dependencies, you can expect good results, both for vibe coding or inline completion.
+## Pre-requisite knowledge
 
-The repository also ships agent skills in the [skills folder](https://github.com/volfpeter/holm/tree/main/skills) that help agents follow `holm` conventions and UI patterns. Copy the skills into your agent's config's `skills/` directory to use them.
+To get started, all you need is a _basic_ understanding of:
+
+- [FastAPI](https://fastapi.tiangolo.com/tutorial/): the underlying web framework.
+- HTML and CSS fundamentals.
+
+The [`holm` in a hurry](https://volfpeter.github.io/holm/in-a-hurry) guide walks you through all the essentials in **under five minutes**, and helps you build up all the intuition you need to start using `holm` effectively.
+
+For a deeper understanding of `holm`, it is recommended to also read the [Application components](https://volfpeter.github.io/holm/application-components) document and the [Quick start guide](https://volfpeter.github.io/holm/guides/quick-start-guide).
+
+Checking out the [htmy](https://volfpeter.github.io/htmy/) documentation can help you understand how components and HTML rendering works in `holm`.
+
+It is recommended to use [HTMX](https://htmx.org/), if for nothing else, then to avoid hard page loads on navigation. [hx-boost](https://htmx.org/attributes/hx-boost/) (or navigation with `hx-get`) offers the same benefits as the `Link` component in Next.js.
+
+Familiarity with [FastHX](https://volfpeter.github.io/fasthx/) (the rendering layer between `htmy` and `FastAPI`), and its `htmy` integration can occasionally be useful, but not necessary at all.
 
 ## Technical notes
 

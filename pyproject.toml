@@ -10,7 +10,11 @@ dependencies = [
     "htmy[jinja,lxml]>=0.13.1",
     "markupsafe>=3.0.3",
     "python-multipart>=0.0.20",
+    "typer>=0.27.1",
 ]
+
+[project.scripts]
+holm = "holm.cli:app"
 
 [build-system]
 requires = ["pdm-backend"]
@@ -23,6 +27,7 @@ dev = [
     "mkdocstrings-python>=2.0.3",
     "mypy>=2.1.0",
     "poethepoet>=0.44.0",
+    "pydantic-settings>=2.15.0",
     "pytest>=9.0.3",
     "pytest-random-order>=1.2.0",
     "ruff>=0.15.10",
@@ -34,6 +39,7 @@ dev = [
 [tool.mypy]
 strict = true
 exclude = [
+    "dev",
     "examples/actions-with-htmx",
     "examples/forms",
     "examples/jinja-layout",
@@ -47,11 +53,25 @@ exclude = [
 explicit_package_bases = true
 show_error_codes = true
 
+[[tool.mypy.overrides]]
+module = "holm.resources.app_template_slim.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["components", "components.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "holm.resources.app_template.app.showcase.page"
+disable_error_code = ["no-any-return"]
+
 [tool.pdm.build]
-# TODO: find a way to exclude test_app/ from the wheel build.
-# This config can be removed then, and tests/ and tests_app/ can be added back
-# to the source build as expected, but excluded from the wheel build.
-excludes = ["tests/", "test_app/"]
+excludes = [
+    "tests/",
+    "test_app/",
+    "**/.ruff_cache/",
+    "**/.mypy_cache/",
+]
 
 [tool.pdm.version]
 source = "file"
@@ -87,6 +107,7 @@ lint.select = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*" = ["S101"] # S101: use of assert detected
+"holm/resources/app_template_slim/app/main.py" = ["I001"] # overlay fragment; .head resolves only after overlaying onto the base template
 
 [tool.poe.tasks]
 
@@ -98,9 +119,9 @@ format-fix = "ruff format ."
 lint = "ruff check ."
 lint-fix = "ruff check . --fix"
 
-mypy = "mypy ."
+type = "mypy ."
 
-check.sequence = ["format", "lint", "mypy"]
+check.sequence = ["format", "lint", "type"]
 check.ignore_fail = "return_non_zero"
 
 test = "python -m pytest tests"

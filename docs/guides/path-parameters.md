@@ -4,7 +4,7 @@ This guide demonstrates how to create pages with dynamic routes in a `holm` appl
 
 We will cover:
 
-- How to create dynamic routes using `holm`'s file-system-based routing.
+- How to create dynamic routes using `holm`'s file-system based routing.
 - How to access path parameters in your page and metadata functions.
 - How to execute async code in pages, layouts, or metadata functions.
 - How to generate dynamic metadata for pages with dynamic routes.
