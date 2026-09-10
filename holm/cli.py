@@ -238,7 +238,8 @@ def _copy_templates(
                 project_name=project_name,
                 js_runner=js_runner,
                 js_bundler=js_bundler,
-            )
+            ),
+            encoding="utf-8",
         )
     if slim:
         _copy_slim_overrides(target, project_name=project_name, js_runner=js_runner, js_bundler=js_bundler)
@@ -262,7 +263,8 @@ def _copy_slim_overrides(target: Path, *, project_name: str, js_runner: str, js_
                 project_name=project_name,
                 js_runner=js_runner,
                 js_bundler=js_bundler,
-            )
+            ),
+            encoding="utf-8",
         )
 
 
