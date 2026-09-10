@@ -16,5 +16,5 @@ handlers: dict[int | type[Exception], FastAPIErrorHandler] = {
 ```
 
 - Handlers live in `error.py` or `errors.py` at the root package
-- There is not automatic error rendering, HTML responses must be rendered manually
+- Error handlers may return a `htmy.Component` or a FastAPI `Response`. Components are automatically rendered to an `HTMLResponse`, responses are returned unchanged
 - Prefer redirects over HTML responses in error handlers

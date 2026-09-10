@@ -31,6 +31,11 @@ html.form(
 ```
 
 ```python
+from typing import Annotated
+
+from fastapi import Form
+
+
 @action.post("/create-todo")
 def create_todo(title: Annotated[str, Form()]) -> ComponentType:
     todo = add_todo(title)
