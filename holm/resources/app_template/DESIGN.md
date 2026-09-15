@@ -39,7 +39,7 @@ Pages render on the server. The browser receives that HTML plus the stylesheet a
 └── pyproject.toml       # Python dependencies, tool config, poe tasks
 ```
 
-`holm` walks `app/`: `page.py` becomes a route, `layout.py` or `layout.jinja` wraps pages, `actions.py` defines endpoints that return HTML fragments, and `error.py` maps error codes to handlers (the 404 handler redirects to `/not-found`). UI components live in `components/` at the project root, outside `app/`, where discovery never touches them. Import them as `from components.button import button`. The full template additionally ships `app/nav.py`, `app/actions.py`, `app/design/`, `app/showcase/`, and `assets/demo.css`; delete what you don't need.
+`holm` walks `app/`: `page.py` becomes a route, `layout.py` or `layout.jinja` wraps pages, `actions.py` defines endpoints that return HTML fragments, and `error.py` maps error codes to handlers (the 404 handler redirects to `/not-found`). UI components live in `components/` at the project root, outside `app/`, where discovery never touches them. Import them as `from components.button import button`.
 
 `assets/` holds the source files for the stylesheet and the JS bundle; you edit those. `static/` holds the compiled files the app serves. Don't edit anything in `static/` by hand.
 
@@ -51,7 +51,7 @@ The project ships the `holm-web` agent skill in `.agents/skills/`. Agents should
 
 `app/main.py` is the composition root: it creates the FastAPI app, mounts `static/` at `/static`, adds gzip compression, and hands everything to `holm.App()`. Custom FastAPI middleware, exception handlers, or additional mounts belong there.
 
-Layout slots are configured in the same call. The root layout renders two named slots besides `children`: `head` (the `<head>` component from `app/head.py`) and `theme_switcher`. The full template adds a third slot, `nav` (the current-page-aware navigation bar from `app/nav.py`). Nested layouts can define further slots. `app/head.py` gets access to page metadata through the `htmy` context: it is a context-only component that reads the metadata the current page put there.
+Layout slots are configured in the same call. The root layout renders `head` (the `<head>` component from `app/head.py`) and `theme_switcher` besides `children`. Nested layouts can define further slots. `app/head.py` gets access to page metadata through the `htmy` context: it is a context-only component that reads the metadata the current page put there.
 
 `app/settings.py` holds runtime settings via pydantic-settings, reading `.env` when present. It selects which stylesheet and JS bundle to serve through the `CSS_FILE` and `JS_FILE` environment variables, which is the mechanism behind `poe dev` and `poe preview`.
 
@@ -63,7 +63,7 @@ Only the stylesheet and the JS bundle are built from `assets/`.
 
 Sources live in `assets/`:
 
-- `app.css` imports TailwindCSS and BasecoatUI. Your own CSS goes here. The full template keeps its demo styles in `assets/demo.css`, imported from `app.css`; delete that file together with the demo pages.
+- `app.css` imports TailwindCSS and BasecoatUI. Your own CSS goes here.
 - `app.js` imports HTMX and the BasecoatUI runtime. Your own scripts go here.
 
 Both are compiled into `static/` in two flavors:

@@ -201,6 +201,7 @@ def _scaffold(
             "basecoat-css@^1",
             "htmx.org@^4",
             *([] if js_manager == "bun" else ["esbuild"]),
+            *(["--allow-build=esbuild", "--allow-build=@parcel/watcher"] if js_manager == "pnpm" else []),
         ],
         cwd=target,
     )
