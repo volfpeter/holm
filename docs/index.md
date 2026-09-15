@@ -36,7 +36,7 @@ cd my-app
 uv run poe start
 ```
 
-The command creates a ready-to-run application (served at http://localhost:5000) with the [htmui](https://github.com/volfpeter/htmui) component catalog, Tailwind CSS, and the `ruff`, `mypy`, and `poethepoet` toolchain set up.
+The command creates a ready-to-run application (served at http://localhost:5000) with the [htmui](https://github.com/volfpeter/htmui) component catalog, Tailwind CSS, and the `ruff`, `mypy`, and `poethepoet` toolchain set up. Pass `--slim` for the same setup with a barebones homepage.
 
 Supported operating systems:
 

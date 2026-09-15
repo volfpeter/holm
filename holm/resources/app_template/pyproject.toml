@@ -29,10 +29,10 @@ select = ["B", "C", "E", "F", "I", "S", "W"]
 [tool.poe.tasks]
 start = "honcho start"
 
-build-dev-css = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o static/app-dev.css"
+build-dev-css = "__holm_js_runner__ tailwindcss -i assets/app.css -o static/app-dev.css"
 build-dev-js = "__holm_js_bundler__ assets/app.js --outfile=static/app-dev.js"
 
-build-prod-css = "__holm_js_runner__ @tailwindcss/cli -i assets/app.css -o static/app.css --minify"
+build-prod-css = "__holm_js_runner__ tailwindcss -i assets/app.css -o static/app.css --minify"
 build-prod-js = "__holm_js_bundler__ assets/app.js --minify --outfile=static/app.js"
 
 build.sequence = ["build-prod-css", "build-prod-js"]

@@ -1,10 +1,12 @@
 """holm command-line interface."""
 
-import importlib.resources
 import re
 import shutil
 import subprocess
 import sys
+from collections.abc import Iterator
+from contextlib import contextmanager
+from importlib.resources import as_file, files
 from pathlib import Path
 from typing import Annotated, Literal, TypeAlias, cast
 
@@ -22,11 +24,11 @@ _NAME_RULES = (
 
 _JS_MANAGERS: tuple[_JsManager, ...] = ("bun", "pnpm", "npm")
 
-_JS_RUNNER: dict[_JsManager, str] = {"npm": "npx", "pnpm": "pnpm dlx", "bun": "bunx"}
+_JS_RUNNER: dict[_JsManager, str] = {"npm": "npx", "pnpm": "pnpm exec", "bun": "bunx"}
 
 _JS_BUNDLER: dict[_JsManager, str] = {
     "npm": "npx esbuild --bundle",
-    "pnpm": "pnpm dlx esbuild --bundle",
+    "pnpm": "pnpm exec esbuild --bundle",
     "bun": "bun build",
 }
 
@@ -210,39 +212,48 @@ def _scaffold(
     _build_js(target, js_bundler, "static/app.js", minify=True)
     _run(["uv", "run", "poe", "format-fix"], cwd=target)
     _run(["uv", "run", "poe", "lint-fix"], cwd=target)
-    _run(["uv", "run", "poe", "check"], cwd=target)
+    _run(["uv", "run", "poe", "check"], cwd=target, required=False)
 
 
-def _resource_dir() -> Path:
-    return cast("Path", importlib.resources.files("holm") / "resources")
+@contextmanager
+def _resource_dir() -> Iterator[Path]:
+    with as_file(files("holm").joinpath("resources")) as path:
+        yield path
 
 
 def _copy_templates(
     target: Path, *, project_name: str, js_runner: str, js_bundler: str, slim: bool
 ) -> None:
-    source = _resource_dir() / "app_template"
-    target.mkdir(parents=True, exist_ok=True)
-    for path in sorted(source.rglob("*")):
-        if not path.is_file():
-            continue
-        rel = path.relative_to(source)
-        if ".ruff_cache" in rel.parts:
-            continue
-        if slim and _is_slim_skipped(rel):
-            continue
-        dest = target / rel
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_text(
-            Tokens.render(
-                path.read_text(encoding="utf-8"),
+    with _resource_dir() as resources:
+        source = resources / "app_template"
+        target.mkdir(parents=True, exist_ok=True)
+        for path in sorted(source.rglob("*")):
+            if not path.is_file():
+                continue
+            rel = path.relative_to(source)
+            if ".ruff_cache" in rel.parts:
+                continue
+            if slim and _is_slim_skipped(rel):
+                continue
+            dest = target / rel
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(
+                Tokens.render(
+                    path.read_text(encoding="utf-8"),
+                    project_name=project_name,
+                    js_runner=js_runner,
+                    js_bundler=js_bundler,
+                ),
+                encoding="utf-8",
+            )
+        if slim:
+            _copy_slim_overrides(
+                resources / "app_template_slim",
+                target,
                 project_name=project_name,
                 js_runner=js_runner,
                 js_bundler=js_bundler,
-            ),
-            encoding="utf-8",
-        )
-    if slim:
-        _copy_slim_overrides(target, project_name=project_name, js_runner=js_runner, js_bundler=js_bundler)
+            )
 
 
 def _is_slim_skipped(rel: Path) -> bool:
@@ -250,8 +261,9 @@ def _is_slim_skipped(rel: Path) -> bool:
     return any(posix == skipped or posix.startswith(skipped + "/") for skipped in _SLIM_SKIP)
 
 
-def _copy_slim_overrides(target: Path, *, project_name: str, js_runner: str, js_bundler: str) -> None:
-    source = _resource_dir() / "app_template_slim"
+def _copy_slim_overrides(
+    source: Path, target: Path, *, project_name: str, js_runner: str, js_bundler: str
+) -> None:
     for path in sorted(source.rglob("*")):
         if not path.is_file():
             continue
@@ -269,20 +281,21 @@ def _copy_slim_overrides(target: Path, *, project_name: str, js_runner: str, js_
 
 
 def _add_skill(target: Path, *, force: bool) -> None:
-    source = _resource_dir() / "skills" / "holm-web"
-    dest = target / ".agents" / "skills" / "holm-web"
-    if dest.exists():
-        if not force:
-            _fail(f"{dest} already exists, use --force to overwrite.")
-        shutil.rmtree(dest)
-    shutil.copytree(source, dest)
+    with _resource_dir() as resources:
+        source = resources / "skills" / "holm-web"
+        dest = target / ".agents" / "skills" / "holm-web"
+        if dest.exists():
+            if not force:
+                _fail(f"{dest} already exists, use --force to overwrite.")
+            shutil.rmtree(dest)
+        shutil.copytree(source, dest)
 
 
 def _build_css(target: Path, js_runner: str, output: str, *, minify: bool) -> None:
     _run(
         [
             *js_runner.split(),
-            "@tailwindcss/cli",
+            "tailwindcss",
             "-i",
             "assets/app.css",
             "-o",
@@ -305,9 +318,12 @@ def _build_js(target: Path, js_bundler: str, output: str, *, minify: bool) -> No
     )
 
 
-def _run(args: list[str], cwd: Path) -> None:
+def _run(args: list[str], cwd: Path, *, required: bool = True) -> None:
     typer.echo(f"$ {' '.join(args)}")
     try:
         subprocess.run(args, cwd=cwd, check=True)  # noqa: S603
     except subprocess.CalledProcessError as e:
-        _fail(f"command failed with exit code {e.returncode}: {' '.join(args)}")
+        message = f"command failed with exit code {e.returncode}: {' '.join(args)}"
+        if required:
+            _fail(message)
+        typer.echo(f"Warning: {message}", err=True)
