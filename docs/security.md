@@ -38,15 +38,13 @@ Together, these offer reasonable protection against CSRF attacks.
 - the `handle_submit()` functionality in `page.py` modules for `POST` requests;
 - the custom `APIRouter` support in `api.py` modules.
 
-For defense in depth, `holm` provides `OriginCheckMiddleware`, which executes an origin check on state-changing requests:
+For defense in depth, `holm` provides [`OriginCheckMiddleware`](api/holm.md#holm.OriginCheckMiddleware), which executes an origin check on state-changing requests:
 
 ```python
 from holm import OriginCheckMiddleware
 
 app.add_middleware(OriginCheckMiddleware, trusted_origins=["https://app.example.com"])
 ```
-
-It validates `Origin` first, falling back to `Referer`, against the request `Host` plus `trusted_origins`. Defaults are lenient (missing headers allowed, cookieless requests skipped) so non-browser clients keep working.
 
 Since the check is based on the `Host` header, it provides extra safety only as long as the [host header](#host-header-validation) can be trusted.
 

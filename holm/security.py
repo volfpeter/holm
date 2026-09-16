@@ -18,6 +18,7 @@ class OriginCheckMiddleware:
     its hostname and port match the request `Host` or one of `trusted_origins` - forwarded
     headers are not trusted. The scheme is ignored, and a `null` or unparsable `Referer` is
     treated as if the header was missing. An `Origin` that fails to resolve is always rejected.
+    A missing or unparsable `Host` is always rejected as well.
 
     Requests without cookies are skipped by default, so non-browser clients keep working.
     """
@@ -70,11 +71,11 @@ class OriginCheckMiddleware:
 
         raw_host = headers.get(b"host")
         if raw_host is None:
-            return True
+            return False
 
         host = _get_hostname_and_port(raw_host.decode("latin-1"))
         if not host[0]:
-            return True
+            return False
 
         raw_origin = headers.get(b"origin")
         if raw_origin is not None:
@@ -100,9 +101,9 @@ _UNSAFE_METHODS: frozenset[str] = frozenset({"POST", "PUT", "PATCH", "DELETE"})
 
 def _get_hostname_and_port(url: str) -> tuple[str, int | None]:
     """Returns the lowercase hostname and port of a URL, origin, or bare host."""
-    parsed = urlsplit(url if "://" in url else f"//{url}")
-    hostname = parsed.hostname or ""
     try:
+        parsed = urlsplit(url if "://" in url else f"//{url}")
+        hostname = parsed.hostname or ""
         port = parsed.port
     except ValueError:
         return ("", None)

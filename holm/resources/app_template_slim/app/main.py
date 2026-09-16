@@ -9,6 +9,10 @@ from .head import head
 app = FastAPI()
 app.add_middleware(GZipMiddleware)
 app.add_middleware(OriginCheckMiddleware)
+# TODO: enable trusted hosts before deploying to harden the origin check.
+# from starlette.middleware.trustedhost import TrustedHostMiddleware
+# app.add_middleware(TrustedHostMiddleware, allowed_hosts=["localhost", "example.com"])
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 App(
