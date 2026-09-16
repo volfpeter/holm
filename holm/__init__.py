@@ -1,4 +1,4 @@
-__version__ = "0.10.0"
+__version__ = "0.11.0"
 
 from ._jinja import JinjaTemplate as JinjaTemplate
 from .app import App as App
