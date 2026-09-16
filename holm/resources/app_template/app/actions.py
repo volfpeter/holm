@@ -25,5 +25,5 @@ def welcome(lang: str = "en") -> ComponentType:
         _greetings[index][1],
         hx_get=f"/welcome?lang={next_lang}",
         hx_trigger="every 2s",
-        hx_swap="outerHTML",
+        hx_swap="outerHTML transition:true",
     )
