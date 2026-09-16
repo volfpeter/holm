@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.venv/
+.ruff_cache/
+.mypy_cache/
+node_modules/
+.env
+static/app-dev.css
+static/app-dev.js

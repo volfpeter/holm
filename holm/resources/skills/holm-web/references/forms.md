@@ -24,6 +24,7 @@ def handle_submit(q: Annotated[str, Form()]) -> ComponentType:
 ## HTMX form submissions to `handle_submit`
 
 ```python
+from fastapi import Request
 from holm import without_layout
 
 

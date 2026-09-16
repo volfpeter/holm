@@ -4,8 +4,8 @@
 
 ```python
 from fastapi import Request
-from htmy import ComponentSequence, Context, component, html
 from holm import Metadata
+from htmy import ComponentSequence, ComponentType, Context, component, html
 
 
 async def layout(children: ComponentType, request: Request) -> ComponentSequence:
