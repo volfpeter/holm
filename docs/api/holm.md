@@ -4,6 +4,10 @@
     options:
         show_root_heading: true
 
+::: holm.OriginCheckMiddleware
+    options:
+        show_root_heading: true
+
 ::: holm.Metadata
     options:
         show_root_heading: true
