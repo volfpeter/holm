@@ -31,6 +31,9 @@ from test_app.actions import RenderedAction
         ("/multi", "PUT", "PUT"),
         ("/multi", "PATCH", "PATCH"),
         ("/multi", "DELETE", "DELETE"),
+        # Single action with multiple methods
+        ("/route", "GET", "ROUTE action"),
+        ("/route", "POST", "ROUTE action"),
     ],
 )
 def test_action(client: TestClient, action_path: str, method: str, expected: str) -> None:

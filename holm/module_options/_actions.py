@@ -84,7 +84,7 @@ class action:
     """
 
     @classmethod
-    def __call__(
+    def route(
         cls,
         path: str | None = None,
         *,

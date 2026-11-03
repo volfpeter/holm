@@ -1,4 +1,4 @@
-__version__ = "0.11.1"
+__version__ = "0.11.2"
 
 from fasthx.htmy import CurrentRequest as CurrentRequest
 from fasthx.htmy import RouteParams as RouteParams
