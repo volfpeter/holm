@@ -50,7 +50,7 @@ app = App(layout_slots={"navbar": navbar})
 First we create `my_app/navbar.py` with a navigation component that highlights the current page:
 
 ```python hl_lines="1 18 28"
-from fasthx.htmy import CurrentRequest
+from holm import CurrentRequest
 from htmy import ComponentType, Context, component, html
 
 highlight_style = "text-decoration: underline; text-decoration-thickness: 2px;"

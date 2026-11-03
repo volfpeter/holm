@@ -2,8 +2,8 @@
 
 ## Automatically injected by fasthx
 
-- `CurrentRequest`: the current `fastapi.Request`, access in `htmy` component: `CurrentRequest.from_context(context)`
-- `RouteParams`: all resolved FastAPI route parameters, access in `htmy` component: `RouteParams.from_context(context)`
+- `CurrentRequest` (`from holm import CurrentRequest`): the current `fastapi.Request`, access in `htmy` component: `CurrentRequest.from_context(context)`
+- `RouteParams` (`from holm import RouteParams`): all resolved FastAPI route parameters, access in `htmy` component: `RouteParams.from_context(context)`
 
 ## Automatically injected by holm
 

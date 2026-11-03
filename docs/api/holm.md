@@ -15,6 +15,14 @@
             - "!__init__"
             - "!_metadata"
 
+::: holm.CurrentRequest
+    options:
+        show_root_heading: true
+
+::: holm.RouteParams
+    options:
+        show_root_heading: true
+
 ::: holm.action
     options:
         members:

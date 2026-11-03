@@ -1,5 +1,6 @@
-from fasthx.htmy import CurrentRequest
 from htmy import ComponentType, Context, component, html
+
+from holm import CurrentRequest
 
 highlight_style = "text-decoration: underline; text-decoration-thickness: 2px;"
 """

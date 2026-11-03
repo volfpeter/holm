@@ -1,5 +1,6 @@
-from fasthx.htmy import CurrentRequest
 from htmy import ComponentType, Context, component, html
+
+from holm import CurrentRequest
 
 
 def nav_item(text: str, *, href: str, current_path: str) -> ComponentType:
