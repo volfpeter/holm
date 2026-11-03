@@ -66,12 +66,7 @@ module = "holm.resources.app_template.app.showcase.page"
 disable_error_code = ["no-any-return"]
 
 [tool.pdm.build]
-excludes = [
-    "tests/",
-    "test_app/",
-    "**/.ruff_cache/",
-    "**/.mypy_cache/",
-]
+excludes = ["tests/", "test_app/", "**/.ruff_cache/", "**/.mypy_cache/"]
 
 [tool.pdm.version]
 source = "file"
@@ -107,7 +102,9 @@ lint.select = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*" = ["S101"] # S101: use of assert detected
-"holm/resources/app_template_slim/app/main.py" = ["I001"] # overlay fragment; .head resolves only after overlaying onto the base template
+"holm/resources/app_template_slim/app/main.py" = [
+    "I001",
+] # overlay fragment; .head resolves only after overlaying onto the base template
 
 [tool.poe.tasks]
 
@@ -126,4 +123,5 @@ check.ignore_fail = "return_non_zero"
 
 test = "python -m pytest tests"
 
+build-docs = "zensical build --clean --strict"
 serve-docs = "zensical serve"

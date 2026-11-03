@@ -37,7 +37,7 @@ jobs:
         run: uv sync
 
       - name: Build documentation
-        run: uv run zensical build --clean
+        run: uv run poe build-docs
 
       - name: Upload pages
         uses: actions/upload-pages-artifact@v4
