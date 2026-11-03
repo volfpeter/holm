@@ -31,7 +31,7 @@
             - put
             - patch
             - delete
-            - __call__
+            - route
         show_root_heading: true
 
 ::: holm.without_layout

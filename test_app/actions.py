@@ -66,6 +66,14 @@ def multi() -> str:  # noqa: F811
     return "DELETE"
 
 
+# -- Action with multiple HTTP methods
+
+
+@action.route("/route", methods=["GET", "POST"])
+def route() -> str:
+    return "ROUTE action"
+
+
 def _in_layout(rendered_action: str, title: str = "App") -> str:
     return "\n".join(
         [
