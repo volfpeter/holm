@@ -108,7 +108,7 @@ def welcome_message() -> str:
 Important details:
 
 - We use the `@action.get()` decorator to define a HTTP `GET` action. `holm` provides decorators for all standard HTTP methods (e.g., `@action.post()`, `@action.put()`, `@action.delete()`).
-- Since no explicit path was provided to the `@action.get()` decorator, `holm` automatically infers the path from the function name, resulting in a `/welcome_message` endpoint.
+- Since no explicit path was provided to the `@action.get()` decorator, `holm` automatically infers the path from the function name, resulting in a `/welcome-message` endpoint.
 - The return value (a plain string in this case) is automatically rendered by `holm` as an HTML response.
 
 ## Add dynamic behavior to the home page
@@ -117,7 +117,7 @@ Finally we add dynamic content to the home page (`page.py` in the root directory
 
 On the `h1` element, which contains our welcome message, we set:
 
-- `hx_get` to use our newly created `/welcome_message` route (`welcome_message()` action) when HTMX is triggered.
+- `hx_get` to use our newly created `/welcome-message` route (`welcome_message()` action) when HTMX is triggered.
 - `hx_trigger` to `every 2s` to make the page load a new welcome message from our action every 2 seconds.
 
 These two attributes together will replace the displayed welcome message every two seconds without reloading the entire page.
