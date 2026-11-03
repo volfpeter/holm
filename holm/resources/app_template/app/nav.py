@@ -1,4 +1,4 @@
-from fasthx.htmy import CurrentRequest
+from holm import CurrentRequest
 from htmy import ComponentType, Context, component, html
 
 _LINKS: tuple[tuple[str, str], ...] = (("Design", "/design"), ("Showcase", "/showcase"))

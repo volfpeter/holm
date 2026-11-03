@@ -1,4 +1,7 @@
-__version__ = "0.11.0"
+__version__ = "0.11.1"
+
+from fasthx.htmy import CurrentRequest as CurrentRequest
+from fasthx.htmy import RouteParams as RouteParams
 
 from ._jinja import JinjaTemplate as JinjaTemplate
 from .app import App as App

@@ -99,7 +99,7 @@ def welcome_message() -> str:
 
     No path was provided for the action decorator, by default it
     creates the path from the decorator function's name, so the
-    path will be "/welcome_message" within the router that contains
+    path will be "/welcome-message" within the router that contains
     the actions module.
     """
     return random.choice(_welcome_message)  # noqa: S311
